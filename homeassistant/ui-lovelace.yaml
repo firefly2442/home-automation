@@ -15,6 +15,11 @@ views:
         entities:
           - entity: sensor.sidecamera_events
             show_state: true
+      - type: history-graph
+        title: 'Camera Status'
+        entities:
+          - camera.frontcamera
+          - camera.sidecamera
   - title: People
     cards:
       # https://www.home-assistant.io/lovelace/glance/
