@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+
+  # https://github.com/dlandon/zoneminder
+  zoneminder:
+    build: ./zoneminder/
+    restart: always
+    container_name: zoneminder
+    privileged: "true"
+    network_mode: "bridge"
+    ports:
+      - 8443:443/tcp
+      - 9000:9000/tcp
+    environment:
+      TZ: "America/Denver"
+      INSTALL_HOOK: "0"
+      INSTALL_FACE: "0"
+      INSTALL_TINY_YOLO: "0"
+      INSTALL_YOLO: "0"
+    volumes:
+      - ${ZONEMINDER_PATH}/config/:/config:rw
+      - ${ZONEMINDER_PATH}/data/:/var/cache/zoneminder:rw
+
+  # https://github.com/home-assistant/home-assistant
+  homeassistant:
+    build: ./homeassistant/
+    restart: always
+    container_name: homeassistant
+    ports:
+      - 8123:8123/tcp
+    environment:
+      TZ: "America/Denver"
+    volumes:
+      - ${HOMEASSISTANT_PATH}:/config
+    depends_on:
+      - zoneminder

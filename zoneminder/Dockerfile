@@ -1,0 +1,1 @@
+FROM dlandon/zoneminder:latest

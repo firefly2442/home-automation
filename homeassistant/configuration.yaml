@@ -1,0 +1,70 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  base_url: 192.168.1.123:8123
+  # turn off self-signed certs because the Android app can't deal with them
+  #ssl_certificate: /config/ssl/cert.crt
+  #ssl_key: /config/ssl/cert.key
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# https://www.home-assistant.io/integrations/zoneminder/
+zoneminder:
+  host: 192.168.1.113:8443
+  path: /zm/
+  ssl: True
+  verify_ssl: False
+
+camera:
+  platform: zoneminder
+
+# https://www.home-assistant.io/integrations/nws/
+weather:
+  platform: nws
+  api_key: firefly2442@gmail.com
+  station: KABQ # ABQ airport https://www.wrh.noaa.gov/cnrfc/rsa_getObs.php?sid=ABQ&num=24
+
+sensor:
+  # # https://www.home-assistant.io/integrations/systemmonitor/
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /
+      - type: memory_use_percent
+      - type: swap_use_percent
+      - type: load_5m
+  # https://www.home-assistant.io/integrations/version/
+  - platform: version
+  # https://www.home-assistant.io/integrations/zoneminder/
+  - platform: zoneminder
+    include_archived: False
+  # https://www.home-assistant.io/integrations/uptime/
+  - platform: uptime
+    name: Uptime
+    unit_of_measurement: days
+
+# https://www.home-assistant.io/lovelace/yaml-mode/
+lovelace:
+  mode: yaml
+
+device_tracker:
+  # https://www.home-assistant.io/integrations/luci/
+  - platform: luci
+    host: 192.168.1.1
+    username: root
+    # https://www.home-assistant.io/docs/configuration/secrets/
+    password: !secret openwrt_password
+    ssl: True
+    verify_ssl: False
+
+# https://community.home-assistant.io/t/picture-for-person-component-and-zone-naming-enhancement-for-home-and-not-home/103835/7
+homeassistant:
+  customize:
+    person.patrick:
+      entity_picture: /local/binary_logo.jpg

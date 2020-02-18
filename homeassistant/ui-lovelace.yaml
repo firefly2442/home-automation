@@ -1,0 +1,76 @@
+title: Home
+views:
+  - title: Cameras
+    cards:
+      # https://www.home-assistant.io/lovelace/picture-glance/
+      - type: picture-glance
+        camera_image: camera.frontcamera
+        title: Front Camera
+        entities:
+          - entity: sensor.frontcamera_events
+            show_state: true
+      - type: picture-glance
+        camera_image: camera.sidecamera
+        title: Side Camera
+        entities:
+          - entity: sensor.sidecamera_events
+            show_state: true
+  - title: People
+    cards:
+      # https://www.home-assistant.io/lovelace/glance/
+      - type: glance
+        title: People
+        entities:
+          - person.patrick
+  - title: Weather
+    cards:
+      # https://www.home-assistant.io/lovelace/weather-forecast/
+      - type: weather-forecast
+        entity: weather.kabq
+  - title: System Monitor
+    cards:
+      - type: history-graph
+        title: 'CPU Load'
+        entities:
+          - sensor.load_5m
+      - type: history-graph
+        title: 'Memory'
+        entities:
+          - sensor.memory_use_percent
+          - sensor.swap_use_percent
+      - type: gauge
+        name: / Disk Use
+        unit: '%'
+        entity: sensor.disk_use_percent
+        severity:
+          green: 0
+          yellow: 60
+          red: 85
+      - type: gauge
+        name: Memory Use
+        unit: '%'
+        entity: sensor.memory_use_percent
+        severity:
+          green: 0
+          yellow: 60
+          red: 85
+      - type: gauge
+        name: Swap Use
+        unit: '%'
+        entity: sensor.swap_use_percent
+        severity:
+          green: 0
+          yellow: 60
+          red: 85
+      - type: markdown
+        content: "Home Assistant Uptime: {{ states('sensor.uptime') }} days."
+  - title: Updater
+    cards:
+      # https://www.home-assistant.io/integrations/updater/
+      # https://www.home-assistant.io/lovelace/glance/
+      - type: glance
+        title: Update Available?
+        entities:
+          - binary_sensor.updater
+      - type: markdown
+        content: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} is available.  You're running version {{ states('sensor.current_version') }}."
