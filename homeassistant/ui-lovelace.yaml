@@ -27,6 +27,10 @@ views:
         title: People
         entities:
           - person.patrick
+      - type: history-graph
+        title: 'Patrick Home'
+        entities:
+          - person.patrick
   - title: Weather
     cards:
       # https://www.home-assistant.io/lovelace/weather-forecast/
@@ -43,6 +47,10 @@ views:
         entities:
           - sensor.memory_use_percent
           - sensor.swap_use_percent
+      - type: history-graph
+        title: 'CPU Temp'
+        entities:
+          - sensor.cpu_temperature
       - type: gauge
         name: / Disk Use
         unit: '%'

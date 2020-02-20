@@ -48,6 +48,14 @@ sensor:
   - platform: uptime
     name: Uptime
     unit_of_measurement: days
+  # https://www.home-assistant.io/integrations/sensor.command_line/#cpu-temperature
+  - platform: command_line
+    name: CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    # If errors occur, make sure configuration file is encoded as UTF-8
+    unit_of_measurement: "°F"
+    # make sure to set the corresponding unit system in configuration -> general, this seems to override the unit of measurement
+    value_template: '{{ (value | multiply(0.001) * 1.8 + 32) | round(1) }}'
 
 # https://www.home-assistant.io/lovelace/yaml-mode/
 lovelace:
