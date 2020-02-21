@@ -31,7 +31,7 @@ weather:
   station: KABQ # ABQ airport https://www.wrh.noaa.gov/cnrfc/rsa_getObs.php?sid=ABQ&num=24
 
 sensor:
-  # # https://www.home-assistant.io/integrations/systemmonitor/
+  # https://www.home-assistant.io/integrations/systemmonitor/
   - platform: systemmonitor
     resources:
       - type: disk_use_percent

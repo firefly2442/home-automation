@@ -65,6 +65,7 @@ Upon startup, register user with `Patrick` and `carlsonp`.
 Install package on OpenWRT router:
 
 ```shell
+opkg update
 opkg install luci-mod-rpc
 ```
 
@@ -98,7 +99,4 @@ TODO:
 
 zoneminder person detection, ML
 alarm on person detected
-cpu/memory/disk/temp usage on Antec
-utilities usage? electricity?
-use grafana for visuals and graphing?
 z-wave motion detection sensors?
