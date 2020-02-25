@@ -32,6 +32,7 @@ weather:
 
 sensor:
   # https://www.home-assistant.io/integrations/systemmonitor/
+  # TODO: how can we define multiple disks/mounts here?
   - platform: systemmonitor
     resources:
       - type: disk_use_percent

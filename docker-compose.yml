@@ -10,13 +10,14 @@ services:
     network_mode: "bridge"
     ports:
       - 8443:443/tcp
-      - 9000:9000/tcp
+      # this shouldn't need to be exposed outside the Docker compose network
+      #- 9000:9000/tcp
     environment:
       TZ: "America/Denver"
-      INSTALL_HOOK: "0"
+      INSTALL_HOOK: "1"
       INSTALL_FACE: "0"
       INSTALL_TINY_YOLO: "0"
-      INSTALL_YOLO: "0"
+      INSTALL_YOLO: "1"
     volumes:
       - ${ZONEMINDER_PATH}/config/:/config:rw
       - ${ZONEMINDER_PATH}/data/:/var/cache/zoneminder:rw

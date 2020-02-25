@@ -2,7 +2,7 @@
 *.key
 .env
 secrets.yaml
-
+secrets.ini
 
 
 

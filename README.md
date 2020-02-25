@@ -4,6 +4,7 @@ My personal home automation setup in Docker leveraging:
 
 * [Zoneminder](https://github.com/ZoneMinder/zoneminder)
 * [Home-Assistant](https://github.com/home-assistant/home-assistant)
+* [OpenWRT](https://openwrt.org/)
 
 ## Setup
 
@@ -11,23 +12,41 @@ Copy `.env-copy` to `.env` and edit
 
 Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
 
+Copy `zoneminder/secrets_copy.ini` to `zoneminder/secrets.ini` and edit
+
 ```shell
 docker-compose up --build -d
+```
+
+Wait until `zoneminder` is up and running.  This will take some time, you can check the progress via:
+
+```shell
+docker logs -f zoneminder
 ```
 
 Run `setup-certs.sh`
 
 Run `initial-setup.sh`
 
-There's an annoying race condition where zoneminder doesn't get setup correctly.
+Run `setup-options.sh`
+
+Run `setup-cameras.sh`
+
+Restart `zoneminder`:
+
+```shell
+docker restart zoneminder
+```
+
+There's an annoying race condition where homeassistant doesn't get setup correctly
+if zoneminder isn't running.
 
 ```shell
 docker restart homeassistant
 ```
 
-Run `setup-cameras.sh`
-
-Install the home-assistant Android application on cellphone
+Install the [home-assistant Android application](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android&hl=en_US)
+on cellphone
 
 ## UI
 
@@ -47,20 +66,30 @@ Front Camera (Amcrest IP4M-1051W - 4MP)
 
 Cellphone (Samsung Galaxy Nexus)
 
+* Uses the [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_US)
+application for Android
 * `http://admin:secret@192.168.1.116:8080/video`
 * 1280 x 720 (30 fps)
 * x264 encoding
+* Setup Network -> Firewall rules in OpenWRT to reject any packages from the LAN
+to WAN for the MAC address of the cellphone.  This allows it on the local network
+but disallows all Internet traffic.
 
 ### Additional Setup
 
-* Set the timezone in options, otherwise you get warnings in the logs
-* Change the refresh frequency for the UI
-* Manually setup zones and tweak sensitivities for motion detection
-* Review filters for purging disk when full
+* Review [filters](https://zoneminder.readthedocs.io/en/latest/userguide/filterevents.html) for purging
+disk when full, reduce deletion from 100 to 10 events
+
+### Event Server for Object Detection
+
+See `zoneminder/*.ini` files
+
+There's also [extensive documentation](https://zmeventnotification.readthedocs.io/en/stable/guides/hooks.html)
+on the hooks system, object detection methods/libraries, configuration, and more.
 
 ## Home Assistant
 
-Upon startup, register user with `Patrick` and `carlsonp`.
+Upon startup, register user with `Patrick`.
 
 Install package on OpenWRT router:
 
@@ -93,10 +122,19 @@ docker-compose up -d
 docker-compose down -v
 ```
 
+Cleanup files from the mounted Docker volumes
 
+## Helpful Links and References
 
-TODO:
+* [Zoneminder and HA integration with zmEventServer](https://seanb.co.uk/2019/08/zoneminder-and-home-assistant/)
+* [Managing notifications in HA](https://seanb.co.uk/2019/08/managing-zoneminder-notifications-with-home-assistant/)
+* [Dockerized version of Zoneminder](https://github.com/dlandon/zoneminder)
+* [zmeventnotification for object detection](https://github.com/pliablepixels/zmeventnotification)
 
-zoneminder person detection, ML
-alarm on person detected
-z-wave motion detection sensors?
+## TODO
+
+* add switch to enable/disable cameras in HA
+* upload image / email alert on identifying person
+* zoneminder person detection
+* alarm on person detected
+* setup tp-link switches
