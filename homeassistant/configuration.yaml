@@ -58,6 +58,15 @@ sensor:
     unit_of_measurement: "°F"
     # make sure to set the corresponding unit system in configuration -> general, this seems to override the unit of measurement
     value_template: '{{ (value | multiply(0.001) * 1.8 + 32) | round(1) }}'
+  # https://www.home-assistant.io/integrations/rest
+  - platform: rest
+    # https://www.home-assistant.io/docs/configuration/platform_options/
+    scan_interval: 600 # run every 10 minutes, default on local polling of sensors is 30 seconds
+    resource: https://192.168.1.113:8443/zm/api/host/getVersion.json
+    name: zoneminder_version
+    verify_ssl: false
+    json_attributes:
+      - version
 
 # https://www.home-assistant.io/lovelace/yaml-mode/
 lovelace:
