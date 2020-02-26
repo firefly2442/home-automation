@@ -133,7 +133,6 @@ Cleanup files from the mounted Docker volumes
 
 ## TODO
 
-* add switch to enable/disable cameras in HA
 * upload image / email alert on identifying person
 * zoneminder person detection
 * alarm on person detected

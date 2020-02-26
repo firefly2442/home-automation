@@ -15,6 +15,15 @@ views:
         entities:
           - entity: sensor.sidecamera_events
             show_state: true
+      # https://www.home-assistant.io/lovelace/entities/
+      - type: entities
+        title: Toggle Cameras
+        show_header_toggle: true
+        entities:
+          - entity: switch.frontcamera_state
+            name: Front Camera
+          - entity: switch.sidecamera_state
+            name: Side Camera
       - type: history-graph
         title: 'Camera Status'
         entities:
