@@ -87,3 +87,22 @@ homeassistant:
   customize:
     person.patrick:
       entity_picture: /local/binary_logo.jpg
+
+# https://www.home-assistant.io/docs/automation/
+automation:
+  - alias: 'Turn on camera when away'
+    trigger:
+      platform: state
+      entity_id: person.patrick
+      to: not_home
+    action:
+      service: switch.turn_on
+      entity_id: switch.sidecamera_state
+  - alias: 'Turn off camera when home'
+    trigger:
+      platform: state
+      entity_id: person.patrick
+      to: home
+    action:
+      service: switch.turn_off
+      entity_id: switch.sidecamera_state
