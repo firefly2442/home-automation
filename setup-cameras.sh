@@ -66,7 +66,7 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/zones.json -d "Zone[Na
 &Zone[Coords]=0,0 2687,0 2687,1519 0,1519\
 &Zone[Area]=4085760\
 &Zone[AlarmRGB]=16711680\
-&Zone[CheckMethod]=FilteredPixels\
+&Zone[CheckMethod]=AlarmedPixels\
 &Zone[MinPixelThreshold]=20\
 &Zone[MaxPixelThreshold]=\
 &Zone[MinAlarmPixels]=163430\
@@ -92,7 +92,7 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/zones.json -d "Zone[Na
 &Zone[Coords]=0,0 1279,0 1279,719 0,719\
 &Zone[Area]=921600\
 &Zone[AlarmRGB]=16711680\
-&Zone[CheckMethod]=FilteredPixels\
+&Zone[CheckMethod]=AlarmedPixels\
 &Zone[MinPixelThreshold]=20\
 &Zone[MaxPixelThreshold]=\
 &Zone[MinAlarmPixels]=36864\
