@@ -71,9 +71,6 @@ application for Android
 * `http://admin:secret@192.168.1.116:8080/video`
 * 1280 x 720 (30 fps)
 * x264 encoding
-* Setup Network -> Firewall rules in OpenWRT to reject any packages from the LAN
-to WAN for the MAC address of the cellphone.  This allows it on the local network
-but disallows all Internet traffic.
 
 ### Additional Setup
 
@@ -106,6 +103,17 @@ See `ui-lovelace.yaml` for UI configuration
 
 Make changes, then run `initial-setup.sh` to copy the `ui-lovelace.yaml` file over,
 then refresh the page.
+
+### Smart Power Plug Switches
+
+TP-Link HS105 smart switches.  Uses the `Kasa` Android app for setup.
+
+## Networking
+
+Setup Network -> Firewall rules in OpenWRT to reject any packages from the LAN
+to WAN.  This allows it on the local network
+but disallows all Internet traffic.  This way you can block things like the
+cellphone, smart plugs, etc.
 
 ## Updates
 
