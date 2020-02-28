@@ -1,5 +1,18 @@
 title: Home
 views:
+  - title: Lights
+    cards:
+      # https://www.home-assistant.io/lovelace/entities/
+      - type: entities
+        title: Toggle Lights
+        show_header_toggle: false
+        entities:
+          - entity: switch.piano_lamp
+            icon: mdi:lamp
+          - entity: switch.living_room_lamp
+            icon: mdi:floor-lamp
+          - entity: switch.bedroom_lamp
+            icon: mdi:lamp
   - title: Cameras
     cards:
       # https://www.home-assistant.io/lovelace/picture-glance/

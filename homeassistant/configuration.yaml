@@ -106,3 +106,10 @@ automation:
     action:
       service: switch.turn_off
       entity_id: switch.sidecamera_state
+# https://www.home-assistant.io/integrations/tplink/
+tplink:
+  discovery: false
+  switch:
+  - host: 192.168.1.147
+  - host: 192.168.1.200
+  - host: 192.168.1.188
