@@ -144,6 +144,5 @@ Cleanup files from the mounted Docker volumes
 * upload image / email alert on identifying person
 * zoneminder person detection
 * alarm on person detected
-* turn on piano light for 5 minutes when arrive home and dark
 * flash lights when person detected
 * randomly turn on/off lights when away

@@ -106,6 +106,20 @@ automation:
     action:
       service: switch.turn_off
       entity_id: switch.sidecamera_state
+  - alias: 'Turn on piano light when arrive home'
+    trigger:
+      platform: state
+      entity_id: person.patrick
+      to: home
+    condition:
+      - condition: sun
+        after: sunset
+    action:
+      - service: switch.turn_on
+        entity_id:  switch.piano_lamp
+      - delay: 00:02:30
+      - service: switch.turn_off
+        entity_id:  switch.piano_lamp
 # https://www.home-assistant.io/integrations/tplink/
 tplink:
   discovery: false
