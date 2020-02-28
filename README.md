@@ -64,7 +64,7 @@ Front Camera (Amcrest IP4M-1051W - 4MP)
 * 2688 x 1520 (20 fps)
 * h264 passthrough
 
-Cellphone (Samsung Galaxy Nexus)
+Side Camera (Samsung Galaxy Nexus cellphone)
 
 * Uses the [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_US)
 application for Android
