@@ -62,6 +62,11 @@ views:
       # https://www.home-assistant.io/lovelace/weather-forecast/
       - type: weather-forecast
         entity: weather.kabq
+      - type: picture-glance
+        title: Animated Radar
+        camera_image: camera.animated_radar
+        entities:
+          - camera.animated_radar
   - title: System Monitor
     cards:
       - type: history-graph
