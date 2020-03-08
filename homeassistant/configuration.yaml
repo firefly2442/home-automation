@@ -111,7 +111,51 @@ automation:
     action:
       service: switch.turn_off
       entity_id: switch.sidecamera_state
-  - alias: 'Turn on piano light when arrive home'
+  - alias: 'Turn off all lights at sunrise'
+    trigger:
+      platform: state
+      entity_id: sun.sun
+      to: above_horizon
+    action:
+      - service: switch.turn_off
+        entity_id:  switch.living_room_lamp
+      - service: switch.turn_off
+        entity_id:   switch.piano_lamp
+      - service: switch.turn_off
+        entity_id:  switch.bedroom_lamp
+  - alias: 'Turn on light when away'
+    trigger:
+      platform: state
+      entity_id: person.patrick
+      to: not_home
+    condition:
+      - condition: sun
+        after: sunset
+      - condition: time
+        before: '22:30:00'
+    action:
+      - service: switch.turn_on
+        entity_id:  switch.living_room_lamp
+  - alias: 'Turn off lights when away and simulate bedtime'
+    trigger:
+      platform: state
+      entity_id: person.patrick
+      to: not_home
+    condition:
+      - condition: sun
+        after: sunset
+      - condition: time
+        after: '22:50:00'
+    action:
+      - service: switch.turn_off
+        entity_id:   switch.piano_lamp
+      - delay: 00:00:10
+      - service: switch.turn_off
+        entity_id:  switch.living_room_lamp
+      - delay: 00:00:59
+      - service: switch.turn_off
+        entity_id:  switch.bedroom_lamp
+  - alias: 'Turn on light when back'
     trigger:
       platform: state
       entity_id: person.patrick
@@ -121,10 +165,45 @@ automation:
         after: sunset
     action:
       - service: switch.turn_on
-        entity_id:  switch.piano_lamp
+        entity_id:  switch.living_room_lamp
       - delay: 00:02:30
       - service: switch.turn_off
+        entity_id:  switch.living_room_lamp
+  - alias: 'Randomly turn on piano lamp when away'
+    trigger:
+      platform: state
+      entity_id: person.patrick
+      to: not_home
+    condition:
+      - condition: sun
+        after: sunset
+      - condition: time
+        before: '22:30:00'
+    action:
+      - service: switch.turn_off
         entity_id:  switch.piano_lamp
+      - delay: '00:0{{ range(5,10) | random | int }}:00'
+      - service: switch.turn_on
+        entity_id:  switch.piano_lamp
+      - delay: '00:0{{ range(5,10) | random | int }}:00'
+  - alias: 'Randomly turn on bedroom lamp when away'
+    trigger:
+      platform: state
+      entity_id: person.patrick
+      to: not_home
+    condition:
+      - condition: sun
+        after: sunset
+      - condition: time
+        before: '22:30:00'
+    action:
+      - service: switch.turn_off
+        entity_id:  switch.bedroom_lamp
+      - delay: '00:0{{ range(5,10) | random | int }}:00'
+      - service: switch.turn_on
+        entity_id:  switch.bedroom_lamp
+      - delay: '00:0{{ range(5,10) | random | int }}:00'
+
 # https://www.home-assistant.io/integrations/tplink/
 tplink:
   discovery: false

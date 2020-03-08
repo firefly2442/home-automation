@@ -146,3 +146,4 @@ Cleanup files from the mounted Docker volumes
 * alarm on person detected
 * flash lights when person detected
 * randomly turn on/off lights when away
+* cleanup device tracker listing
