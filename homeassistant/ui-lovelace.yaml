@@ -45,7 +45,7 @@ views:
           - camera.frontcamera
           - camera.sidecamera
       - type: markdown
-        content: "Zoneminder version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
+        content: "Zoneminder release {{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }} is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
   - title: People
     cards:
       # https://www.home-assistant.io/lovelace/glance/

@@ -72,6 +72,15 @@ sensor:
     verify_ssl: false
     json_attributes:
       - version
+  - platform: rest
+    # https://www.home-assistant.io/docs/configuration/platform_options/
+    scan_interval: 43200 # run every 12 hours, default on local polling of sensors is 30 seconds
+    resource: https://api.github.com/repos/ZoneMinder/zoneminder/releases/latest
+    name: zoneminder_latest_release
+    verify_ssl: false
+    value_template: '1' # dummy value, not used, avoids the "state max length is 255 characters" error
+    json_attributes:
+      - tag_name
 
 # https://www.home-assistant.io/lovelace/yaml-mode/
 lovelace:
