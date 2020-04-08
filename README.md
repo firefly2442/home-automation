@@ -8,6 +8,19 @@ My personal home automation setup in Docker leveraging:
 
 ## Setup
 
+Install the proprietary Nvidia drivers via the "Additional Drivers" GUI.
+
+Install `cuda-drivers` package, requires an Nvidia card
+
+Follow directions for [installing nvidia-docker](https://github.com/NVIDIA/nvidia-docker) support
+
+Use `sudo watch -n0.5 nvidia-smi` to check things are working
+
+Until [docker-compose](https://github.com/docker/compose/issues/6691) support works, GPU support will be broken.
+
+Check to make sure [Tensorflow via GPUs](https://www.tensorflow.org/install/docker) works by following instructions
+for testing by running a Docker image.
+
 Copy `.env-copy` to `.env` and edit
 
 Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
@@ -121,6 +134,8 @@ If there are updates upstream in the Docker images:
 
 ```shell
 docker-compose build --pull
+# or force a full rebuild
+# docker-compose build --no-cache --pull
 docker-compose up -d
 ```
 
@@ -147,3 +162,4 @@ Cleanup files from the mounted Docker volumes
 * flash lights when person detected
 * randomly turn on/off lights when away
 * cleanup device tracker listing
+* add health check for Docker containers

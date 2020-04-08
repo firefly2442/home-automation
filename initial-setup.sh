@@ -12,3 +12,11 @@ docker cp ./homeassistant/binary_logo.jpg homeassistant:/config/www/binary_logo.
 docker cp ./zoneminder/zmeventnotification.ini zoneminder:/config/zmeventnotification.ini
 docker cp ./zoneminder/secrets.ini zoneminder:/config/secrets.ini
 docker cp ./zoneminder/objectconfig.ini zoneminder:/config/hook/objectconfig.ini
+
+# download yolo3 model
+# https://pjreddie.com/darknet/yolo/
+if [ ! -f "./yolo/yolov3.weights" ]; then
+    # 248 MB
+    # md5sum: c84e5b99d0e52cd466ae710cadf6d84c
+    wget https://pjreddie.com/media/files/yolov3.weights -P ./yolo/
+fi

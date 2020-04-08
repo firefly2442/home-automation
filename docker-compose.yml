@@ -6,32 +6,68 @@ services:
     build: ./zoneminder/
     restart: always
     container_name: zoneminder
+    hostname: zoneminder
     privileged: "true"
-    network_mode: "bridge"
     ports:
       - 8443:443/tcp
       # this shouldn't need to be exposed outside the Docker compose network
       #- 9000:9000/tcp
     environment:
       TZ: "America/Denver"
-      INSTALL_HOOK: "1"
+      INSTALL_HOOK: "0"
       INSTALL_FACE: "0"
       INSTALL_TINY_YOLO: "0"
-      INSTALL_YOLO: "1"
+      INSTALL_YOLO: "0"
     volumes:
       - ${ZONEMINDER_PATH}/config/:/config:rw
-      - ${ZONEMINDER_PATH}/data/:/var/cache/zoneminder:rw
+      - zoneminder_data:/var/cache/zoneminder:rw
 
   # https://github.com/home-assistant/home-assistant
   homeassistant:
     build: ./homeassistant/
     restart: always
     container_name: homeassistant
+    hostname: homeassistant
     ports:
       - 8123:8123/tcp
     environment:
       TZ: "America/Denver"
     volumes:
-      - ${HOMEASSISTANT_PATH}:/config
+      - ${HOMEASSISTANT_PATH}:/config:rw
     depends_on:
       - zoneminder
+
+  yolo:
+    build: ./yolo/
+    restart: always
+    container_name: yolo
+    hostname: yolo
+    volumes:
+      - zoneminder_data:/var/cache/zoneminder:rw
+      - /yolo
+      - /backup2/yolo/:/testing
+    depends_on:
+      - zoneminder
+
+  # mqtt broker
+  # https://hub.docker.com/_/eclipse-mosquitto
+  mosquitto:
+    build: ./mosquitto/
+    restart: always
+    container_name: mosquitto
+    hostname: mosquitto
+    ports:
+      - 1883:1883/tcp # standard port
+      - 9001:9001/tcp # websockets
+    depends_on:
+      - homeassistant
+
+# http://blog.code4hire.com/2018/06/define-named-volume-with-host-mount-in-the-docker-compose-file/
+# https://docs.docker.com/compose/compose-file/#volume-configuration-reference
+volumes:
+  zoneminder_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${ZONEMINDER_PATH}/data/
+      o: bind

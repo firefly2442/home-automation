@@ -3,7 +3,7 @@
 .env
 secrets.yaml
 secrets.ini
-
+yolov3.weights
 
 
 
