@@ -8,18 +8,30 @@ My personal home automation setup in Docker leveraging:
 
 ## Setup
 
-Install the proprietary Nvidia drivers via the "Additional Drivers" GUI.
+Install Docker and run Linux post-install steps so you don't need `sudo` for your regular user.
 
-Install `cuda-drivers` package, requires an Nvidia card
+Install docker-compose.
+
+Install the proprietary Nvidia drivers via the "Additional Drivers" GUI.
 
 Follow directions for [installing nvidia-docker](https://github.com/NVIDIA/nvidia-docker) support
 
 Use `sudo watch -n0.5 nvidia-smi` to check things are working
 
-Until [docker-compose](https://github.com/docker/compose/issues/6691) support works, GPU support will be broken.
+Use `sudo nvtop` for a graphical view of the GPU usage
+
+Until [docker-compose](https://github.com/docker/compose/issues/6691) support works, GPU support is hacky.
 
 Check to make sure [Tensorflow via GPUs](https://www.tensorflow.org/install/docker) works by following instructions
-for testing by running a Docker image.
+for testing by running a Docker image to calculate a tensor.
+
+```shell
+# attempt to circumvent docker-compose GPU inability, join the Docker network that docker-compose creates
+docker-compose build
+docker stop yolo
+docker rm yolo
+docker run --gpus all -it --network=home-automation_default --name=yolo -v /backup2/zoneminder/data:/var/cache/zoneminder -v /yolo -v /backup2/yolo/:/testing home-automation_yolo
+```
 
 Copy `.env-copy` to `.env` and edit
 
@@ -99,7 +111,7 @@ on the hooks system, object detection methods/libraries, configuration, and more
 
 ## Home Assistant
 
-Upon startup, register user with `Patrick`.
+Upon startup, register with name `Patrick` and username `patrick`.
 
 Install package on OpenWRT router:
 
@@ -120,6 +132,16 @@ then refresh the page.
 ### Smart Power Plug Switches
 
 TP-Link HS105 smart switches.  Uses the `Kasa` Android app for setup.
+
+## Yolo object detection
+
+Run `yolo.py`
+
+### Benchmarking and Profiling Performance
+
+```shell
+python3 -m pyinstrument yolo.py
+```
 
 ## Networking
 
@@ -163,3 +185,4 @@ Cleanup files from the mounted Docker volumes
 * randomly turn on/off lights when away
 * cleanup device tracker listing
 * add health check for Docker containers
+* fix weather, noise option?

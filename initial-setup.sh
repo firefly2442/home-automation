@@ -13,10 +13,18 @@ docker cp ./zoneminder/zmeventnotification.ini zoneminder:/config/zmeventnotific
 docker cp ./zoneminder/secrets.ini zoneminder:/config/secrets.ini
 docker cp ./zoneminder/objectconfig.ini zoneminder:/config/hook/objectconfig.ini
 
-# download yolo3 model
+# download yolo3 pretrained model
 # https://pjreddie.com/darknet/yolo/
 if [ ! -f "./yolo/yolov3.weights" ]; then
     # 248 MB
     # md5sum: c84e5b99d0e52cd466ae710cadf6d84c
     wget https://pjreddie.com/media/files/yolov3.weights -P ./yolo/
+fi
+
+# download yolo3-tiny pretrained model
+# https://pjreddie.com/darknet/yolo/
+if [ ! -f "./yolo/yolov3-tiny.weights" ]; then
+    # 34 MB
+    # md5sum: 3bcd6b390912c18924b46b26a9e7ff53
+    wget https://pjreddie.com/media/files/yolov3-tiny.weights -P ./yolo/
 fi

@@ -6,14 +6,19 @@ RUN apt-get update && apt-get install -y \
     && apt-get -y upgrade \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install keras opencv-python pillow paho-mqtt
+RUN pip install keras opencv-python pillow paho-mqtt configparser pyinstrument
 
 WORKDIR /
 
-COPY yolov3.weights /yolo/yolov3.weights
+COPY *.weights /yolo/
+
+COPY *.cfg /yolo/
 
 COPY *.py /
 
-COPY run.sh /
+# https://github.com/qqwweee/keras-yolo3
+RUN python3 convert.py /yolo/yolov3.cfg /yolo/yolov3.weights /yolo/model.h5
 
-CMD ["/bin/bash", "run.sh"]
+RUN python3 convert.py /yolo/yolov3-tiny.cfg /yolo/yolov3-tiny.weights /yolo/model-tiny.h5
+
+CMD ["python3", "yolo.py"]
