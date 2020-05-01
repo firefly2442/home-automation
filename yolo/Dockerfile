@@ -16,9 +16,8 @@ COPY *.cfg /yolo/
 
 COPY *.py /
 
-# https://github.com/qqwweee/keras-yolo3
-RUN python3 convert.py /yolo/yolov3.cfg /yolo/yolov3.weights /yolo/model.h5
+RUN [ -e "/yolo/model.h5" ] && echo "/yolo/model.h5 already generated" || python3 convert.py /yolo/yolov3.cfg /yolo/yolov3.weights /yolo/model.h5
 
-RUN python3 convert.py /yolo/yolov3-tiny.cfg /yolo/yolov3-tiny.weights /yolo/model-tiny.h5
+RUN [ -e "/yolo/model-tiny.h5" ] && echo "/yolo/model-tiny.h5 already generated" || python3 convert.py /yolo/yolov3-tiny.cfg /yolo/yolov3-tiny.weights /yolo/model-tiny.h5
 
 CMD ["python3", "yolo.py"]
