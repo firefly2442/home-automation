@@ -41,9 +41,13 @@ def _sigmoid(x):
 # TODO: can this method be sped up or transferred to tensorflow?
 def decode_netout(netout, anchors, obj_thresh, net_h, net_w):
 	grid_h, grid_w = netout.shape[:2]
+	print(grid_h)
+	print(grid_w)
 	nb_box = 3
 	netout = netout.reshape((grid_h, grid_w, nb_box, -1))
+	print(netout.shape)
 	boxes = []
+	#print(netout[..., :2])
 	netout[..., :2]  = _sigmoid(netout[..., :2])
 	netout[..., 4:]  = _sigmoid(netout[..., 4:])
 	netout[..., 5:]  = netout[..., 4][..., np.newaxis] * netout[..., 5:]

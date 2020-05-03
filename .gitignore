@@ -4,7 +4,7 @@
 secrets.yaml
 secrets.ini
 *.weights
-
+*.h5
 
 
 

@@ -38,7 +38,8 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
         # define the expected input shape for the model, see .cfg file for width and height in the [net] section, must be divisible by 32
         input_w, input_h = 416, 416
 
-    while True:
+    # while 1 is slightly faster than while True
+    while 1:
         try:
             # https://zoneminder.readthedocs.io/en/latest/api.html
             monitor = requests.get("https://zoneminder:443/zm/api/events/index/MonitorId:"+monitorid+".json?sort=StartTime&direction=desc", verify=False)
@@ -64,13 +65,17 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                 # https://www.dlology.com/blog/gentle-guide-on-how-yolo-object-localization-works-with-keras-part-2/
                                 # https://towardsdatascience.com/dive-really-deep-into-yolo-v3-a-beginners-guide-9e3d2666280e
                                 # https://github.com/qqwweee/keras-yolo3
+                                # https://github.com/zzh8829/yolov3-tf2
 
                                 logging.info(jpg_path)
                                 # load and prepare image
                                 image, image_w, image_h = detect.load_image_pixels(jpg_path, (input_w, input_h))
                                 # make prediction
-                                # https://keras.io/models/model/
+                                # https://keras.io/models/model/#predict
                                 yhat = model.predict(image, verbose=0, use_multiprocessing=True)
+                                # TODO: is there a performance benefit of leveraging predict_on_batch?
+                                # https://stackoverflow.com/questions/44972565/what-is-the-difference-between-the-predict-and-predict-on-batch-methods-of-a-ker
+                                #yhat = model.predict_on_batch(image)
                                 # define the probability threshold for detected objects
                                 class_threshold = 0.6
                                 boxes = list()
@@ -107,7 +112,8 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                 run_every_frames = round(round((time_delta/1000)*fps) * 1.1) # *1.1 so that we are slightly ahead
                                 logging.info("New run every x frames: " + str(run_every_frames))
                                 logging.info("Running at " + str(round(((1 / (time_delta/1000))/fps)*100, 2)) + " percent of FPS")
-                    time.sleep(1)
+                    else:
+                        time.sleep(1)
             else:
                 logging.error(str(monitor))
                 logging.error(monitor.json())

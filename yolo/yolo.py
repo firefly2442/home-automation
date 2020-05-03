@@ -34,8 +34,13 @@ labels = ["person", "bicycle", "car", "motorbike", "bus", "truck"]
 mqttclient = paho.Client()
 mqttclient.connect("192.168.1.113", 1883)
 
-p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, labels, yolo_model, ))
+# start up processing for true parallelism
+#p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, labels, yolo_model, ))
 #p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, labels, yolo_model, ))
+
+# we can't use pyinstrument on processes so this is for debugging manually
+process.run_process_monitor("1", 20, mqttclient, labels, yolo_model)
+process.run_process_monitor("2", 30, mqttclient, labels, yolo_model)
 
 p1.start()
 #p2.start()

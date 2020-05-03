@@ -14,10 +14,16 @@ COPY *.weights /yolo/
 
 COPY *.cfg /yolo/
 
+#TODO: debugging, swap back over when finished
+COPY *.h5 /yolo/
+
 COPY *.py /
 
-RUN [ -e "/yolo/model.h5" ] && echo "/yolo/model.h5 already generated" || python3 convert.py /yolo/yolov3.cfg /yolo/yolov3.weights /yolo/model.h5
+#RUN python3 convert.py /yolo/yolov3.cfg /yolo/yolov3.weights /yolo/model.h5
 
-RUN [ -e "/yolo/model-tiny.h5" ] && echo "/yolo/model-tiny.h5 already generated" || python3 convert.py /yolo/yolov3-tiny.cfg /yolo/yolov3-tiny.weights /yolo/model-tiny.h5
+#RUN python3 convert.py /yolo/yolov3-tiny.cfg /yolo/yolov3-tiny.weights /yolo/model-tiny.h5
 
-CMD ["python3", "yolo.py"]
+# for profiling
+CMD ["python3", "-m", "pyinstrument", "yolo.py"]
+# without profiling, no overhead
+#CMD ["python3", "yolo.py"]
