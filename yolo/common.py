@@ -1,5 +1,6 @@
 def setupLogging(log, handlers, sys):
     logging = log.getLogger('yolo')
+    logging.propagate = False # so we don't get any conflicts with the abseil logger
     logging.setLevel(log.INFO)
     # logging is a singleton, make sure we don't duplicate the handlers and spawn additional log messages
     if not logging.handlers:

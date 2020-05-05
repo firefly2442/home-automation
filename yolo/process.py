@@ -6,14 +6,27 @@ from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
 import tensorflow as tf
 import paho.mqtt.client as paho
-import detect # detect.py
 import common # common.py
+from absl import flags
+from absl.flags import FLAGS
+import cv2
+import numpy as np
+sys.path.insert(0, "/yolo/yolov3-tf2/")
+from yolov3_tf2.models import (
+    YoloV3, YoloV3Tiny
+)
+from yolov3_tf2.dataset import transform_images, load_tfrecord_dataset
+from yolov3_tf2.utils import draw_outputs
 
 
 def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
     logging = common.setupLogging(log, handlers, sys)
 
-    logging.info("Num GPUs Available: " + str(len(tf.config.list_physical_devices('GPU'))))
+    physical_devices = tf.config.experimental.list_physical_devices('GPU')
+    for physical_device in physical_devices:
+        tf.config.experimental.set_memory_growth(physical_device, True)
+    
+    logging.info("Num GPUs Available: " + str(len(physical_devices)))
 
     from urllib3.exceptions import InsecureRequestWarning
     # Suppress only the single warning from urllib3 about insecure requests
@@ -22,21 +35,17 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
     
     # load yolov3 model
     # https://stackoverflow.com/questions/53295570/userwarning-no-training-configuration-found-in-save-file-the-model-was-not-c
+    # anchors must be divisible by 32
     if (yolo_model == "yolov3"):
-        model = load_model('/yolo/model.h5', compile=False)
-        # yolov3 anchors
-        anchors = [[116,90, 156,198, 373,326], [30,61, 62,45, 59,119], [10,13, 16,30, 33,23]]
-        # define the expected input shape for the model, see .cfg file for width and heigh in the [net] section, must be divisible by 32
-        input_w, input_h = 608, 608
+        yolo = YoloV3(classes=FLAGS.num_classes)
+        FLAGS.weights = "/yolo/yolov3-tf2/checkpoints/yolov3.tf"
     elif (yolo_model == "yolov3-tiny"):
-        model = load_model('/yolo/model-tiny.h5', compile=False)
-        # yolov3-tiny anchors
-        # TODO: is there something wrong with the .cfg files? these anchors don't work
-        # anchors = [[135,169, 344,319], [37,58, 81,82], [10,14,  23,27]]
-        # https://github.com/pjreddie/darknet/issues/568
-        anchors = [[116,90, 156,198, 373,326], [30,61, 62,45, 59,119], [10,13, 16,30, 33,23]]
-        # define the expected input shape for the model, see .cfg file for width and height in the [net] section, must be divisible by 32
-        input_w, input_h = 416, 416
+        yolo = YoloV3Tiny(classes=FLAGS.num_classes)
+        FLAGS.weights = "/yolo/yolov3-tf2/checkpoints/yolov3-tiny.tf"
+    
+    yolo.load_weights(FLAGS.weights).expect_partial()
+
+    class_names = [c.strip() for c in open(FLAGS.classes).readlines()]
 
     # while 1 is slightly faster than while True
     while 1:
@@ -67,34 +76,31 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                 # https://github.com/qqwweee/keras-yolo3
                                 # https://github.com/zzh8829/yolov3-tf2
 
+                                # see here for example: https://github.com/zzh8829/yolov3-tf2/blob/master/detect.py
                                 logging.info(jpg_path)
-                                # load and prepare image
-                                image, image_w, image_h = detect.load_image_pixels(jpg_path, (input_w, input_h))
-                                # make prediction
-                                # https://keras.io/models/model/#predict
-                                yhat = model.predict(image, verbose=0, use_multiprocessing=True)
-                                # TODO: is there a performance benefit of leveraging predict_on_batch?
-                                # https://stackoverflow.com/questions/44972565/what-is-the-difference-between-the-predict-and-predict-on-batch-methods-of-a-ker
-                                #yhat = model.predict_on_batch(image)
-                                # define the probability threshold for detected objects
-                                class_threshold = 0.6
-                                boxes = list()
-                                for i in range(len(yhat)):
-                                    # decode the output of the network
-                                    boxes += detect.decode_netout(yhat[i][0], anchors[i], class_threshold, input_h, input_w)
-                                # correct the sizes of the bounding boxes for the shape of the image
-                                detect.correct_yolo_boxes(boxes, image_h, image_w, input_h, input_w)
-                                # suppress non-maximal boxes
-                                boxes = detect.do_nms(boxes, 0.5)
-                                # get the details of the detected objects
-                                v_boxes, v_labels, v_scores = detect.get_boxes(boxes, labels, class_threshold)
-                                # summarize what we found
-                                for i in range(len(v_boxes)):
-                                    logging.info(str(v_labels[i]) + " - " + str(v_scores[i]))
-                                    ret = mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", str(v_labels[i]) + str(v_scores[i]))
+                                FLAGS.image = jpg_path
+                                if FLAGS.tfrecord:
+                                    dataset = load_tfrecord_dataset(FLAGS.tfrecord, FLAGS.classes, FLAGS.size)
+                                    dataset = dataset.shuffle(512)
+                                    img_raw, _label = next(iter(dataset.take(1)))
+                                else:
+                                    img_raw = tf.image.decode_image(open(FLAGS.image, 'rb').read(), channels=3)
+
+                                img = tf.expand_dims(img_raw, 0)
+                                img = transform_images(img, FLAGS.size)
+
+                                boxes, scores, classes, nums = yolo(img)
+
+                                img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
+                                img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
+                                FLAGS.output = '/testing/'+os.path.splitext(os.path.basename(jpg_path))[0]+'-bb.jpg'
+                                cv2.imwrite(FLAGS.output, img)
+                                for i in range(nums[0]):
+                                    logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
+                                                                    np.array(scores[0][i]),
+                                                                    np.array(boxes[0][i])))
+                                    ret = mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", str(class_names[int(classes[0][i])]) + str(np.array(scores[0][i])))
                                     # TODO: error trapping on mqtt failure, check ret
-                                # draw what we found
-                                detect.draw_boxes(jpg_path, v_boxes, v_labels, v_scores)
                                 skipped_frame = False
                                 frame_now = 1
                             else:
