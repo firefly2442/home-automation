@@ -1,4 +1,4 @@
 [submodule "yolov3-tf2"]
-	path = yolo/yolov3-tf
+	path = yolo/yolov3-tf2
 	url = https://github.com/zzh8829/yolov3-tf2.git
 	branch = master
