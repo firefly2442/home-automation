@@ -6,7 +6,7 @@ def setupLogging(log, handlers, sys):
     if not logging.handlers:
         logHandler = log.StreamHandler()
         logHandler.setLevel(log.INFO)
-        logHandler.setFormatter(log.Formatter("%(asctime)s - %(levelname)s - %(message)s", '%m/%d/%Y %I:%M:%S %p'))
+        logHandler.setFormatter(log.Formatter("{%(pathname)s:%(lineno)d} %(asctime)s - %(levelname)s - %(message)s", '%m/%d/%Y %I:%M:%S %p'))
         logging.addHandler(logHandler)
 
     return logging
