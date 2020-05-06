@@ -56,9 +56,6 @@ views:
         content: "Zoneminder release {{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }} is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
   - title: Weather
     cards:
-      # https://www.home-assistant.io/lovelace/weather-forecast/
-      - type: weather-forecast
-        entity: weather.kabq
       - type: picture-glance
         title: Animated Radar
         camera_image: camera.animated_radar
