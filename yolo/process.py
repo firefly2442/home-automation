@@ -39,9 +39,11 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
     if (yolo_model == "yolov3"):
         yolo = YoloV3(classes=FLAGS.num_classes)
         FLAGS.weights = "/yolo/yolov3-tf2/checkpoints/yolov3.tf"
+        FLAGS.tiny = False
     elif (yolo_model == "yolov3-tiny"):
         yolo = YoloV3Tiny(classes=FLAGS.num_classes)
         FLAGS.weights = "/yolo/yolov3-tf2/checkpoints/yolov3-tiny.tf"
+        FLAGS.tiny = True
     
     yolo.load_weights(FLAGS.weights).expect_partial()
 
@@ -79,12 +81,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                 # see here for example: https://github.com/zzh8829/yolov3-tf2/blob/master/detect.py
                                 logging.info(jpg_path)
                                 FLAGS.image = jpg_path
-                                if FLAGS.tfrecord:
-                                    dataset = load_tfrecord_dataset(FLAGS.tfrecord, FLAGS.classes, FLAGS.size)
-                                    dataset = dataset.shuffle(512)
-                                    img_raw, _label = next(iter(dataset.take(1)))
-                                else:
-                                    img_raw = tf.image.decode_image(open(FLAGS.image, 'rb').read(), channels=3)
+                                img_raw = tf.image.decode_image(open(FLAGS.image, 'rb').read(), channels=3)
 
                                 img = tf.expand_dims(img_raw, 0)
                                 img = transform_images(img, FLAGS.size)
@@ -92,15 +89,17 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                 boxes, scores, classes, nums = yolo(img)
 
                                 img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
+                                # TODO: parameterize coloring, put in PR upstream
                                 img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
                                 FLAGS.output = '/testing/'+os.path.splitext(os.path.basename(jpg_path))[0]+'-bb.jpg'
                                 cv2.imwrite(FLAGS.output, img)
                                 for i in range(nums[0]):
-                                    logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
-                                                                    np.array(scores[0][i]),
-                                                                    np.array(boxes[0][i])))
-                                    ret = mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", str(class_names[int(classes[0][i])]) + str(np.array(scores[0][i])))
-                                    # TODO: error trapping on mqtt failure, check ret
+                                    if (class_names[int(classes[0][i])] in labels):
+                                        logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
+                                                                        np.array(scores[0][i]),
+                                                                        np.array(boxes[0][i])))
+                                        ret = mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", str(class_names[int(classes[0][i])]) + str(np.array(scores[0][i])))
+                                        # TODO: error trapping on mqtt failure, check ret
                                 skipped_frame = False
                                 frame_now = 1
                             else:
@@ -123,10 +122,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
             else:
                 logging.error(str(monitor))
                 logging.error(monitor.json())
-                            
-                            
+                time.sleep(1)
 
         except Exception as e:
             logging.error(str(e))
-        
-        time.sleep(5)

@@ -89,7 +89,7 @@ Front Camera (Amcrest IP4M-1051W - 4MP)
 * 2688 x 1520 (20 fps)
 * h264 passthrough
 
-Side Camera (Samsung Galaxy Nexus cellphone)
+Inside Camera (Samsung Galaxy Nexus cellphone)
 
 * Uses the [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_US)
 application for Android
@@ -112,13 +112,6 @@ on the hooks system, object detection methods/libraries, configuration, and more
 ## Home Assistant
 
 Upon startup, register with name `Patrick` and username `patrick`.
-
-Install package on OpenWRT router:
-
-```shell
-opkg update
-opkg install luci-mod-rpc
-```
 
 See `configuration.yaml` for devices and setup
 
@@ -186,3 +179,4 @@ Cleanup files from the mounted Docker volumes
 * cleanup device tracker listing
 * add health check for Docker containers
 * fix weather, noise option?
+* cleanup old event server configs and references

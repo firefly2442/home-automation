@@ -29,7 +29,6 @@ camera:
     still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=10&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=1&smooth=0&centerx=400&centery=240&station=ABX&rainsnow=1&lightning=0&noclutter=0&showlabels=0&showstorms=0&rand=26384596'
     name: Animated Radar
 
-
 # https://www.home-assistant.io/integrations/nws/
 weather:
   platform: nws
@@ -86,40 +85,35 @@ sensor:
 lovelace:
   mode: yaml
 
-device_tracker:
-  # https://www.home-assistant.io/integrations/luci/
-  - platform: luci
-    host: 192.168.1.1
-    username: root
-    # https://www.home-assistant.io/docs/configuration/secrets/
-    password: !secret openwrt_password
-    ssl: True
-    verify_ssl: False
-
 # https://community.home-assistant.io/t/picture-for-person-component-and-zone-naming-enhancement-for-home-and-not-home/103835/7
 homeassistant:
   customize:
     person.patrick:
       entity_picture: /local/binary_logo.jpg
 
+# https://www.home-assistant.io/integrations/input_boolean/
+input_boolean:
+  alarm:
+    name: Toggle Alarm
+
 # https://www.home-assistant.io/docs/automation/
 automation:
   - alias: 'Turn on camera when away'
     trigger:
       platform: state
-      entity_id: person.patrick
-      to: not_home
+      entity_id: input_boolean.alarm
+      to: 'on'
     action:
       service: switch.turn_on
-      entity_id: switch.sidecamera_state
+      entity_id: switch.insidecamera_state
   - alias: 'Turn off camera when home'
     trigger:
       platform: state
-      entity_id: person.patrick
-      to: home
+      entity_id: input_boolean.alarm
+      to: 'off'
     action:
       service: switch.turn_off
-      entity_id: switch.sidecamera_state
+      entity_id: switch.insidecamera_state
   # - alias: 'Turn off all lights at sunrise'
   #   trigger:
   #     platform: state

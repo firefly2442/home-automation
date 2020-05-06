@@ -11,7 +11,6 @@ flags.DEFINE_string('weights', '/yolo/yolov3-tf2/checkpoints/yolov3.tf', 'path t
 flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
 flags.DEFINE_integer('size', 416, 'resize images to')
 flags.DEFINE_string('image', '', 'path to input image')
-flags.DEFINE_string('tfrecord', None, 'tfrecord instead of image')
 flags.DEFINE_string('output', '', 'path to output image')
 flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
 
@@ -35,20 +34,20 @@ def main(_argv):
     mqttclient.connect("192.168.1.113", 1883)
 
     # start up processing for true parallelism
-    #p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, labels, yolo_model, ))
-    #p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, labels, yolo_model, ))
+    p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, labels, yolo_model, ))
+    p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, labels, yolo_model, ))
 
     # we can't use pyinstrument on processes so this is for debugging manually
-    process.run_process_monitor("1", 20, mqttclient, labels, yolo_model)
+    #process.run_process_monitor("1", 20, mqttclient, labels, yolo_model)
     #process.run_process_monitor("2", 30, mqttclient, labels, yolo_model)
 
     p1.start()
-    #p2.start()
+    p2.start()
 
     # for debugging purposes
     input("Press Enter to exit...\n")
     p1.terminate()
-
+    p2.terminate()
 
 
 if __name__ == '__main__':

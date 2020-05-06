@@ -29,7 +29,7 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Moni
 &Monitor[LabelFormat]=\
 &Monitor[AlarmFrameCount]=1"
 
-curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Monitor[Name]=SideCamera\
+curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Monitor[Name]=InsideCamera\
 &Monitor[Function]=Mocord\
 &Monitor[Type]=Ffmpeg\
 &Monitor[Method]=rtpRtsp\

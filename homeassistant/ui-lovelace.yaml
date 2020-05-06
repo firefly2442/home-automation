@@ -1,6 +1,6 @@
 title: Home
 views:
-  - title: Lights
+  - title: Controls
     cards:
       # https://www.home-assistant.io/lovelace/entities/
       - type: entities
@@ -13,6 +13,14 @@ views:
             icon: mdi:floor-lamp
           - entity: switch.bedroom_lamp
             icon: mdi:lamp
+      # https://www.home-assistant.io/lovelace/entities/
+      - type: entities
+        title: Toggle Alarm
+        show_header_toggle: false
+        entities:
+          - entity: input_boolean.alarm
+            name: Alarm
+            icon: mdi:alarm-light
   - title: Cameras
     cards:
       # https://www.home-assistant.io/lovelace/picture-glance/
@@ -23,10 +31,10 @@ views:
           - entity: sensor.frontcamera_events
             show_state: true
       - type: picture-glance
-        camera_image: camera.sidecamera
-        title: Side Camera
+        camera_image: camera.insidecamera
+        title: Inside Camera
         entities:
-          - entity: sensor.sidecamera_events
+          - entity: sensor.insidecamera_events
             show_state: true
       # https://www.home-assistant.io/lovelace/entities/
       - type: entities
@@ -36,27 +44,16 @@ views:
           - entity: switch.frontcamera_state
             name: Front Camera
             icon: mdi:video
-          - entity: switch.sidecamera_state
-            name: Side Camera
+          - entity: switch.insidecamera_state
+            name: Inside Camera
             icon: mdi:video
       - type: history-graph
         title: 'Camera Status'
         entities:
           - camera.frontcamera
-          - camera.sidecamera
+          - camera.insidecamera
       - type: markdown
         content: "Zoneminder release {{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }} is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
-  - title: People
-    cards:
-      # https://www.home-assistant.io/lovelace/glance/
-      - type: glance
-        title: People
-        entities:
-          - person.patrick
-      - type: history-graph
-        title: 'Patrick Home'
-        entities:
-          - person.patrick
   - title: Weather
     cards:
       # https://www.home-assistant.io/lovelace/weather-forecast/
