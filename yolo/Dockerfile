@@ -19,6 +19,8 @@ COPY ./yolov3-tf2/ /yolo/yolov3-tf2/
 RUN python3 /yolo/yolov3-tf2/convert.py --weights /yolo/yolov3.weights --output /yolo/yolov3-tf2/checkpoints/yolov3.tf
 RUN python3 /yolo/yolov3-tf2/convert.py --weights /yolo/yolov3-tiny.weights --output /yolo/yolov3-tf2/checkpoints/yolov3-tiny.tf --tiny
 
+RUN rm /yolo/yolov3.weights /yolo/yolov3-tiny.weights
+
 COPY *.py /
 
 # for profiling

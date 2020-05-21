@@ -7,11 +7,6 @@ docker cp ./homeassistant/ui-lovelace.yaml homeassistant:/config/ui-lovelace.yam
 docker exec homeassistant mkdir -p /config/www/
 docker cp ./homeassistant/binary_logo.jpg homeassistant:/config/www/binary_logo.jpg
 
-# add config file for Zoneminder Event Server and object detection
-docker cp ./zoneminder/zmeventnotification.ini zoneminder:/config/zmeventnotification.ini
-docker cp ./zoneminder/secrets.ini zoneminder:/config/secrets.ini
-docker cp ./zoneminder/objectconfig.ini zoneminder:/config/hook/objectconfig.ini
-
 # download yolo3 pretrained model
 # https://pjreddie.com/darknet/yolo/
 if [ ! -f "./yolo/yolov3.weights" ]; then

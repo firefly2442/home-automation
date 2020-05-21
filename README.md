@@ -180,3 +180,4 @@ Cleanup files from the mounted Docker volumes
 * add health check for Docker containers
 * fix weather, noise option?
 * cleanup old event server configs and references
+* rebuild zoneminder w/out event server

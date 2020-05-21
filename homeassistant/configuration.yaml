@@ -74,6 +74,9 @@ sensor:
     value_template: '1' # dummy value, not used, avoids the "state max length is 255 characters" error
     json_attributes:
       - tag_name
+  - platform: mqtt
+    name: inside_camera_mqtt
+    state_topic: "home-assistant/zoneminder/yolo/2/"
 
 # https://www.home-assistant.io/lovelace/yaml-mode/
 lovelace:

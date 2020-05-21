@@ -25,7 +25,8 @@ def main(_argv):
 
     # define the labels to look for, 80 items in the yolov3 pretrained set, see .cfg file and the "classes" value
     # https://github.com/amikelive/coco-labels/blob/master/coco-labels-2014_2017.txt
-    labels = ["person", "bicycle", "car", "motorbike", "bus", "truck"]
+    monitor_one_labels = ["person", "bicycle", "car", "motorbike", "bus", "truck"]
+    monitor_two_labels = ["person"]
     # reducing this and re-generating the .weights file doesn't seem to improve performance
     # https://stackoverflow.com/questions/57898577/how-to-reduce-number-of-classes-in-yolov3-files
 
@@ -34,19 +35,19 @@ def main(_argv):
     mqttclient.connect("192.168.1.113", 1883)
 
     # start up processing for true parallelism
-    p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, labels, yolo_model, ))
-    p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, labels, yolo_model, ))
+    #p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, monitor_one_labels, yolo_model, ))
+    #p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, monitor_two_labels, yolo_model, ))
 
     # we can't use pyinstrument on processes so this is for debugging manually
-    #process.run_process_monitor("1", 20, mqttclient, labels, yolo_model)
-    #process.run_process_monitor("2", 30, mqttclient, labels, yolo_model)
+    #process.run_process_monitor("1", 20, mqttclient, monitor_one_labels, yolo_model)
+    process.run_process_monitor("2", 30, mqttclient, monitor_two_labels, yolo_model)
 
-    p1.start()
+    #p1.start()
     p2.start()
 
     # for debugging purposes
     input("Press Enter to exit...\n")
-    p1.terminate()
+    #p1.terminate()
     p2.terminate()
 
 
