@@ -168,5 +168,4 @@ Cleanup files from the mounted Docker volumes
 * randomly turn on/off lights when away
 * cleanup device tracker listing
 * add health check for Docker containers
-* fix weather, noise option?
 * cleanup old event server configs and references

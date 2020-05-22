@@ -26,7 +26,7 @@ camera:
   - platform: zoneminder
   # https://www.home-assistant.io/integrations/generic_ip_camera/
   - platform: generic
-    still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=10&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=1&smooth=0&centerx=400&centery=240&station=ABX&rainsnow=1&lightning=0&noclutter=0&showlabels=0&showstorms=0&rand=26384596'
+    still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=10&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=1&smooth=0&centerx=400&centery=240&station=ABX&rainsnow=1&lightning=0&noclutter=1&showlabels=0&showstorms=0&rand=26384596'
     name: Animated Radar
 
 sensor:
