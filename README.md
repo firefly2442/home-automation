@@ -37,8 +37,6 @@ Copy `.env-copy` to `.env` and edit
 
 Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
 
-Copy `zoneminder/secrets_copy.ini` to `zoneminder/secrets.ini` and edit
-
 ```shell
 docker-compose up --build -d
 ```
@@ -102,13 +100,6 @@ application for Android
 * Review [filters](https://zoneminder.readthedocs.io/en/latest/userguide/filterevents.html) for purging
 disk when full, reduce deletion from 100 to 10 events
 
-### Event Server for Object Detection
-
-See `zoneminder/*.ini` files
-
-There's also [extensive documentation](https://zmeventnotification.readthedocs.io/en/stable/guides/hooks.html)
-on the hooks system, object detection methods/libraries, configuration, and more.
-
 ## Home Assistant
 
 Upon startup, register with name `Patrick` and username `patrick`.
@@ -167,7 +158,6 @@ Cleanup files from the mounted Docker volumes
 * [Zoneminder and HA integration with zmEventServer](https://seanb.co.uk/2019/08/zoneminder-and-home-assistant/)
 * [Managing notifications in HA](https://seanb.co.uk/2019/08/managing-zoneminder-notifications-with-home-assistant/)
 * [Dockerized version of Zoneminder](https://github.com/dlandon/zoneminder)
-* [zmeventnotification for object detection](https://github.com/pliablepixels/zmeventnotification)
 
 ## TODO
 
@@ -180,4 +170,3 @@ Cleanup files from the mounted Docker volumes
 * add health check for Docker containers
 * fix weather, noise option?
 * cleanup old event server configs and references
-* rebuild zoneminder w/out event server
