@@ -75,6 +75,9 @@ sensor:
     json_attributes:
       - tag_name
   - platform: mqtt
+    name: outside_camera_mqtt
+    state_topic: "home-assistant/zoneminder/yolo/1/"
+  - platform: mqtt
     name: inside_camera_mqtt
     state_topic: "home-assistant/zoneminder/yolo/2/"
 

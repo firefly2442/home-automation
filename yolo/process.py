@@ -136,6 +136,8 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                     logging.info("Run every x frames: " + str(run_every_frames))
                                     run_every_frames = round(round((time_delta/1000)*fps) * 1.1) # *1.1 so that we are slightly ahead
                                     logging.info("New run every x frames: " + str(run_every_frames))
+                        else:
+                            time.sleep(1)
                     else:
                         time.sleep(1)
             else:

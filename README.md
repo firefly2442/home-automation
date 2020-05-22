@@ -4,7 +4,6 @@ My personal home automation setup in Docker leveraging:
 
 * [Zoneminder](https://github.com/ZoneMinder/zoneminder)
 * [Home-Assistant](https://github.com/home-assistant/home-assistant)
-* [OpenWRT](https://openwrt.org/)
 
 ## Setup
 
@@ -166,6 +165,4 @@ Cleanup files from the mounted Docker volumes
 * alarm on person detected
 * flash lights when person detected
 * randomly turn on/off lights when away
-* cleanup device tracker listing
 * add health check for Docker containers
-* cleanup old event server configs and references
