@@ -19,7 +19,7 @@ zoneminder:
 # https://www.home-assistant.io/integrations/zoneminder/#switch
 switch:
   - platform: zoneminder
-    command_on: Mocord
+    command_on: Record
     command_off: None
 
 camera:
