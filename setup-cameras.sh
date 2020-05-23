@@ -10,7 +10,7 @@ fi
 # make sure to encode special characters like &'s which become %26
 # https://zoneminder.readthedocs.io/en/latest/api.html#add-a-monitor
 curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Monitor[Name]=FrontCamera\
-&Monitor[Function]=Mocord\
+&Monitor[Function]=Record\
 &Monitor[Type]=Ffmpeg\
 &Monitor[Method]=rtpRtsp\
 &Monitor[Path]=rtsp://admin:$CAMERA_PASSWORD@192.168.1.111:554/cam/realmonitor?channel=1%26subtype=0\
@@ -30,7 +30,7 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Moni
 &Monitor[AlarmFrameCount]=1"
 
 curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Monitor[Name]=InsideCamera\
-&Monitor[Function]=Mocord\
+&Monitor[Function]=Record\
 &Monitor[Type]=Ffmpeg\
 &Monitor[Method]=rtpRtsp\
 &Monitor[Path]=http://admin:$CAMERA_PASSWORD@192.168.1.116:8080/video\
@@ -40,7 +40,7 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Moni
 &Monitor[Height]=720\
 &Monitor[Colours]=4\
 &Monitor[SaveJPEGs]=1\
-&Monitor[VideoWriter]=1\
+&Monitor[VideoWriter]=0\
 &Monitor[ImageBufferCount]=30\
 &Monitor[WarmupCount]=0\
 &Monitor[PreEventCount]=5\
