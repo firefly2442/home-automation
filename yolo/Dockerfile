@@ -12,7 +12,8 @@ WORKDIR /
 
 COPY *.weights /yolo/
 
-COPY *.cfg /yolo/
+# are these .cfg files needed anymore?
+#COPY *.cfg /yolo/
 
 COPY ./yolov3-tf2/ /yolo/yolov3-tf2/
 

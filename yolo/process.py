@@ -57,7 +57,6 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
         try:
             # https://zoneminder.readthedocs.io/en/latest/api.html
             monitor = requests.get("https://zoneminder:443/zm/api/events/index/MonitorId:"+monitorid+".json?sort=StartTime&direction=desc", verify=False)
-            tf.keras.backend.clear_session() # TODO: does this do anything?
             if (monitor.ok):
                 data = monitor.json()
                 continue_exec = True
@@ -98,14 +97,12 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                     classes = classes.numpy()
                                     nums = nums.numpy()
 
-                                    img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
                                     for i in range(nums[0]):
                                         # filter out labels we're not interested in
                                         if (class_names[int(classes[0][i])] in labels and scores[0][i] > 0.6):
                                             logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
                                                                             np.array(scores[0][i]),
                                                                             np.array(boxes[0][i])))
-                                            #mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "{'class':'"+str(class_names[int(classes[0][i])])+"', 'score':'"+str(np.array(scores[0][i]))+"'}")
                                             mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", str(class_names[int(classes[0][i])]))
                                         else:
                                             # clear out the arrays of stuff we don't care about so they don't get bounding boxes drawn
@@ -115,9 +112,11 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                             nums[0] = int(nums[0]) - 1 # 1D
                                             i = i - 1 # we're in-place removing items from arrays so we have to continue with the same index next go around
                                     if (nums[0] != 0):
+                                        img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
                                         # TODO: parameterize coloring, put in PR upstream
                                         img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
                                         cv2.imwrite('/testing/'+monitorid+"/"+os.path.splitext(os.path.basename(jpg_path))[0]+'-bb.jpg', img)
+                                    # send an empty mqtt message so that home assistant doesn't show stale data into the future
                                     mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "")
                                     skipped_frame = False
                                     frame_now = 1
@@ -136,8 +135,6 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                     logging.info("Run every x frames: " + str(run_every_frames))
                                     run_every_frames = round(round((time_delta/1000)*fps) * 1.1) # *1.1 so that we are slightly ahead
                                     logging.info("New run every x frames: " + str(run_every_frames))
-                        else:
-                            time.sleep(1)
                     else:
                         time.sleep(1)
             else:
