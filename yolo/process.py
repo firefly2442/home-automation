@@ -62,8 +62,10 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                 continue_exec = True
                 run_every_frames = 1
                 frame_now = 1
+                start_frame_at = 1
                 while (continue_exec):
                     event = requests.get("https://zoneminder:443/zm/api/events/"+str(data['events'][0]['Event']['Id'])+".json", verify=False)
+                    time.sleep(0.5)
                     if (event.ok):
                         event_data = event.json()
                         logging.info("Number frames to process: " + str(event_data['event']['Event']['Frames']))
@@ -72,7 +74,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                 continue_exec = False
                             filesystem_path = event_data['event']['Event']['FileSystemPath']
                             
-                            for frame_num in range(1, int(event_data['event']['Event']['Frames'])):
+                            for frame_num in range(start_frame_at, int(event_data['event']['Event']['Frames'])):
                                 start_time = datetime.datetime.now()
                                 jpg_path = os.path.join(filesystem_path, str(frame_num).zfill(5) + "-capture.jpg")
                                 if (os.path.isfile(jpg_path) and (frame_now == run_every_frames or (frame_num - frame_now) % run_every_frames == 0)):
@@ -84,6 +86,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
 
                                     # see here for example: https://github.com/zzh8829/yolov3-tf2/blob/master/detect.py
                                     logging.info(jpg_path)
+                                    logging.info("Monitor " + monitorid + " running on frame: " + str(frame_num))
                                     FLAGS.image = jpg_path
                                     img_raw = tf.image.decode_image(open(FLAGS.image, 'rb').read(), channels=3)
 
@@ -130,11 +133,12 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                 if (not skipped_frame):
                                     logging.info("Running monitor " + monitorid)
                                     time_delta = (datetime.datetime.now() - start_time).total_seconds() * 1000 # milliseconds
-                                    logging.info("MS check: " + str(((run_every_frames/fps) * 1000)))
-                                    logging.info("Time delta: " + str(time_delta))
-                                    logging.info("Run every x frames: " + str(run_every_frames))
+                                    #logging.info("MS check: " + str(((run_every_frames/fps) * 1000)))
+                                    #logging.info("Time delta: " + str(time_delta))
+                                    #logging.info("Run every x frames: " + str(run_every_frames))
                                     run_every_frames = round(round((time_delta/1000)*fps) * 1.1) # *1.1 so that we are slightly ahead
                                     logging.info("New run every x frames: " + str(run_every_frames))
+                            start_frame_at = int(event_data['event']['Event']['Frames'])
                     else:
                         time.sleep(1)
             else:

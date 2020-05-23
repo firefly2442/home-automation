@@ -27,7 +27,7 @@ def main(_argv):
     # https://github.com/amikelive/coco-labels/blob/master/coco-labels-2014_2017.txt
     monitor_one_labels = ["person", "bicycle", "car", "motorbike", "bus", "truck"]
     monitor_two_labels = ["person"]
-    # reducing this and re-generating the .weights file doesn't seem to improve performance
+    # reducing the labels and re-generating the .weights file doesn't seem to improve performance
     # https://stackoverflow.com/questions/57898577/how-to-reduce-number-of-classes-in-yolov3-files
 
     # mqtt setup
