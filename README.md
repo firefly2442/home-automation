@@ -70,6 +70,8 @@ docker restart homeassistant
 Install the [home-assistant Android application](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android&hl=en_US)
 on cellphone
 
+Run `run-yolo-CPU.sh` or `run-yolo-GPU.sh` for debugging/testing
+
 ## UI
 
 * [Zoneminder - https://192.168.1.113:8443/zm/](https://192.168.1.113:8443/zm/)
@@ -122,9 +124,7 @@ Run `yolo.py`
 
 ### Benchmarking and Profiling Performance
 
-```shell
-python3 -m pyinstrument yolo.py
-```
+Turn on/off debugging via pyinstrument from `yolo/Dockerfile`
 
 ## Networking
 
@@ -166,3 +166,6 @@ Cleanup files from the mounted Docker volumes
 * flash lights when person detected
 * randomly turn on/off lights when away
 * add health check for Docker containers
+* test yolo logging and status when other containers are down
+* test yolo when zoneminder cameras are down
+* put zoneminder config folder and homeassistant on SSD
