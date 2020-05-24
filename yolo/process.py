@@ -118,7 +118,10 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                         img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
                                         # TODO: parameterize coloring, put in PR upstream
                                         img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
-                                        cv2.imwrite('/testing/'+monitorid+"/"+os.path.splitext(os.path.basename(jpg_path))[0]+'-bb.jpg', img)
+                                        # testing location
+                                        #cv2.imwrite('/testing/'+monitorid+"/"+os.path.splitext(os.path.basename(jpg_path))[0]+'-bb.jpg', img)
+                                        # overwrite image
+                                        cv2.imwrite(jpg_path, img)
                                     # send an empty mqtt message so that home assistant doesn't show stale data into the future
                                     mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "")
                                     skipped_frame = False
@@ -128,8 +131,8 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                     frame_now = frame_now + 1
                                     
                                 # delete the original file to save space
-                                if os.path.exists(jpg_path):
-                                    os.remove(jpg_path)
+                                # if os.path.exists(jpg_path):
+                                #     os.remove(jpg_path)
                                 if (not skipped_frame):
                                     logging.info("Running monitor " + monitorid)
                                     time_delta = (datetime.datetime.now() - start_time).total_seconds() * 1000 # milliseconds
