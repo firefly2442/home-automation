@@ -22,9 +22,6 @@ from yolov3_tf2.utils import draw_outputs
 def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
     logging = common.setupLogging(log, handlers, sys)
 
-    if not os.path.exists("/testing/"+monitorid):
-        os.mkdir("/testing/"+monitorid)
-
     physical_devices = tf.config.experimental.list_physical_devices('GPU')
     for physical_device in physical_devices:
         tf.config.experimental.set_memory_growth(physical_device, True)
@@ -106,7 +103,12 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                             logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
                                                                             np.array(scores[0][i]),
                                                                             np.array(boxes[0][i])))
-                                            mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", str(class_names[int(classes[0][i])]))
+                                            # you have to use /config/www/ for Discord
+                                            # https://community.home-assistant.io/t/discord-image-notification/125735/13
+                                            # https://github.com/home-assistant/core/issues/26560
+                                            zm_path = jpg_path.replace("/var/cache/", "/config/www/")
+                                            # don't pass JSON with single quotes, otherwise it won't work
+                                            mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "{\"label\": \"" + str(class_names[int(classes[0][i])]) + "\", \"img_path\": \"" + zm_path + "\", \"timestamp\": \"" + event_data['event']['Event']['StartTime'] + "\"}")
                                         else:
                                             # clear out the arrays of stuff we don't care about so they don't get bounding boxes drawn
                                             boxes = np.delete(boxes, i, axis=1) # 3D
@@ -118,21 +120,16 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                         img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
                                         # TODO: parameterize coloring, put in PR upstream
                                         img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
-                                        # testing location
-                                        #cv2.imwrite('/testing/'+monitorid+"/"+os.path.splitext(os.path.basename(jpg_path))[0]+'-bb.jpg', img)
                                         # overwrite image
                                         cv2.imwrite(jpg_path, img)
                                     # send an empty mqtt message so that home assistant doesn't show stale data into the future
-                                    mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "")
+                                    mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "{\"label\": \"\", \"img_path\": \"\", \"timestamp\": \"\"}")
                                     skipped_frame = False
                                     frame_now = 1
                                 else:
                                     skipped_frame = True
                                     frame_now = frame_now + 1
                                     
-                                # delete the original file to save space
-                                # if os.path.exists(jpg_path):
-                                #     os.remove(jpg_path)
                                 if (not skipped_frame):
                                     logging.info("Running monitor " + monitorid)
                                     time_delta = (datetime.datetime.now() - start_time).total_seconds() * 1000 # milliseconds

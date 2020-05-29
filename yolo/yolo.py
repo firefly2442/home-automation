@@ -35,8 +35,8 @@ def main(_argv):
     mqttclient.connect("192.168.1.113", 1883)
 
     # start up processing for true parallelism
-    p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, ["person"], yolo_model, False, ))
-    p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, ["person"], yolo_model, True, ))
+    p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, ["person"], yolo_model, ))
+    p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, ["person"], yolo_model, ))
 
     # we can't use pyinstrument on processes so this is for debugging manually
     #process.run_process_monitor("1", 20, mqttclient, ["person"], yolo_model)

@@ -75,11 +75,29 @@ sensor:
     json_attributes:
       - tag_name
   - platform: mqtt
-    name: outside_camera_mqtt
+    name: outside_camera_mqtt_label
     state_topic: "home-assistant/zoneminder/yolo/1/"
+    value_template: "{{ value_json.label }}"
   - platform: mqtt
-    name: inside_camera_mqtt
+    name: outside_camera_mqtt_path
+    state_topic: "home-assistant/zoneminder/yolo/1/"
+    value_template: "{{ value_json.img_path }}"
+  - platform: mqtt
+    name: outside_camera_mqtt_timestamp
+    state_topic: "home-assistant/zoneminder/yolo/1/"
+    value_template: "{{ value_json.timestamp }}"
+  - platform: mqtt
+    name: inside_camera_mqtt_label
     state_topic: "home-assistant/zoneminder/yolo/2/"
+    value_template: "{{ value_json.label }}"
+  - platform: mqtt
+    name: inside_camera_mqtt_path
+    state_topic: "home-assistant/zoneminder/yolo/2/"
+    value_template: "{{ value_json.img_path }}"
+  - platform: mqtt
+    name: inside_camera_mqtt_timestamp
+    state_topic: "home-assistant/zoneminder/yolo/2/"
+    value_template: "{{ value_json.timestamp }}"
 
 # https://www.home-assistant.io/lovelace/yaml-mode/
 lovelace:
@@ -90,11 +108,18 @@ homeassistant:
   customize:
     person.patrick:
       entity_picture: /local/binary_logo.jpg
+    input_text.discord_user_id:
+      hidden: true # make sure no one can see value on screen
 
 # https://www.home-assistant.io/integrations/input_boolean/
 input_boolean:
   alarm:
     name: Toggle Alarm
+
+input_text:
+  discord_user_id:
+    name: Tagged Discord username
+    initial: !secret discord_tagged_user_id
 
 # https://www.home-assistant.io/docs/automation/
 automation:
@@ -114,6 +139,31 @@ automation:
     action:
       service: switch.turn_off
       entity_id: switch.insidecamera_state
+  # https://www.home-assistant.io/integrations/notify/
+  - alias: 'Send Discord inside person alarm message'
+    trigger:
+      platform: state
+      entity_id:  sensor.inside_camera_mqtt_label
+      to: 'person'
+    condition:
+      - condition: state
+        entity_id: input_boolean.alarm
+        state: 'on'
+    action:
+      # turning the service off and then back on after a delay prevents it from spamming
+      - service: automation.turn_off
+        entity_id: automation.send_discord_inside_person_alarm_message
+      - service: notify.discord
+        data_template:
+          message: "<@{{ states('input_text.discord_user_id') }}> Inside camera alarm! Starting timestamp: {{ states('sensor.inside_camera_mqtt_timestamp') }} - {{ states('sensor.inside_camera_mqtt_path') }}"
+          target: !secret discord_channel # channel ID
+          data:
+            images:
+              - "{{ states('sensor.inside_camera_mqtt_path') }}"
+      - delay: 00:00:15 # delay so that we don't spam Discord
+      - service: automation.turn_on
+        entity_id: automation.send_discord_inside_person_alarm_message
+        
   # - alias: 'Turn off all lights at sunrise'
   #   trigger:
   #     platform: state
@@ -219,3 +269,9 @@ tplink:
 mqtt:
   broker: 192.168.1.113
   port: 1883
+
+# https://www.home-assistant.io/integrations/discord/
+notify:
+  - platform: discord
+    name: Discord
+    token: !secret discord_token

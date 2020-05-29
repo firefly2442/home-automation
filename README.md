@@ -24,14 +24,6 @@ Until [docker-compose](https://github.com/docker/compose/issues/6691) support wo
 Check to make sure [Tensorflow via GPUs](https://www.tensorflow.org/install/docker) works by following instructions
 for testing by running a Docker image to calculate a tensor.
 
-```shell
-# attempt to circumvent docker-compose GPU inability, join the Docker network that docker-compose creates
-docker-compose build
-docker stop yolo
-docker rm yolo
-docker run --gpus all -it --network=home-automation_default --name=yolo -v /backup2/zoneminder/data:/var/cache/zoneminder -v /yolo -v /backup2/yolo/:/testing home-automation_yolo
-```
-
 Copy `.env-copy` to `.env` and edit
 
 Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
@@ -160,9 +152,6 @@ Cleanup files from the mounted Docker volumes
 
 ## TODO
 
-* upload image / email alert on identifying person
-* zoneminder person detection
-* alarm on person detected
 * flash lights when person detected
 * randomly turn on/off lights when away
 * add health check for Docker containers

@@ -34,6 +34,7 @@ services:
       TZ: "America/Denver"
     volumes:
       - ${HOMEASSISTANT_PATH}:/config:rw
+      - zoneminder_data:/config/www/zoneminder:ro
     depends_on:
       - zoneminder
 
@@ -45,7 +46,6 @@ services:
     volumes:
       - zoneminder_data:/var/cache/zoneminder:rw
       - /yolo
-      - /backup2/yolo/:/testing
     depends_on:
       - zoneminder
 
