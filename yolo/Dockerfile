@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get -y upgrade \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install keras opencv-python pillow paho-mqtt configparser pyinstrument
+RUN pip install --no-cache-dir keras opencv-python pillow paho-mqtt configparser pyinstrument
 
 WORKDIR /
 
