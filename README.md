@@ -158,3 +158,4 @@ Cleanup files from the mounted Docker volumes
 * test yolo logging and status when other containers are down
 * test yolo when zoneminder cameras are down
 * put zoneminder config folder and homeassistant on SSD
+* set reduced multi-threading
