@@ -159,3 +159,4 @@ Cleanup files from the mounted Docker volumes
 * test yolo when zoneminder cameras are down
 * put zoneminder config folder and homeassistant on SSD
 * set reduced multi-threading
+* fix history page slowness
