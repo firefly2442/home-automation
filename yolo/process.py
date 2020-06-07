@@ -110,6 +110,8 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                                     # you have to use /config/www/ for Discord
                                                     # https://community.home-assistant.io/t/discord-image-notification/125735/13
                                                     # https://github.com/home-assistant/core/issues/26560
+                                                    # get access to images served up from homeassistant via:
+                                                    # http://192.168.1.113:8123/local/zoneminder/events/1/2020-06-07/3488/05328-capture.jpg
                                                     zm_path = jpg_path.replace("/var/cache/", "/config/www/")
                                                     # don't pass JSON with single quotes, otherwise it won't work
                                                     mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "{\"label\": \"" + str(class_names[int(classes[0][i])]) + "\", \"img_path\": \"" + zm_path + "\", \"timestamp\": \"" + event_data['event']['Event']['StartTime'] + "\"}")
@@ -120,7 +122,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                                     classes = np.delete(classes, i, axis=1) # 2D
                                                     nums[0] = int(nums[0]) - 1 # 1D
                                                     i = i - 1 # we're in-place removing items from arrays so we have to continue with the same index next go around
-                                            if (nums[0] != 0):
+                                            if (nums[0] is not None and nums[0] != 0):
                                                 img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
                                                 # TODO: parameterize coloring, put in PR upstream
                                                 img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
