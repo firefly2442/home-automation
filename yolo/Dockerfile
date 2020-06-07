@@ -13,9 +13,6 @@ WORKDIR /
 
 COPY *.weights /yolo/
 
-# are these .cfg files needed anymore?
-#COPY *.cfg /yolo/
-
 COPY ./yolov3-tf2/ /yolo/yolov3-tf2/
 
 RUN python3 /yolo/yolov3-tf2/convert.py --weights /yolo/yolov3.weights --output /yolo/yolov3-tf2/checkpoints/yolov3.tf
