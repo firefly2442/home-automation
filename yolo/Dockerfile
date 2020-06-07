@@ -2,7 +2,8 @@ FROM tensorflow/tensorflow:latest-gpu-py3
 
 RUN apt-get update && apt-get install -y \
     nano \
-    libsm6 libxext6 libxrender-dev \
+    libsm6 libxext6 libxrender-dev && \
+    DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata \
     && apt-get -y upgrade \
     && rm -rf /var/lib/apt/lists/*
 

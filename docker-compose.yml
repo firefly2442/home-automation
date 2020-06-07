@@ -43,6 +43,8 @@ services:
     restart: always
     container_name: yolo
     hostname: yolo
+    environment:
+      TZ: "America/Denver"
     volumes:
       - zoneminder_data:/var/cache/zoneminder:rw
       - /yolo
@@ -56,6 +58,8 @@ services:
     restart: always
     container_name: mosquitto
     hostname: mosquitto
+    environment:
+      TZ: "America/Denver"
     ports:
       - 1883:1883/tcp # standard port
       - 9001:9001/tcp # websockets
