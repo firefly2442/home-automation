@@ -101,9 +101,10 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                             classes = classes.numpy()
                                             nums = nums.numpy()
 
-                                            for i in range(nums[0]):
+                                            i = 0
+                                            while i < int(nums[0]):
                                                 # filter out labels we're not interested in
-                                                if (class_names[int(classes[0][i])] in labels and scores[0][i] > 0.6):
+                                                if (class_names[int(classes[0][i])] in labels and scores[0][i] > 0.7):
                                                     logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
                                                                                     np.array(scores[0][i]),
                                                                                     np.array(boxes[0][i])))
@@ -115,16 +116,20 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                                     zm_path = jpg_path.replace("/var/cache/", "/config/www/")
                                                     # don't pass JSON with single quotes, otherwise it won't work
                                                     mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "{\"label\": \"" + str(class_names[int(classes[0][i])]) + "\", \"img_path\": \"" + zm_path + "\", \"timestamp\": \"" + event_data['event']['Event']['StartTime'] + "\"}")
+                                                    #logging.info("Writing to MQTT: " + "{\"label\": \"" + str(class_names[int(classes[0][i])]) + "\", \"img_path\": \"" + zm_path + "\", \"timestamp\": \"" + event_data['event']['Event']['StartTime'] + "\"}")
                                                 else:
+                                                    #logging.info("Removing item from image: " + str(class_names[int(classes[0][i])]) + " " + str(np.array(boxes[0][i])) + " " + str(np.array(scores[0][i])))
                                                     # clear out the arrays of stuff we don't care about so they don't get bounding boxes drawn
                                                     boxes = np.delete(boxes, i, axis=1) # 3D
                                                     scores = np.delete(scores, i, axis=1) # 2D
                                                     classes = np.delete(classes, i, axis=1) # 2D
                                                     nums[0] = int(nums[0]) - 1 # 1D
                                                     i = i - 1 # we're in-place removing items from arrays so we have to continue with the same index next go around
+                                                i = i + 1
                                             if (nums[0] is not None and nums[0] != 0):
                                                 img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
                                                 # TODO: parameterize coloring, put in PR upstream
+                                                #logging.info("Writing image to disk: " + str(classes) + " " + str(boxes) + " " + str(scores))
                                                 img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
                                                 # overwrite image
                                                 cv2.imwrite(jpg_path, img)
