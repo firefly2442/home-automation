@@ -1,6 +1,4 @@
-import os, multiprocessing, sys
-import logging as log
-import logging.handlers as handlers
+import os, multiprocessing, sys, time
 import paho.mqtt.client as paho
 from absl import app, flags
 import process # process.py
@@ -34,21 +32,35 @@ def main(_argv):
     mqttclient = paho.Client()
     mqttclient.connect("192.168.1.113", 1883)
 
-    # start up processing for true parallelism
-    p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, ["person"], yolo_model, ))
-    p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, ["person"], yolo_model, ))
-
     # we can't use pyinstrument on processes so this is for debugging manually
     #process.run_process_monitor("1", 20, mqttclient, ["person"], yolo_model)
     #process.run_process_monitor("2", 30, mqttclient, ["person"], yolo_model)
 
-    p1.start()
-    p2.start()
+    procs = [None, None]
 
-    # for debugging purposes
-    input("Press Enter to exit...\n")
-    p1.terminate()
-    p2.terminate()
+    # while 1 is slightly faster than while True
+    while 1:
+        for i,proc in enumerate(procs):
+            restart_it = False
+            if proc is not None:
+                proc.join(timeout=0)
+                if not proc.is_alive():
+                    restart_it = True
+            else:
+                restart_it = True
+
+            # start up processing for true parallelism
+            if restart_it:
+                if i == 0:
+                    p1 = multiprocessing.Process(target=process.run_process_monitor, args=("1", 20, mqttclient, ["person"], yolo_model, ))
+                    p1.start()
+                    procs[i] = p1
+                elif i == 1:
+                    p2 = multiprocessing.Process(target=process.run_process_monitor, args=("2", 30, mqttclient, ["person"], yolo_model, ))
+                    p2.start()
+                    procs[i] = p2
+            else:
+                time.sleep(5)
 
 
 if __name__ == '__main__':

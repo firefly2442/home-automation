@@ -159,4 +159,6 @@ Cleanup files from the mounted Docker volumes
 * test yolo when zoneminder cameras are down
 * put zoneminder config folder and homeassistant on SSD
 * set reduced multi-threading
+  * https://www.tensorflow.org/api_docs/python/tf/config/threading/set_inter_op_parallelism_threads
+  * https://www.tensorflow.org/api_docs/python/tf/config/threading
 * fix history page slowness
