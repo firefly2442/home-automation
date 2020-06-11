@@ -52,6 +52,8 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
     # while 1 is slightly faster than while True
     while 1:
         try:
+            # clear out the session so we don't have memory leaks
+            tf.keras.backend.clear_session()
             # https://zoneminder.readthedocs.io/en/latest/api.html
             monitor_status = requests.get("https://zoneminder:443/zm/api/monitors.json", verify=False)
             if (monitor_status.ok):
