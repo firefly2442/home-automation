@@ -1,8 +1,7 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
 
-RUN apt-get update && apt-get install -y \
-    nano \
-    libsm6 libxext6 libxrender-dev && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nano libsm6 libxext6 libxrender-dev && \
     DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata \
     && apt-get -y upgrade \
     && rm -rf /var/lib/apt/lists/*
@@ -23,6 +22,6 @@ RUN rm /yolo/yolov3.weights /yolo/yolov3-tiny.weights
 COPY *.py /
 
 # for profiling
-CMD ["python3", "-m", "pyinstrument", "yolo.py"]
+#CMD ["python3", "-m", "pyinstrument", "yolo.py"]
 # without profiling, no overhead
-#CMD ["python3", "yolo.py"]
+CMD ["python3", "yolo.py"]
