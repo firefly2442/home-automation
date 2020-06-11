@@ -53,7 +53,7 @@ views:
           - camera.frontcamera
           - camera.insidecamera
       - type: markdown
-        content: "Zoneminder release {{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }} is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
+        content: "Zoneminder release [{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }}](https://github.com/ZoneMinder/zoneminder/releases) is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
   - title: Weather
     cards:
       - type: picture-glance
@@ -111,4 +111,4 @@ views:
         entities:
           - binary_sensor.updater
       - type: markdown
-        content: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} is available.  You're running version {{ states('sensor.current_version') }}."
+        content: "Home Assistant [{{ state_attr('binary_sensor.updater', 'newest_version') }}](https://github.com/home-assistant/core/releases) is available.  You're running version {{ states('sensor.current_version') }}."
