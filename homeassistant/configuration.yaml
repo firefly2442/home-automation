@@ -179,6 +179,28 @@ automation:
       - delay: 00:00:15 # delay so that we don't spam Discord
       - service: automation.turn_on
         entity_id: automation.send_discord_inside_person_alarm_message
+  - alias: 'Turn on light evening when away'
+    trigger:
+      platform: state
+      entity_id: sun.sun
+      to: below_horizon
+    condition:
+      - condition: state
+        entity_id: input_boolean.alarm
+        state: 'on'
+    action:
+      - service: switch.turn_on
+        entity_id:  switch.living_room_lamp
+      - delay: 00:00:10
+      - service: switch.turn_on
+        entity_id:   switch.piano_lamp
+      - delay: 02:00:00
+      - service: switch.turn_off
+        entity_id:  switch.living_room_lamp
+      - delay: 00:00:20
+      - service: switch.turn_off
+        entity_id:   switch.piano_lamp
+        
         
   # - alias: 'Turn off all lights at sunrise'
   #   trigger:
