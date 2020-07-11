@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+   <head>
+      <title>Recent Camera Events</title>
+      <style>
+         table, th, td {
+            border: 1px solid black;
+         }
+      </style>
+   </head>
+   <body>
+      <h2>Video over the last day...</h2>
+      <br>
+      <table>
+      <th>Date</th><th>Start Time</th><th>Video</th>
+      {% for event in events %}
+         <tr>
+         <td>{{ event['date'] }}</td>
+         <td>{{ event['time'] }}</td>
+         <td>
+            <a href="https://192.168.1.113:8443/zm/index.php?view=event&eid={{ event['eventnumber'] }}" target="_blank">
+               <img src="{{ event['base64'] }}" alt="{{ event['time'] }}"/>
+            </a>
+         </td>
+         </tr>
+      {% endfor %}
+      </table>
+   </body>
+</html>

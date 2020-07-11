@@ -5,7 +5,7 @@ secrets.yaml
 secrets.ini
 *.weights
 *.h5
-
+/flaskcamera/config.py
 
 
 

@@ -66,6 +66,22 @@ services:
     depends_on:
       - homeassistant
 
+  # a simple flask app to show camera events
+  flaskcamera:
+    build: ./flaskcamera/
+    restart: always
+    container_name: flaskcamera
+    hostname: flaskcamera
+    environment:
+      TZ: "America/Denver"
+    ports:
+      - 5000:5000/tcp
+    volumes:
+      - zoneminder_data:/config/www/zoneminder:ro
+    depends_on:
+      - homeassistant
+      - zoneminder
+
 # http://blog.code4hire.com/2018/06/define-named-volume-with-host-mount-in-the-docker-compose-file/
 # https://docs.docker.com/compose/compose-file/#volume-configuration-reference
 volumes:

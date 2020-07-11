@@ -28,6 +28,8 @@ Copy `.env-copy` to `.env` and edit
 
 Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
 
+Copy `flaskcamera/config.example.py` to `flaskcamera/config.py` and edit
+
 ```shell
 docker-compose up --build -d
 ```
@@ -68,6 +70,7 @@ Run `run-yolo-CPU.sh` or `run-yolo-GPU.sh` for debugging/testing
 
 * [Zoneminder - https://192.168.1.113:8443/zm/](https://192.168.1.113:8443/zm/)
 * [Home-Assistant - http://192.168.1.113:8123](http://192.168.1.113:8123)
+* [Flask Camera Events - http://192.168.1.113:5000/camera/sensor.outside_camera_mqtt_full](http://localhost:5000/camera/sensor.outside_camera_mqtt_full)
 
 ## Zoneminder
 
@@ -161,4 +164,8 @@ Cleanup files from the mounted Docker volumes
 * set reduced multi-threading
   * https://www.tensorflow.org/api_docs/python/tf/config/threading/set_inter_op_parallelism_threads
   * https://www.tensorflow.org/api_docs/python/tf/config/threading
-* fix history page slowness
+* get weather card added back in
+* add API check for zoneminder on HA startup so there's no race condition
+* calculate estimated distance based on pixels?
+* make sure scaled images and event folders get cleared away by zoneminder filter deletion
+* every so often, hit the flask camera UI with HA to refresh cache

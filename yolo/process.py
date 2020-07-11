@@ -106,7 +106,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                             i = 0
                                             while i < int(nums[0]):
                                                 # filter out labels we're not interested in
-                                                if (class_names[int(classes[0][i])] in labels and scores[0][i] > 0.7):
+                                                if (class_names[int(classes[0][i])] in labels and scores[0][i] > 0.75):
                                                     logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
                                                                                     np.array(scores[0][i]),
                                                                                     np.array(boxes[0][i])))
@@ -135,11 +135,21 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                                 img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
                                                 # overwrite image
                                                 cv2.imwrite(jpg_path, img)
+                                                # write a scaled version for GIF generation via the Flask app
+                                                scale_factor = 350 / img.shape[0] # 350 is the desired resized height in pixels
+                                                width = int(img.shape[1] * scale_factor)
+                                                height = int(img.shape[0] * scale_factor)
+                                                dim = (width, height)
+                                                resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+                                                cv2.imwrite(jpg_path.replace("-capture.jpg", "-capture_scaled.jpg"), resized)
                                             # send an empty mqtt message so that home assistant doesn't show stale data into the future
                                             mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "{\"label\": \"\", \"img_path\": \"\", \"timestamp\": \"\"}")
                                             skipped_frame = False
                                             frame_now = 1
                                         else:
+                                            if (os.path.exists(jpg_path)):
+                                                # delete file to make space, already have video
+                                                os.remove(jpg_path)
                                             skipped_frame = True
                                             frame_now = frame_now + 1
                                             
