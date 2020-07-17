@@ -62,6 +62,7 @@ def query_camera(camerasensor):
             templated_events = []
             gif_images = []
             prev = None
+            state = None
             cleaned_data = []
             for event in data:
                 if (event['state'] and event['state'] != "unknown" and event['state'] != "{\"label\": \"\", \"img_path\": \"\", \"timestamp\": \"\"}"):
@@ -88,8 +89,9 @@ def query_camera(camerasensor):
                             logging.info("Processed " + str(k) + " of " + str(len(cleaned_data)))
 
             # kinda hacky but we need to make sure to write out whatever we have for the last event
-            dt, tm, detect_base64, event_number = writeGIF(state, gif_images, clearimage=True)
-            templated_events.append({"date": dt, "time": tm, "base64": detect_base64, "eventnumber": event_number})
+            if (state):
+                dt, tm, detect_base64, event_number = writeGIF(state, gif_images, clearimage=True)
+                templated_events.append({"date": dt, "time": tm, "base64": detect_base64, "eventnumber": event_number})
 
             return render_template('index.html', events = templated_events)
         else:
