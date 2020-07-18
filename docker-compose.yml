@@ -69,7 +69,8 @@ services:
       TZ: "America/Denver"
     ports:
       - 1883:1883/tcp # standard port
-      - 9001:9001/tcp # websockets
+      # this shouldn't be needed
+      #- 9001:9001/tcp # websockets
     depends_on:
       - homeassistant
 
