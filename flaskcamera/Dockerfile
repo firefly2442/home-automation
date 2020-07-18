@@ -6,9 +6,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get -y upgrade \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --no-cache-dir flask requests imageio scikit-image pygifsicle
+RUN pip3 install --no-cache-dir flask requests imageio pygifsicle
+
+COPY startup.sh startup.sh
+RUN chmod +x startup.sh
 
 COPY *.py /
 COPY ./templates/*.html /templates/
 
-CMD ["python3", "app.py"]
+CMD ["./startup.sh"]

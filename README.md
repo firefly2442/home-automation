@@ -168,5 +168,4 @@ Cleanup files from the mounted Docker volumes
 * add API check for zoneminder on HA startup so there's no race condition
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
-* every so often, hit the flask camera UI with HA to refresh cache
 * fix cert warnings and verify=False settings

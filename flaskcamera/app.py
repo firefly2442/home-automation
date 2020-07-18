@@ -1,8 +1,5 @@
 import requests, json, re, os, imageio, base64, io, sys
-from skimage.transform import rescale
-from skimage.io import imread
 from pygifsicle import optimize # https://github.com/LucaCappelletti94/pygifsicle
-import numpy as np
 import logging.handlers as handlers
 import logging as log
 from flask import Flask, render_template
@@ -84,9 +81,9 @@ def query_camera(camerasensor):
                                 templated_events.append({"date": dt, "time": tm, "base64": detect_base64, "eventnumber": event_number})
                                 gif_images = []
 
-                            gif_images.append(imread(state['img_path'], as_gray=False))
+                            gif_images.append(imageio.imread(state['img_path']))
                             prev = state
-                            logging.info("Processed " + str(k) + " of " + str(len(cleaned_data)))
+                            #logging.info("Processed " + str(k) + " of " + str(len(cleaned_data)))
 
             # kinda hacky but we need to make sure to write out whatever we have for the last event
             if (state):
