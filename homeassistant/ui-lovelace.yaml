@@ -52,6 +52,10 @@ views:
         entities:
           - camera.frontcamera
           - camera.insidecamera
+      - type: history-graph
+        title: 'Outside People Tracked'
+        entities:
+          - sensor.outside_camera_mqtt_label
       - type: markdown
         content: "Zoneminder release [{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }}](https://github.com/ZoneMinder/zoneminder/releases) is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
   - title: Weather

@@ -82,28 +82,12 @@ sensor:
     state_topic: "home-assistant/zoneminder/yolo/1/"
     value_template: "{{ value_json.label }}"
   - platform: mqtt
-    name: outside_camera_mqtt_path
-    state_topic: "home-assistant/zoneminder/yolo/1/"
-    value_template: "{{ value_json.img_path }}"
-  - platform: mqtt
-    name: outside_camera_mqtt_timestamp
-    state_topic: "home-assistant/zoneminder/yolo/1/"
-    value_template: "{{ value_json.timestamp }}"
-  - platform: mqtt
     name: inside_camera_mqtt_full
     state_topic: "home-assistant/zoneminder/yolo/2/"
   - platform: mqtt
     name: inside_camera_mqtt_label
     state_topic: "home-assistant/zoneminder/yolo/2/"
     value_template: "{{ value_json.label }}"
-  - platform: mqtt
-    name: inside_camera_mqtt_path
-    state_topic: "home-assistant/zoneminder/yolo/2/"
-    value_template: "{{ value_json.img_path }}"
-  - platform: mqtt
-    name: inside_camera_mqtt_timestamp
-    state_topic: "home-assistant/zoneminder/yolo/2/"
-    value_template: "{{ value_json.timestamp }}"
 
 # https://www.home-assistant.io/lovelace/yaml-mode/
 lovelace:
@@ -146,15 +130,15 @@ automation:
       service: switch.turn_off
       entity_id: switch.insidecamera_state
   # https://community.home-assistant.io/t/recorder-purge-and-repack/110552
-  - alias: Purge Database
-    trigger:
-      platform: time
-      at: '02:22:22'
-    action:
-      service: recorder.purge
-      data:
-        keep_days: 5
-        repack: true
+  # - alias: Purge Database
+  #   trigger:
+  #     platform: time
+  #     at: '02:22:22'
+  #   action:
+  #     service: recorder.purge
+  #     data:
+  #       keep_days: 5
+  #       repack: true
   # https://www.home-assistant.io/integrations/notify/
   - alias: 'Send Discord inside person alarm message'
     trigger:
@@ -313,35 +297,3 @@ notify:
   - platform: discord
     name: Discord
     token: !secret discord_token
-
-# https://www.home-assistant.io/integrations/recorder
-# full list of all domain services
-# https://github.com/home-assistant/core/blob/master/homeassistant/components/default_config/manifest.json
-# recorder:
-#   purge_keep_days: 5
-#   include:
-#     domains:
-#       - automation
-#       - cloud
-#       - config
-#       - frontend
-#       - history
-#       - map
-#       - mobile_app
-#       - person
-#       - scene
-#       - script
-#       - ssdp
-#       - sun
-#       - system_health
-#       - updater
-#       - zeroconf
-#       - zone
-#       - input_boolean
-#       - input_datetime
-#       - input_text
-#       - input_number
-#       - input_select
-#   exclude:
-#     domains:
-#       - logbook
