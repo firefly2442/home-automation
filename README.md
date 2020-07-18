@@ -54,13 +54,6 @@ Restart `zoneminder`:
 docker restart zoneminder
 ```
 
-There's an annoying race condition where homeassistant doesn't get setup correctly
-if zoneminder isn't running.
-
-```shell
-docker restart homeassistant
-```
-
 Install the [home-assistant Android application](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android&hl=en_US)
 on cellphone
 
@@ -160,10 +153,6 @@ Cleanup files from the mounted Docker volumes
 * test yolo logging and status when other containers are down
 * test yolo when zoneminder cameras are down
 * put zoneminder config folder and homeassistant on SSD
-* set reduced multi-threading
-  * https://www.tensorflow.org/api_docs/python/tf/config/threading/set_inter_op_parallelism_threads
-  * https://www.tensorflow.org/api_docs/python/tf/config/threading
-* add API check for zoneminder on HA startup so there's no race condition
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
-* fix cert warnings, -k flags, and verify=False settings
+* fix cert warnings, -k flags on curl, and verify=False settings on Requests.get
