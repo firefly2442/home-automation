@@ -156,3 +156,4 @@ Cleanup files from the mounted Docker volumes
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
 * fix cert warnings, -k flags on curl, and verify=False settings on Requests.get
+* add explanatory text on containers, documentation, images/GIFs to README
