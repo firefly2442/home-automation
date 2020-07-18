@@ -157,7 +157,6 @@ Cleanup files from the mounted Docker volumes
 
 * flash lights when person detected
 * randomly turn on/off lights when away
-* add health check for Docker containers
 * test yolo logging and status when other containers are down
 * test yolo when zoneminder cameras are down
 * put zoneminder config folder and homeassistant on SSD
@@ -168,4 +167,4 @@ Cleanup files from the mounted Docker volumes
 * add API check for zoneminder on HA startup so there's no race condition
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
-* fix cert warnings and verify=False settings
+* fix cert warnings, -k flags, and verify=False settings

@@ -45,6 +45,11 @@ def writeGIF(towrite, gif_images, clearimage=False):
     return(dt, tm, detect_base64, event_number)
                                 
 
+# e.g.: http://localhost:5000/
+@app.route('/')
+def home():
+    return "Homepage"
+
 # e.g.: http://localhost:5000/camera/sensor.outside_camera_mqtt_full
 @app.route('/camera/<camerasensor>')
 def query_camera(camerasensor):

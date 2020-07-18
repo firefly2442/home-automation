@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.4'
 services:
 
   # https://github.com/dlandon/zoneminder
@@ -21,6 +21,13 @@ services:
     volumes:
       - ${ZONEMINDER_PATH}/config/:/config:rw
       - zoneminder_data:/var/cache/zoneminder:rw
+    # https://docs.docker.com/compose/compose-file/#healthcheck
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-k", "https://localhost:443/zm/api/host/getVersion.json"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   # https://github.com/home-assistant/home-assistant
   homeassistant:
@@ -81,6 +88,14 @@ services:
     depends_on:
       - homeassistant
       - zoneminder
+    # https://docs.docker.com/compose/compose-file/#healthcheck
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 
 # http://blog.code4hire.com/2018/06/define-named-volume-with-host-mount-in-the-docker-compose-file/
 # https://docs.docker.com/compose/compose-file/#volume-configuration-reference
