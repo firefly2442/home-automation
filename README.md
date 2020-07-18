@@ -163,7 +163,6 @@ Cleanup files from the mounted Docker volumes
 * set reduced multi-threading
   * https://www.tensorflow.org/api_docs/python/tf/config/threading/set_inter_op_parallelism_threads
   * https://www.tensorflow.org/api_docs/python/tf/config/threading
-* get weather card added back in
 * add API check for zoneminder on HA startup so there's no race condition
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion

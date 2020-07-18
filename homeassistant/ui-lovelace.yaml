@@ -60,6 +60,8 @@ views:
         content: "Zoneminder release [{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }}](https://github.com/ZoneMinder/zoneminder/releases) is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
   - title: Weather
     cards:
+      - type: weather-forecast
+        entity: weather.home
       - type: picture-glance
         title: Animated Radar
         camera_image: camera.animated_radar
