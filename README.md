@@ -126,9 +126,9 @@ cellphone, smart plugs, etc.
 If there are updates upstream in the Docker images:
 
 ```shell
-docker-compose build --pull
+docker-compose build --pull --parallel
 # or force a full rebuild
-# docker-compose build --no-cache --pull
+# docker-compose build --no-cache --pull --parallel
 docker-compose up -d
 ```
 
@@ -152,7 +152,6 @@ Cleanup files from the mounted Docker volumes
 * randomly turn on/off lights when away
 * test yolo logging and status when other containers are down
 * test yolo when zoneminder cameras are down
-* put zoneminder config folder and homeassistant on SSD
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
 * fix cert warnings, -k flags on curl, and verify=False settings on Requests.get
