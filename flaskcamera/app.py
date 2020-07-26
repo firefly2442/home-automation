@@ -58,7 +58,7 @@ def query_camera(camerasensor):
         headers = {"Authorization": "Bearer " + config.homeassistant_token}
         params = {"filter_entity_id": camerasensor}
         # https://developers.home-assistant.io/docs/api/rest/#get-apihistoryperiodtimestamp
-        monitor = requests.get("http://192.168.1.113:8123/api/history/period", headers=headers, params=params, verify=False)
+        monitor = requests.get("http://192.168.1.113:8123/api/history/period", headers=headers, params=params)
         if monitor.ok:
             data = monitor.json()[0] # data is wrapped in an extra array thus the [0]
             templated_events = []
