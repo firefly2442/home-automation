@@ -23,7 +23,7 @@ services:
       - zoneminder_data:/var/cache/zoneminder:rw
     # https://docs.docker.com/compose/compose-file/#healthcheck
     healthcheck:
-      test: ["CMD", "curl", "-f", "-k", "https://localhost:443/zm/api/host/getVersion.json"]
+      test: ["CMD", "curl", "-f", "https://192.168.1.113:8443/zm/api/host/getVersion.json"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -54,7 +54,6 @@ services:
       TZ: "America/Denver"
     volumes:
       - zoneminder_data:/var/cache/zoneminder:rw
-      - /yolo
     depends_on:
       - zoneminder
 

@@ -30,6 +30,8 @@ Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
 
 Copy `flaskcamera/config.example.py` to `flaskcamera/config.py` and edit
 
+Run `setup-certs.sh`
+
 ```shell
 docker-compose up --build -d
 ```
@@ -39,8 +41,6 @@ Wait until `zoneminder` is up and running.  This will take some time, you can ch
 ```shell
 docker logs -f zoneminder
 ```
-
-Run `setup-certs.sh`
 
 Run `initial-setup.sh`
 
@@ -154,5 +154,5 @@ Cleanup files from the mounted Docker volumes
 * test yolo when zoneminder cameras are down
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
-* fix cert warnings, -k flags on curl, and verify=False settings on Requests.get
+* fix cert warnings, -k flags on curl, and verify=False settings on Requests.get, verify_ssl: False in configuration.yaml
 * add explanatory text on containers, documentation, images/GIFs to README

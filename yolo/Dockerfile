@@ -1,7 +1,7 @@
-FROM tensorflow/tensorflow:latest-gpu-py3
+FROM tensorflow/tensorflow:latest-gpu
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    nano libsm6 libxext6 libxrender-dev && \
+    nano libsm6 libxext6 libxrender-dev ca-certificates && \
     DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata \
     && apt-get -y upgrade \
     && rm -rf /var/lib/apt/lists/*
@@ -9,6 +9,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir keras opencv-python pillow paho-mqtt configparser pyinstrument
 
 WORKDIR /
+
+COPY cert.crt /usr/local/share/ca-certificates/cert.crt
+COPY cert.key /usr/local/share/ca-certificates/cert.key
+
+COPY startup.sh startup.sh
+RUN chmod +x startup.sh
+
+RUN update-ca-certificates
 
 COPY *.weights /yolo/
 
@@ -21,7 +29,5 @@ RUN rm /yolo/yolov3.weights /yolo/yolov3-tiny.weights
 
 COPY *.py /
 
-# for profiling
-#CMD ["python3", "-m", "pyinstrument", "yolo.py"]
-# without profiling, no overhead
-CMD ["python3", "yolo.py"]
+
+CMD ["./startup.sh"]

@@ -28,9 +28,6 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
         
     logging.info("Num GPUs Available: " + str(len(physical_devices)))
 
-    from urllib3.exceptions import InsecureRequestWarning
-    # Suppress only the single warning from urllib3 about insecure requests
-    requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
     logging.info("Running monitor " + monitorid)
     
     # load yolov3 model
@@ -55,11 +52,12 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
             # clear out the session so we don't have memory leaks
             tf.keras.backend.clear_session()
             # https://zoneminder.readthedocs.io/en/latest/api.html
-            monitor_status = requests.get("https://zoneminder:443/zm/api/monitors.json", verify=False)
+            # pass our certificate authority file that has been updated after running update-ca-certificates
+            monitor_status = requests.get("https://192.168.1.113:8443/zm/api/monitors.json", verify="/etc/ssl/certs/ca-certificates.crt")
             if (monitor_status.ok):
                 status = monitor_status.json()
                 if (status['monitors'][int(monitorid)-1]['Monitor_Status']['Status'] == "Connected"):
-                    monitor = requests.get("https://zoneminder:443/zm/api/events/index/MonitorId:"+monitorid+".json?sort=StartTime&direction=desc", verify=False)
+                    monitor = requests.get("https://192.168.1.113:8443/zm/api/events/index/MonitorId:"+monitorid+".json?sort=StartTime&direction=desc", verify="/etc/ssl/certs/ca-certificates.crt")
                     if (monitor.ok):
                         data = monitor.json()
                         continue_exec = True
@@ -67,7 +65,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                         frame_now = 1
                         start_frame_at = 1
                         while (continue_exec):
-                            event = requests.get("https://zoneminder:443/zm/api/events/"+str(data['events'][0]['Event']['Id'])+".json", verify=False)
+                            event = requests.get("https://192.168.1.113:8443/zm/api/events/"+str(data['events'][0]['Event']['Id'])+".json", verify="/etc/ssl/certs/ca-certificates.crt")
                             time.sleep(0.5)
                             if (event.ok):
                                 event_data = event.json()

@@ -3,25 +3,20 @@
 # if the file doesn't exist
 if [ ! -f "cert.crt" ]; then
     # generate self-signed keys
-    openssl req -x509 -nodes -days 4096 -newkey rsa:2048 -out cert.crt -keyout cert.key -subj "/C=US/ST=Self/L=Self/O=Self/CN=192.168.1.113"
+    # https://security.stackexchange.com/questions/74345/provide-subjectaltname-to-openssl-directly-on-the-command-line
+    # requires openssl version 1.1.1
+    openssl req -x509 -nodes -days 4096 -newkey rsa:2048 -out cert.crt -keyout cert.key -subj "/C=US/ST=Self/L=Self/O=Self/CN=192.168.1.113" -addext "subjectAltName = IP:192.168.1.113"
 fi
 
-# copy key to zoneminder
-docker cp cert.crt zoneminder:/config/keys/cert.crt
-docker cp cert.key zoneminder:/config/keys/cert.key
-docker cp ServerName zoneminder:/config/keys/ServerName
+# copy key to zoneminder folder
+cp cert.crt ./zoneminder/cert.crt
+cp cert.key ./zoneminder/cert.key
+cp ServerName ./zoneminder/ServerName
 
-# these are for the ZM Event Server, see /etc/zm/secrets.ini
-docker cp cert.crt zoneminder:/etc/apache2/ssl/zoneminder.crt
-docker cp cert.key zoneminder:/etc/apache2/ssl/zoneminder.key
+# copy key to home-assistant folder
+cp cert.crt ./homeassistant/cert.crt
+cp cert.key ./homeassistant/cert.key
 
-docker exec homeassistant mkdir -p /config/ssl/
-
-# copy key to home-assistant
-docker cp cert.crt homeassistant:/config/ssl/cert.crt
-docker cp cert.key homeassistant:/config/ssl/cert.key
-
-docker cp cert.crt homeassistant:/usr/local/share/ca-certificates/cert.crt
-docker cp cert.crt homeassistant:/etc/ssl/certs/cert.crt
-
-docker exec homeassistant update-ca-certificates
+# copy key to yolo folder
+cp cert.crt ./yolo/cert.crt
+cp cert.key ./yolo/cert.key
