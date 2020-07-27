@@ -11,6 +11,8 @@ update-ca-certificates
 openssl x509 -in /config/ssl/cert.crt -out /config/ssl/cert.pem
 
 # add the pem to the certifi Python package certificate authority file
+# the Python requests library does not use the system default CA, but uses the CA from the certifi package
+# adding the PEM lets HA not spam warnings about insecure connections in the logs
 cat /usr/local/lib/python3.8/site-packages/certifi/cacert.pem /config/ssl/cert.pem > /usr/local/lib/python3.8/site-packages/certifi/cacert-updated.pem
 mv /usr/local/lib/python3.8/site-packages/certifi/cacert-updated.pem /usr/local/lib/python3.8/site-packages/certifi/cacert.pem
 
