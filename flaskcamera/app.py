@@ -67,7 +67,7 @@ def query_camera(camerasensor):
             state = None
             cleaned_data = []
             for event in data:
-                if (event['state'] and event['state'] != "unknown" and event['state'] != "{\"label\": \"\", \"img_path\": \"\", \"timestamp\": \"\"}"):
+                if (event and 'state' in event and event['state'] and event['state'] != "unknown" and event['state'] != "{\"label\": \"\", \"img_path\": \"\", \"timestamp\": \"\"}"):
                     #logging.info("adding: " + str(event['state']))
                     cleaned_data.append(event)
             for k,event in enumerate(cleaned_data):
@@ -76,7 +76,7 @@ def query_camera(camerasensor):
                         state = json.loads(event['state'])
                     except ValueError:
                         pass # ignore other events for manual testing
-                    if (state['img_path']):
+                    if (state and 'img_path' in state and state['img_path']):
                         # load in the already rescaled image so we don't have massive GIFs
                         state['img_path'] = state['img_path'].replace("-capture.jpg", "-capture_scaled.jpg")
                         if (state['img_path'] != "" and os.path.isfile(state['img_path'])):
