@@ -1,4 +1,4 @@
-import os, multiprocessing, sys, time
+import os, multiprocessing, time
 import paho.mqtt.client as paho
 from absl import app, flags
 import process # process.py

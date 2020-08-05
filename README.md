@@ -145,6 +145,8 @@ Cleanup files from the mounted Docker volumes
 
 ## Helpful Links and References
 
+Not using zmEventServer
+
 * [Zoneminder and HA integration with zmEventServer](https://seanb.co.uk/2019/08/zoneminder-and-home-assistant/)
 * [Managing notifications in HA](https://seanb.co.uk/2019/08/managing-zoneminder-notifications-with-home-assistant/)
 * [Dockerized version of Zoneminder](https://github.com/dlandon/zoneminder)
@@ -157,5 +159,4 @@ Cleanup files from the mounted Docker volumes
 * test yolo when zoneminder cameras are down
 * calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
-* fix cert warnings, -k flags on curl, and verify=False settings on Requests.get, verify_ssl: False in configuration.yaml
-* add explanatory text on containers, documentation, images/GIFs to README
+* add explanatory text on containers, documentation, images/GIFs to README, add helpful links
