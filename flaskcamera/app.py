@@ -1,6 +1,5 @@
-import requests, json, re, os, imageio, base64, io, sys
+import requests, json, re, os, imageio, base64
 from pygifsicle import optimize # https://github.com/LucaCappelletti94/pygifsicle
-import logging.handlers as handlers
 import logging as log
 from flask import Flask, render_template
 import config # config.py

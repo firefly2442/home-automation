@@ -1,13 +1,8 @@
-import requests, sys, json, time, os, datetime, multiprocessing
+import requests, sys, time, os, datetime
 import logging as log
 import logging.handlers as handlers
-from keras.models import load_model
-from keras.preprocessing.image import load_img
-from keras.preprocessing.image import img_to_array
 import tensorflow as tf
-import paho.mqtt.client as paho
 import common # common.py
-from absl import flags
 from absl.flags import FLAGS
 import cv2
 import numpy as np
@@ -15,7 +10,7 @@ sys.path.insert(0, "/yolo/yolov3-tf2/")
 from yolov3_tf2.models import (
     YoloV3, YoloV3Tiny
 )
-from yolov3_tf2.dataset import transform_images, load_tfrecord_dataset
+from yolov3_tf2.dataset import transform_images
 from yolov3_tf2.utils import draw_outputs
 
 
