@@ -1,8 +1,9 @@
 # Home Automation
 
-My personal home automation setup in Docker leveraging:
-
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/firefly2442/home-automation.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/firefly2442/home-automation/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/firefly2442/home-automation.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/firefly2442/home-automation/context:python)
+
+My personal home automation setup in Docker leveraging:
 
 * [Zoneminder](https://github.com/ZoneMinder/zoneminder)
 * [Home-Assistant](https://github.com/home-assistant/home-assistant)
