@@ -2,6 +2,8 @@
 
 My personal home automation setup in Docker leveraging:
 
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/firefly2442/home-automation.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/firefly2442/home-automation/alerts/)
+
 * [Zoneminder](https://github.com/ZoneMinder/zoneminder)
 * [Home-Assistant](https://github.com/home-assistant/home-assistant)
 
