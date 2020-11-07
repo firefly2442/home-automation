@@ -6,10 +6,10 @@ then
   export $(cat .env | sed 's/#.*//g' | xargs)
 fi
 
-# load up working cameras, then load up https://192.168.1.113:8443/zm/api/monitors.json to see the correct values
+# load up working cameras, then load up https://192.168.1.226:9443/zm/api/monitors.json to see the correct values
 # make sure to encode special characters like &'s which become %26
 # https://zoneminder.readthedocs.io/en/latest/api.html#add-a-monitor
-curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Monitor[Name]=FrontCamera\
+curl --insecure -X POST https://192.168.1.226:9443/zm/api/monitors.json -d "Monitor[Name]=FrontCamera\
 &Monitor[Function]=Record\
 &Monitor[Type]=Ffmpeg\
 &Monitor[Method]=rtpRtsp\
@@ -29,11 +29,11 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Moni
 &Monitor[LabelFormat]=\
 &Monitor[AlarmFrameCount]=1"
 
-curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Monitor[Name]=InsideCamera\
+curl --insecure -X POST https://192.168.1.226:9443/zm/api/monitors.json -d "Monitor[Name]=InsideCamera\
 &Monitor[Function]=Record\
 &Monitor[Type]=Ffmpeg\
 &Monitor[Method]=rtpRtsp\
-&Monitor[Path]=http://admin:$CAMERA_PASSWORD@192.168.1.116:8080/video\
+&Monitor[Path]=rtsp://admin:$CAMERA_PASSWORD@192.168.1.116:8080/h264_pcm.sdp\
 &Monitor[V4LCapturesPerFrame]=1\
 &Monitor[RTSPDescribe]=false\
 &Monitor[Width]=1280\
@@ -52,13 +52,13 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/monitors.json -d "Moni
 # setup the zones for alarm detection of events
 # https://zoneminder.readthedocs.io/en/latest/api.html#create-a-zone
 # https://zoneminder.readthedocs.io/en/latest/userguide/definezone.html
-# load up working zones, then load up https://192.168.1.113:8443/zm/api/zones.json to see the correct values
+# load up working zones, then load up https://192.168.1.226:9443/zm/api/zones.json to see the correct values
 # note the coordinates are off by 1 since it starts at 0,0
 
 # 2688 * 1520 = 4085760 (Area)
 # 163430 / 4085760 = 0.0399 (MinAlarmPixels)
 # 81715 / 4085760 = 0.0199 (MinFilterPixels)
-curl --insecure -X POST https://192.168.1.113:8443/zm/api/zones.json -d "Zone[Name]=All\
+curl --insecure -X POST https://192.168.1.226:9443/zm/api/zones.json -d "Zone[Name]=All\
 &Zone[MonitorId]=1\
 &Zone[Type]=Active\
 &Zone[Units]=Pixels\
@@ -84,7 +84,7 @@ curl --insecure -X POST https://192.168.1.113:8443/zm/api/zones.json -d "Zone[Na
 # 1280 * 720 = 921600 (Area)
 # 36864 / 921600 = 0.04 (MinAlarmPixels)
 # 18432 / 921600 = 0.02 (MinFilterPixels)
-curl --insecure -X POST https://192.168.1.113:8443/zm/api/zones.json -d "Zone[Name]=All\
+curl --insecure -X POST https://192.168.1.226:9443/zm/api/zones.json -d "Zone[Name]=All\
 &Zone[MonitorId]=2\
 &Zone[Type]=Active\
 &Zone[Units]=Pixels\

@@ -1,4 +1,4 @@
-FROM dlandon/zoneminder:latest
+FROM localhost:5000/zoneminder:latest
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nano curl ca-certificates \

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p /config/ssl/
+
 # prep certs, this cannot be done in the Dockerfile because
 # we also need to copy them to a mounted volume
 cp /usr/local/share/ca-certificates/cert.crt /config/ssl/cert.crt

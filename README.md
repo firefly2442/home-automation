@@ -35,6 +35,17 @@ Copy `flaskcamera/config.example.py` to `flaskcamera/config.py` and edit
 
 Run `setup-certs.sh`
 
+Checkout dlandon zoneminder code in separate directory.
+
+Build dlandon zoneminder for arm64, checkout code, build, and tag
+
+```shell
+docker build --tag zoneminder:latest --tag localhost:5000/zoneminder:latest .
+docker push localhost:5000/zoneminder:latest
+```
+
+Build our docker-compose and bring up services
+
 ```shell
 docker-compose up --build -d
 ```
@@ -64,9 +75,9 @@ Run `run-yolo-CPU.sh` or `run-yolo-GPU.sh` for debugging/testing
 
 ## UI
 
-* [Zoneminder - https://192.168.1.113:8443/zm/](https://192.168.1.113:8443/zm/)
-* [Home-Assistant - http://192.168.1.113:8123](http://192.168.1.113:8123)
-* [Flask Camera Events - http://192.168.1.113:5000/camera/sensor.outside_camera_mqtt_full](http://localhost:5000/camera/sensor.outside_camera_mqtt_full)
+* [Zoneminder - https://192.168.1.226:9443/zm/](https://192.168.1.226:9443/zm/)
+* [Home-Assistant - http://192.168.1.226:8123](http://192.168.1.226:8123)
+* [Flask Camera Events - http://192.168.1.226:5000/camera/sensor.outside_camera_mqtt_full](http://localhost:5000/camera/sensor.outside_camera_mqtt_full)
 
 ## Zoneminder
 
@@ -83,9 +94,9 @@ Inside Camera (Samsung Galaxy Nexus cellphone)
 
 * Uses the [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_US)
 application for Android
-* `http://admin:secret@192.168.1.116:8080/video`
+* `rtsp://admin:secret@192.168.1.116:8080/h264_pcm.sdp`
 * 1280 x 720 (30 fps)
-* x264 encoding
+* h264 passthrough
 
 ### Additional Setup
 
@@ -115,7 +126,7 @@ Run `yolo.py`
 
 ### Benchmarking and Profiling Performance
 
-Turn on/off debugging via pyinstrument from `yolo/Dockerfile`
+Turn on/off debugging via pyinstrument from `yolo/startup.sh`
 
 ## Networking
 

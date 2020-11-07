@@ -19,12 +19,12 @@ logging.addHandler(logHandler)
 # curl -X GET \
 #   -H "Authorization: Bearer secret" \
 #   -H "Content-Type: application/json" \
-#   http://192.168.1.113:8123/api/history/period?filter_entity_id=sensor.outside_camera_mqtt_full > test.json
+#   http://192.168.1.226:8123/api/history/period?filter_entity_id=sensor.outside_camera_mqtt_full > test.json
 
 def writeGIF(towrite, gif_images, clearimage=False):
     # /config/www/zoneminder/events/1/2020-07-01/7357/11001-capture.jpg
-    # http://192.168.1.113:8123/local/zoneminder/events/1/2020-07-01/7357/11001-capture.jpg
-    # https://192.168.1.113:8443/zm/index.php?view=event&eid=8061
+    # http://192.168.1.226:8123/local/zoneminder/events/1/2020-07-01/7357/11001-capture.jpg
+    # https://192.168.1.226:9443/zm/index.php?view=event&eid=8061
     dt = re.search(r"^\d{4}-\d{2}-\d{2}", towrite['timestamp']).group()
     tm = re.search(r"\d{2}:\d{2}:\d{2}$", towrite['timestamp']).group()
     event_number = re.search(r"\d{4}-\d{2}-\d{2}\/(\d+)\/", towrite['img_path']).group(1)
@@ -57,7 +57,7 @@ def query_camera(camerasensor):
         headers = {"Authorization": "Bearer " + config.homeassistant_token}
         params = {"filter_entity_id": camerasensor}
         # https://developers.home-assistant.io/docs/api/rest/#get-apihistoryperiodtimestamp
-        monitor = requests.get("http://192.168.1.113:8123/api/history/period", headers=headers, params=params)
+        monitor = requests.get("http://192.168.1.226:8123/api/history/period", headers=headers, params=params)
         if monitor.ok:
             data = monitor.json()[0] # data is wrapped in an extra array thus the [0]
             templated_events = []

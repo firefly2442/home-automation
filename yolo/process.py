@@ -48,11 +48,11 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
             tf.keras.backend.clear_session()
             # https://zoneminder.readthedocs.io/en/latest/api.html
             # pass our certificate authority file that has been updated after running update-ca-certificates
-            monitor_status = requests.get("https://192.168.1.113:8443/zm/api/monitors.json", verify="/etc/ssl/certs/ca-certificates.crt")
+            monitor_status = requests.get("https://192.168.1.226:9443/zm/api/monitors.json", verify="/etc/ssl/certs/ca-certificates.crt")
             if (monitor_status.ok):
                 status = monitor_status.json()
                 if (status['monitors'][int(monitorid)-1]['Monitor_Status']['Status'] == "Connected"):
-                    monitor = requests.get("https://192.168.1.113:8443/zm/api/events/index/MonitorId:"+monitorid+".json?sort=StartTime&direction=desc", verify="/etc/ssl/certs/ca-certificates.crt")
+                    monitor = requests.get("https://192.168.1.226:9443/zm/api/events/index/MonitorId:"+monitorid+".json?sort=StartTime&direction=desc", verify="/etc/ssl/certs/ca-certificates.crt")
                     if (monitor.ok):
                         data = monitor.json()
                         continue_exec = True
@@ -60,7 +60,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                         frame_now = 1
                         start_frame_at = 1
                         while (continue_exec):
-                            event = requests.get("https://192.168.1.113:8443/zm/api/events/"+str(data['events'][0]['Event']['Id'])+".json", verify="/etc/ssl/certs/ca-certificates.crt")
+                            event = requests.get("https://192.168.1.226:9443/zm/api/events/"+str(data['events'][0]['Event']['Id'])+".json", verify="/etc/ssl/certs/ca-certificates.crt")
                             time.sleep(0.5)
                             if (event.ok):
                                 event_data = event.json()
@@ -72,19 +72,31 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                     
                                     for frame_num in range(start_frame_at, int(event_data['event']['Event']['Frames'])):
                                         start_time = datetime.datetime.now()
-                                        jpg_path = os.path.join(filesystem_path, str(frame_num).zfill(5) + "-capture.jpg")
-                                        if (os.path.isfile(jpg_path) and (frame_now == run_every_frames or (frame_num - frame_now) % run_every_frames == 0)):
+                                        video_path = filesystem_path + "/" + event_data['event']['Event']['Id'] + "-video.mp4"
+
+                                        if (os.path.isfile(video_path) and (frame_now == run_every_frames or (frame_num - frame_now) % run_every_frames == 0)):
                                             # Understanding YOLO
                                             # https://www.dlology.com/blog/gentle-guide-on-how-yolo-object-localization-works-with-keras-part-2/
                                             # https://towardsdatascience.com/dive-really-deep-into-yolo-v3-a-beginners-guide-9e3d2666280e
                                             # https://github.com/qqwweee/keras-yolo3
                                             # https://github.com/zzh8829/yolov3-tf2
 
+                                            cap = cv2.VideoCapture(video_path)
+                                            logging.info(video_path)
+                                            # https://stackoverflow.com/questions/33650974/opencv-python-read-specific-frame-using-videocapture
+                                            cap.set(1, frame_num)
+                                            ret, frame = cap.read()
+                                            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # convert to RGB
+                                            jpg_path = filesystem_path + "/" + str(frame_num) + "-capture.jpg"
+                                            #cv2.imwrite(str(jpg_path), frame)
+                                            cap.release()
+
                                             # see here for example: https://github.com/zzh8829/yolov3-tf2/blob/master/detect.py
-                                            logging.info(jpg_path)
                                             logging.info("Monitor " + monitorid + " running on frame: " + str(frame_num))
                                             FLAGS.image = jpg_path
-                                            img_raw = tf.image.decode_image(open(FLAGS.image, 'rb').read(), channels=3)
+                                            #img_raw = tf.image.decode_image(open(FLAGS.image, 'rb').read(), channels=3)
+                                            # https://stackoverflow.com/questions/40273109/convert-python-opencv-mat-image-to-tensorflow-image-data
+                                            img_raw = tf.convert_to_tensor(rgb, dtype=tf.float32)
 
                                             img = tf.expand_dims(img_raw, 0)
                                             img = transform_images(img, FLAGS.size)
@@ -107,7 +119,7 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                                     # https://community.home-assistant.io/t/discord-image-notification/125735/13
                                                     # https://github.com/home-assistant/core/issues/26560
                                                     # get access to images served up from homeassistant via:
-                                                    # http://192.168.1.113:8123/local/zoneminder/events/1/2020-06-07/3488/05328-capture.jpg
+                                                    # http://192.168.1.226:8123/local/zoneminder/events/1/2020-06-07/3488/05328-capture.jpg
                                                     zm_path = jpg_path.replace("/var/cache/", "/config/www/")
                                                     # don't pass JSON with single quotes, otherwise it won't work
                                                     mqttclient.publish("home-assistant/zoneminder/yolo/"+monitorid+"/", "{\"label\": \"" + str(class_names[int(classes[0][i])]) + "\", \"img_path\": \"" + zm_path + "\", \"timestamp\": \"" + event_data['event']['Event']['StartTime'] + "\"}")
@@ -122,12 +134,14 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                                     i = i - 1 # we're in-place removing items from arrays so we have to continue with the same index next go around
                                                 i = i + 1
                                             if (nums[0] is not None and nums[0] != 0):
+                                                # something was identified
                                                 img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
                                                 # TODO: parameterize coloring, put in PR upstream
                                                 #logging.info("Writing image to disk: " + str(classes) + " " + str(boxes) + " " + str(scores))
                                                 img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
-                                                # overwrite image
+                                                # write image
                                                 cv2.imwrite(jpg_path, img)
+                                                logging.info("Wrote: " + jpg_path)
                                                 # write a scaled version for GIF generation via the Flask app
                                                 scale_factor = 350 / img.shape[0] # 350 is the desired resized height in pixels
                                                 width = int(img.shape[1] * scale_factor)
@@ -140,19 +154,16 @@ def run_process_monitor(monitorid, fps, mqttclient, labels, yolo_model):
                                             skipped_frame = False
                                             frame_now = 1
                                         else:
-                                            if (os.path.exists(jpg_path)):
-                                                # delete file to make space, already have video
-                                                os.remove(jpg_path)
                                             skipped_frame = True
                                             frame_now = frame_now + 1
                                             
                                         if (not skipped_frame):
                                             logging.info("Running monitor " + monitorid)
                                             time_delta = (datetime.datetime.now() - start_time).total_seconds() * 1000 # milliseconds
-                                            #logging.info("MS check: " + str(((run_every_frames/fps) * 1000)))
-                                            #logging.info("Time delta: " + str(time_delta))
-                                            #logging.info("Run every x frames: " + str(run_every_frames))
-                                            run_every_frames = round(round((time_delta/1000)*fps) * 1.1) # *1.1 so that we are slightly ahead
+                                            logging.info("MS check: " + str(((run_every_frames/fps) * 1000)))
+                                            logging.info("Time delta: " + str(time_delta))
+                                            logging.info("Run every x frames: " + str(run_every_frames))
+                                            run_every_frames = round(round((time_delta/1000)*fps) * 1.3) # *1.3 so that we are slightly ahead
                                             logging.info("New run every x frames: " + str(run_every_frames))
                                     start_frame_at = int(event_data['event']['Event']['Frames'])
                             else:

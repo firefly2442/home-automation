@@ -10,7 +10,7 @@ default_config:
 
 # https://www.home-assistant.io/integrations/zoneminder/
 zoneminder:
-  host: 192.168.1.113:8443
+  host: 192.168.1.226:9443
   path: /zm/
   ssl: True
 
@@ -58,7 +58,7 @@ sensor:
   - platform: rest
     # https://www.home-assistant.io/docs/configuration/platform_options/
     scan_interval: 600 # run every 10 minutes, default on local polling of sensors is 30 seconds
-    resource: https://192.168.1.113:8443/zm/api/host/getVersion.json
+    resource: https://192.168.1.226:9443/zm/api/host/getVersion.json
     name: zoneminder_version
     json_attributes:
       - version
@@ -285,7 +285,7 @@ tplink:
 
 # https://www.home-assistant.io/integrations/mqtt/
 mqtt:
-  broker: 192.168.1.113
+  broker: 192.168.1.226
   port: 1883
 
 # https://www.home-assistant.io/integrations/discord/

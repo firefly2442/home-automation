@@ -9,7 +9,7 @@ services:
     hostname: zoneminder
     privileged: "true"
     ports:
-      - 8443:443/tcp
+      - 9443:443/tcp
       # this shouldn't need to be exposed outside the Docker compose network
       #- 9000:9000/tcp
     environment:
@@ -23,7 +23,7 @@ services:
       - zoneminder_data:/var/cache/zoneminder:rw
     # https://docs.docker.com/compose/compose-file/#healthcheck
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://192.168.1.113:8443/zm/api/host/getVersion.json"]
+      test: ["CMD", "curl", "-f", "https://192.168.1.226:9443/zm/api/host/getVersion.json"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -74,27 +74,27 @@ services:
       - homeassistant
 
   # a simple flask app to show camera events
-  flaskcamera:
-    build: ./flaskcamera/
-    restart: always
-    container_name: flaskcamera
-    hostname: flaskcamera
-    environment:
-      TZ: "America/Denver"
-    ports:
-      - 5000:5000/tcp
-    volumes:
-      - zoneminder_data:/config/www/zoneminder:ro
-    depends_on:
-      - homeassistant
-      - zoneminder
-    # https://docs.docker.com/compose/compose-file/#healthcheck
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+  # flaskcamera:
+  #   build: ./flaskcamera/
+  #   restart: always
+  #   container_name: flaskcamera
+  #   hostname: flaskcamera
+  #   environment:
+  #     TZ: "America/Denver"
+  #   ports:
+  #     - 5001:5000/tcp
+  #   volumes:
+  #     - zoneminder_data:/config/www/zoneminder:ro
+  #   depends_on:
+  #     - homeassistant
+  #     - zoneminder
+  #   # https://docs.docker.com/compose/compose-file/#healthcheck
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 3
+  #     start_period: 10s
 
 
 # http://blog.code4hire.com/2018/06/define-named-volume-with-host-mount-in-the-docker-compose-file/

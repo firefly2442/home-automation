@@ -30,15 +30,15 @@ def main(_argv):
 
     # mqtt setup
     mqttclient = paho.Client()
-    mqttclient.connect("192.168.1.113", 1883)
+    mqttclient.connect("192.168.1.226", 1883)
 
     # we can't use pyinstrument on processes so this is for debugging manually
-    #process.run_process_monitor("1", 20, mqttclient, ["person"], yolo_model)
-    #process.run_process_monitor("2", 30, mqttclient, ["person"], yolo_model)
+    # process.run_process_monitor("1", 20, mqttclient, ["person"], yolo_model)
+    # process.run_process_monitor("2", 30, mqttclient, ["person"], yolo_model)
 
     procs = [None, None]
 
-    # while 1 is slightly faster than while True
+    while 1 is slightly faster than while True
     while 1:
         for i,proc in enumerate(procs):
             restart_it = False
