@@ -44,18 +44,46 @@ services:
       - zoneminder_data:/config/www/zoneminder:ro
     depends_on:
       - zoneminder
+    devices:
+      # usb Nortek device forwarded to the docker image
+      # zwave
+      - /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C1300092-if00-port0:/dev/ttyUSB0
+      # zigbee
+      - /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C1300092-if01-port0:/dev/ttyUSB1
 
-  yolo:
-    build: ./yolo/
+
+  # https://zwave-js.github.io/zwavejs2mqtt/#/README
+  # https://hub.docker.com/r/zwavejs/zwavejs2mqtt
+  # https://github.com/zwave-js/zwavejs2mqtt/blob/master/docker/docker-compose.yml
+  zwavejs2mqtt:
+    image: zwavejs/zwavejs2mqtt
     restart: always
-    container_name: yolo
-    hostname: yolo
+    container_name: zwavejs2mqtt
+    hostname: zwavejs2mqtt
     environment:
       TZ: "America/Denver"
+    ports:
+      - 8091:8091/tcp # port for web interface
+      - 3000:3000/tcp # port for zwave-js websocket server
     volumes:
-      - zoneminder_data:/var/cache/zoneminder:rw
+      - ${ZWAVE_PATH}:/usr/src/app/store
     depends_on:
-      - zoneminder
+      - homeassistant
+    devices:
+      # usb Nortek device forwarded to the docker image
+      - /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C1300092-if00-port0:/dev/ttyUSB0
+
+  # yolo:
+  #   build: ./yolo/
+  #   restart: always
+  #   container_name: yolo
+  #   hostname: yolo
+  #   environment:
+  #     TZ: "America/Denver"
+  #   volumes:
+  #     - zoneminder_data:/var/cache/zoneminder:rw
+  #   depends_on:
+  #     - zoneminder
 
   # mqtt broker
   # https://hub.docker.com/_/eclipse-mosquitto

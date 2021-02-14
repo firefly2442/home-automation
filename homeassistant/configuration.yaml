@@ -45,7 +45,6 @@ sensor:
   # https://www.home-assistant.io/integrations/uptime/
   - platform: uptime
     name: Uptime
-    unit_of_measurement: days
   # https://www.home-assistant.io/integrations/sensor.command_line/#cpu-temperature
   - platform: command_line
     name: CPU Temperature
@@ -84,6 +83,34 @@ sensor:
     name: inside_camera_mqtt_label
     state_topic: "home-assistant/zoneminder/yolo/2/"
     value_template: "{{ value_json.label }}"
+  - platform: template
+    sensors:
+      # https://community.home-assistant.io/t/uptime-in-days-hours-and-minutes/180916/4
+      uptime_days:
+        value_template: >-
+          {% set up_time =  as_timestamp(now()) - as_timestamp(states('sensor.uptime')) %}
+          {% if up_time == 0 %}
+            Just restarted...
+          {% else %}
+            {% set minutes = (up_time // 60) | int %}
+            {% set hours = (minutes // 60) %}
+            {% set days = (hours // 24) %}
+            {% set weeks = (days // 7) %}
+            {% set minutes = (minutes % 60) %}
+            {% set hours =  (hours % 24) %}
+            {% set days = (days % 7) %}
+            {% macro phrase(value, name) %}
+                      {%- set value = value %}
+                      {%- set end = 's' if value > 1 else '' %}
+                      {{- '{} {}{}'.format(value, name, end) if value | int > 0 else '' }}
+            {%- endmacro %}
+            {% set text = [ phrase(weeks, 'week'), phrase(days, 'day'), phrase(hours, 'hr'), phrase(minutes, 'min') ] | select('!=','') | list | join(', ') %}
+            {% set last_comma = text.rfind(',') %}
+            {% if last_comma != -1 %}
+              {% set text = text[:last_comma] + ' and' + text[last_comma + 1:] %}
+            {% endif %}
+          {{ text }}
+          {% endif %}
 
 # https://www.home-assistant.io/lovelace/yaml-mode/
 lovelace:
@@ -91,6 +118,7 @@ lovelace:
 
 # https://community.home-assistant.io/t/picture-for-person-component-and-zone-naming-enhancement-for-home-and-not-home/103835/7
 homeassistant:
+  unit_system: imperial
   customize:
     person.patrick:
       entity_picture: /local/binary_logo.jpg
@@ -107,6 +135,13 @@ input_text:
     name: Tagged Discord username
     initial: !secret discord_tagged_user_id
 
+# https://www.home-assistant.io/integrations/binary_sensor.template/
+binary_sensor:
+  - platform: template
+    sensors:
+      zoneminder_update:
+        value_template: "{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') != state_attr('sensor.zoneminder_version', 'version') }}"
+
 # https://www.home-assistant.io/docs/automation/
 automation:
   - alias: 'Turn on camera when away'
@@ -116,7 +151,7 @@ automation:
       to: 'on'
     action:
       service: switch.turn_on
-      entity_id: switch.insidecamera_state
+      entity_id: switch.amcrestcamera_state
   - alias: 'Turn off camera when home'
     trigger:
       platform: state
@@ -124,7 +159,7 @@ automation:
       to: 'off'
     action:
       service: switch.turn_off
-      entity_id: switch.insidecamera_state
+      entity_id: switch.amcrestcamera_state
   # https://community.home-assistant.io/t/recorder-purge-and-repack/110552
   # - alias: Purge Database
   #   trigger:
@@ -173,13 +208,13 @@ automation:
         entity_id:  switch.living_room_lamp
       - delay: 00:00:10
       - service: switch.turn_on
-        entity_id:   switch.piano_lamp
+        entity_id:   switch.office_lamp
       - delay: 02:00:00
       - service: switch.turn_off
         entity_id:  switch.living_room_lamp
       - delay: 00:00:20
       - service: switch.turn_off
-        entity_id:   switch.piano_lamp
+        entity_id:   switch.office_lamp
         
         
   # - alias: 'Turn off all lights at sunrise'
@@ -191,7 +226,7 @@ automation:
   #     - service: switch.turn_off
   #       entity_id:  switch.living_room_lamp
   #     - service: switch.turn_off
-  #       entity_id:   switch.piano_lamp
+  #       entity_id:   switch.office_lamp
   #     - service: switch.turn_off
   #       entity_id:  switch.bedroom_lamp
   # - alias: 'Turn on light when away'
@@ -219,7 +254,7 @@ automation:
   #       after: '22:50:00'
   #   action:
   #     - service: switch.turn_off
-  #       entity_id:   switch.piano_lamp
+  #       entity_id:   switch.office_lamp
   #     - delay: 00:00:10
   #     - service: switch.turn_off
   #       entity_id:  switch.living_room_lamp
@@ -240,7 +275,7 @@ automation:
   #     - delay: 00:02:30
   #     - service: switch.turn_off
   #       entity_id:  switch.living_room_lamp
-  # - alias: 'Randomly turn on piano lamp when away'
+  # - alias: 'Randomly turn on office lamp when away'
   #   trigger:
   #     platform: state
   #     entity_id: person.patrick
@@ -252,10 +287,10 @@ automation:
   #       before: '22:30:00'
   #   action:
   #     - service: switch.turn_off
-  #       entity_id:  switch.piano_lamp
+  #       entity_id:  switch.office_lamp
   #     - delay: '00:0{{ range(5,10) | random | int }}:00'
   #     - service: switch.turn_on
-  #       entity_id:  switch.piano_lamp
+  #       entity_id:  switch.office_lamp
   #     - delay: '00:0{{ range(5,10) | random | int }}:00'
   # - alias: 'Randomly turn on bedroom lamp when away'
   #   trigger:
@@ -285,11 +320,24 @@ tplink:
 
 # https://www.home-assistant.io/integrations/mqtt/
 mqtt:
+  discovery: true
   broker: 192.168.1.226
   port: 1883
+  # https://zwave-js.github.io/zwavejs2mqtt/#/guide/homeassistant
+  birth_message:
+    topic: 'homeassistant/status'
+    payload: 'online'
+  will_message:
+    topic: 'homeassistant/status'
+    payload: 'offline'
 
 # https://www.home-assistant.io/integrations/discord/
 notify:
   - platform: discord
     name: Discord
     token: !secret discord_token
+
+# https://www.home-assistant.io/integrations/zha/
+zha:
+  # /dev/ttyUSB1
+  database_path: /config/zigbee.db

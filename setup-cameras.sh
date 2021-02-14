@@ -9,7 +9,7 @@ fi
 # load up working cameras, then load up https://192.168.1.226:9443/zm/api/monitors.json to see the correct values
 # make sure to encode special characters like &'s which become %26
 # https://zoneminder.readthedocs.io/en/latest/api.html#add-a-monitor
-curl --insecure -X POST https://192.168.1.226:9443/zm/api/monitors.json -d "Monitor[Name]=FrontCamera\
+curl --insecure -X POST https://192.168.1.226:9443/zm/api/monitors.json -d "Monitor[Name]=AmcrestCamera\
 &Monitor[Function]=Record\
 &Monitor[Type]=Ffmpeg\
 &Monitor[Method]=rtpRtsp\
@@ -29,7 +29,7 @@ curl --insecure -X POST https://192.168.1.226:9443/zm/api/monitors.json -d "Moni
 &Monitor[LabelFormat]=\
 &Monitor[AlarmFrameCount]=1"
 
-curl --insecure -X POST https://192.168.1.226:9443/zm/api/monitors.json -d "Monitor[Name]=InsideCamera\
+curl --insecure -X POST https://192.168.1.226:9443/zm/api/monitors.json -d "Monitor[Name]=CellphoneCamera\
 &Monitor[Function]=Record\
 &Monitor[Type]=Ffmpeg\
 &Monitor[Method]=rtpRtsp\

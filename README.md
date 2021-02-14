@@ -73,24 +73,31 @@ on cellphone
 
 Run `run-yolo-CPU.sh` or `run-yolo-GPU.sh` for debugging/testing
 
+Setup Frigate on Raspberry Pi 3 B+
+
+```shell
+
+```
+
 ## UI
 
 * [Zoneminder - https://192.168.1.226:9443/zm/](https://192.168.1.226:9443/zm/)
 * [Home-Assistant - http://192.168.1.226:8123](http://192.168.1.226:8123)
 * [Flask Camera Events - http://192.168.1.226:5000/camera/sensor.outside_camera_mqtt_full](http://localhost:5000/camera/sensor.outside_camera_mqtt_full)
+* [ZWaveJS - http://192.168.1.226:8091](http://192.168.1.226:8091/)
 
 ## Zoneminder
 
 ### Cameras
 
-Front Camera (Amcrest IP4M-1051W - 4MP)
+Camera (Amcrest IP4M-1051W - 4MP)
 
 * Web-UI: `http://192.168.1.111`
 * `rtsp://admin:secret@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0`
 * 2688 x 1520 (20 fps)
 * h264 passthrough
 
-Inside Camera (Samsung Galaxy Nexus cellphone)
+Camera (Samsung Galaxy Nexus cellphone)
 
 * Uses the [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_US)
 application for Android

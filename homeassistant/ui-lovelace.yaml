@@ -4,62 +4,80 @@ views:
     cards:
       # https://www.home-assistant.io/lovelace/entities/
       - type: entities
-        title: Toggle Lights
+        title: Lights
         show_header_toggle: false
         entities:
-          - entity: switch.piano_lamp
+          - entity: switch.office_lamp
             icon: mdi:lamp
           - entity: switch.living_room_lamp
             icon: mdi:floor-lamp
-          - entity: switch.bedroom_lamp
-            icon: mdi:lamp
+          - entity: switch.in_wall_smart_switch_current_value
+            name: Outside Lights
+            icon: mdi:outdoor-lamp
+          
       # https://www.home-assistant.io/lovelace/entities/
       - type: entities
-        title: Toggle Alarm
+        title: Alarm
+        show_header_toggle: false
+        entities:
+          - entity: switch.garage_switch
+            name: Arm Alarm
+            icon: mdi:light-switch
+      - type: entities
+        title: Intruder! Alarm!
         show_header_toggle: false
         entities:
           - entity: input_boolean.alarm
-            name: Alarm
+            name: Intruder! Alarm!
             icon: mdi:alarm-light
-  - title: Cameras
+  - title: Thermostat
+    cards:
+      # https://www.home-assistant.io/lovelace/thermostat/
+      - type: thermostat
+        entity: climate.t6_pro_z_wave_programmable_thermostat_thermostat_mode
+        name: Thermostat
+      - type: history-graph
+        title: Temperature
+        entities:
+          - entity: sensor.t6_pro_z_wave_programmable_thermostat_air_temperature
+            name: Temperature
+      - type: history-graph
+        title: Humidity
+        entities:
+          - entity: sensor.t6_pro_z_wave_programmable_thermostat_humidity
+            name: Humidity
+  - title: Cameras/Motion
     cards:
       # https://www.home-assistant.io/lovelace/picture-glance/
       - type: picture-glance
-        camera_image: camera.frontcamera
-        title: Front Camera
+        camera_image: camera.amcrestcamera
+        title: Camera
         entities:
-          - entity: sensor.frontcamera_events
-            show_state: true
-      - type: picture-glance
-        camera_image: camera.insidecamera
-        title: Inside Camera
-        entities:
-          - entity: sensor.insidecamera_events
+          - entity: sensor.amcrestcamera_events
             show_state: true
       # https://www.home-assistant.io/lovelace/entities/
       - type: entities
-        title: Toggle Cameras
+        title: Cameras
         show_header_toggle: false
         entities:
-          - entity: switch.frontcamera_state
-            name: Front Camera
-            icon: mdi:video
-          - entity: switch.insidecamera_state
-            name: Inside Camera
+          - entity: switch.amcrestcamera_state
+            name: Camera
             icon: mdi:video
       - type: history-graph
-        title: 'Camera Status'
+        title: Camera Status
         entities:
-          - camera.frontcamera
-          - camera.insidecamera
+          - camera.amcrestcamera
       - type: history-graph
-        title: 'Outside People Tracked'
+        title: Outside People Tracked
         entities:
-          - sensor.outside_camera_mqtt_label
+          - entity: sensor.outside_camera_mqtt_label
+            name: Motion Sensor
       - type: markdown
         content: "[Flask webpage](http://192.168.1.226:5000/camera/sensor.outside_camera_mqtt_full) showing people detected from the front camera over the last 24 hours."
-      - type: markdown
-        content: "Zoneminder release [{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }}](https://github.com/ZoneMinder/zoneminder/releases) is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
+      - type: history-graph
+        title: Motion Sensor
+        entities:
+          - binary_sensor.lumi_lumi_sensor_motion_aq2_a2fe8704_ias_zone
   - title: Weather
     cards:
       - type: weather-forecast
@@ -72,16 +90,16 @@ views:
   - title: System Monitor
     cards:
       - type: history-graph
-        title: 'CPU Load'
+        title: CPU Load
         entities:
           - sensor.load_5m
       - type: history-graph
-        title: 'Memory'
+        title: Memory
         entities:
           - sensor.memory_use_percent
           - sensor.swap_use_percent
       - type: history-graph
-        title: 'CPU Temp'
+        title: CPU Temp
         entities:
           - sensor.cpu_temperature
       - type: gauge
@@ -109,14 +127,37 @@ views:
           yellow: 60
           red: 85
       - type: markdown
-        content: "Home Assistant Uptime: {{ states('sensor.uptime') }} days."
-  - title: Updater
+        content: "Home Assistant Uptime: {{ states('sensor.uptime_days') }}"
+  - title: Updates
     cards:
       # https://www.home-assistant.io/integrations/updater/
       # https://www.home-assistant.io/lovelace/glance/
       - type: glance
-        title: Update Available?
+        title: Updates
         entities:
-          - binary_sensor.updater
+          - entity: binary_sensor.updater
+            name: Home Assistant
+          - entity: binary_sensor.zoneminder_update
+            name: Zoneminder
       - type: markdown
         content: "Home Assistant [{{ state_attr('binary_sensor.updater', 'newest_version') }}](https://github.com/home-assistant/core/releases) is available.  You're running version {{ states('sensor.current_version') }}."
+      - type: markdown
+        content: "Zoneminder release [{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }}](https://github.com/ZoneMinder/zoneminder/releases) is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
+  - title: Batteries
+    cards:
+      # https://www.home-assistant.io/lovelace/glance/
+      - type: glance
+        title: Batteries
+        entities:
+          - entity: binary_sensor.t6_pro_z_wave_programmable_thermostat_low_battery_level
+            name: Thermostat Battery
+      - type: history-graph
+        title: Thermostat Battery
+        entities:
+          - entity: sensor.t6_pro_z_wave_programmable_thermostat_battery_level
+            name: Thermostat Battery
+      - type: history-graph
+        title: Aqara Motion Sensor Battery
+        entities:
+          - entity: sensor.lumi_lumi_sensor_motion_aq2_a2fe8704_power
+            name: Aqara Motion Sensor Battery
