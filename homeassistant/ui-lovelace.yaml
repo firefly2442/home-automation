@@ -68,12 +68,12 @@ views:
         entities:
           - camera.amcrestcamera
       - type: history-graph
-        title: Outside People Tracked
+        title: Person Detected
         entities:
-          - entity: sensor.outside_camera_mqtt_label
-            name: Motion Sensor
+          - entity: binary_sensor.amcrest_person_motion
+            name: Person Detected
       - type: markdown
-        content: "[Flask webpage](http://192.168.1.226:5000/camera/sensor.outside_camera_mqtt_full) showing people detected from the front camera over the last 24 hours."
+        content: "[Frigate webpage](http://192.168.1.224:5000) showing detection events."
       - type: history-graph
         title: Motion Sensor
         entities:

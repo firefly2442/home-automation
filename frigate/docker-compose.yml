@@ -1,0 +1,18 @@
+version: '3.6'
+services:
+  frigate:
+    container_name: frigate
+    restart: unless-stopped
+    privileged: true
+    image: blakeblackshear/frigate:0.8.1-aarch64
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb
+      - /etc/localtime:/etc/localtime:ro
+      - ./config:/config
+      - ./clips:/media/frigate/clips
+      - ./recordings:/media/frigate/recordings
+    ports:
+      - 5000:5000/tcp # web-interface
+      - 1935:1935/tcp # RTMP feeds
+    environment:
+      FRIGATE_RTSP_PASSWORD: 'frigate'

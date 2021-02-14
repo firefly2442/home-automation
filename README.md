@@ -73,11 +73,11 @@ on cellphone
 
 Run `run-yolo-CPU.sh` or `run-yolo-GPU.sh` for debugging/testing
 
-Setup Frigate on Raspberry Pi 3 B+
+Setup Frigate on Raspberry Pi 3 B+.  See `frigate` folder.  Run `run-frigate.sh`.
 
-```shell
-
-```
+Leverages the [integration with HA](https://blakeblackshear.github.io/frigate/usage/home-assistant)
+Script copies `custom_components` folder over to `/media/usbdrive/homeassistant/` as part of home automation
+refresh and update process.
 
 ## UI
 
