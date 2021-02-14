@@ -7,7 +7,8 @@ secrets.ini
 *.h5
 /flaskcamera/config.py
 /zoneminder/ServerName
-
+/frigate/recordings/
+/frigate/clips/
 
 
 

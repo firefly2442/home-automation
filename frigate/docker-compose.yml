@@ -15,4 +15,4 @@ services:
       - 5000:5000/tcp # web-interface
       - 1935:1935/tcp # RTMP feeds
     environment:
-      FRIGATE_RTSP_PASSWORD: 'frigate'
+      FRIGATE_RTSP_PASSWORD: ${FRIGATE_RTSP_PASSWORD}

@@ -73,7 +73,7 @@ on cellphone
 
 Run `run-yolo-CPU.sh` or `run-yolo-GPU.sh` for debugging/testing
 
-Setup Frigate on Raspberry Pi 3 B+.  See `frigate` folder.  Run `run-frigate.sh`.
+Setup Frigate on Raspberry Pi 3 B+.  Set `FRIGATE_RTSP_PASSWORD` in `.env` which is the camera password.  See `frigate` folder.  Run `run-frigate.sh`.
 
 Leverages the [integration with HA](https://blakeblackshear.github.io/frigate/usage/home-assistant)
 Script copies `custom_components` folder over to `/media/usbdrive/homeassistant/` as part of home automation
