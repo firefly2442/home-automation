@@ -22,7 +22,7 @@ cameras:
     # detect on the sub-stream for improved performance
     width: 640
     height: 480
-    fps: 5
+    fps: 20
     objects:
       track:
         - person
