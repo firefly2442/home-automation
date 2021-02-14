@@ -69,20 +69,6 @@ sensor:
     value_template: '1' # dummy value, not used, avoids the "state max length is 255 characters" error
     json_attributes:
       - tag_name
-  - platform: mqtt
-    name: outside_camera_mqtt_full
-    state_topic: "home-assistant/zoneminder/yolo/1/"
-  - platform: mqtt
-    name: outside_camera_mqtt_label
-    state_topic: "home-assistant/zoneminder/yolo/1/"
-    value_template: "{{ value_json.label }}"
-  - platform: mqtt
-    name: inside_camera_mqtt_full
-    state_topic: "home-assistant/zoneminder/yolo/2/"
-  - platform: mqtt
-    name: inside_camera_mqtt_label
-    state_topic: "home-assistant/zoneminder/yolo/2/"
-    value_template: "{{ value_json.label }}"
   - platform: template
     sensors:
       # https://community.home-assistant.io/t/uptime-in-days-hours-and-minutes/180916/4
@@ -129,6 +115,8 @@ homeassistant:
 input_boolean:
   alarm:
     name: Toggle Alarm
+  alarm_away:
+    name: Alarm Away
 
 input_text:
   discord_user_id:
@@ -144,41 +132,65 @@ binary_sensor:
 
 # https://www.home-assistant.io/docs/automation/
 automation:
-  - alias: 'Turn on camera when away'
+  - alias: 'Turn on camera recording when away'
     trigger:
       platform: state
-      entity_id: input_boolean.alarm
+      entity_id: switch.garage_switch
       to: 'on'
     action:
       service: switch.turn_on
       entity_id: switch.amcrestcamera_state
-  - alias: 'Turn off camera when home'
+  - alias: 'Turn off camera recording when home'
     trigger:
       platform: state
-      entity_id: input_boolean.alarm
+      entity_id: switch.garage_switch
       to: 'off'
     action:
       service: switch.turn_off
       entity_id: switch.amcrestcamera_state
-  # https://community.home-assistant.io/t/recorder-purge-and-repack/110552
-  # - alias: Purge Database
-  #   trigger:
-  #     platform: time
-  #     at: '02:22:22'
-  #   action:
-  #     service: recorder.purge
-  #     data:
-  #       keep_days: 5
-  #       repack: true
-  # https://www.home-assistant.io/integrations/notify/
-  - alias: 'Send Discord inside person alarm message'
+  - alias: 'Motion triggers alarm if alarm home or alarm away'
     trigger:
       platform: state
-      entity_id:  sensor.inside_camera_mqtt_label
-      to: 'person'
+      entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_a2fe8704_ias_zone
+      to: 'on'
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: switch.garage_switch
+          state: 'on'
+        - condition: state
+          entity_id: input_boolean.alarm_away
+          state: 'on'
+    action:
+      service: input_boolean.turn_on
+      entity_id: input_boolean.alarm
+  - alias: 'Person detection triggers alarm if alarm home or alarm away'
+    trigger:
+      platform: state
+      entity_id: binary_sensor.amcrest_person_motion
+      to: 'on'
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: switch.garage_switch
+          state: 'on'
+        - condition: state
+          entity_id: input_boolean.alarm_away
+          state: 'on'
+    action:
+      service: input_boolean.turn_on
+      entity_id: input_boolean.alarm
+  # https://www.home-assistant.io/integrations/notify/
+  - alias: 'Send Discord alarm message'
+    trigger:
+      platform: state
+      entity_id: input_boolean.alarm
+      to: 'on'
     condition:
       - condition: state
-        entity_id: input_boolean.alarm
+        entity_id: switch.garage_switch
         state: 'on'
     action:
       # turning the service off and then back on after a delay prevents it from spamming
@@ -186,7 +198,7 @@ automation:
         entity_id: automation.send_discord_inside_person_alarm_message
       - service: notify.discord
         data_template:
-          message: "<@{{ states('input_text.discord_user_id') }}> Inside camera alarm! Starting timestamp: {{ states('sensor.inside_camera_mqtt_timestamp') }} - {{ states('sensor.inside_camera_mqtt_path') }}"
+          message: "<@{{ states('input_text.discord_user_id') }}> Alarm!"
           target: !secret discord_channel # channel ID
           data:
             images:
@@ -194,41 +206,56 @@ automation:
       - delay: 00:00:15 # delay so that we don't spam Discord
       - service: automation.turn_on
         entity_id: automation.send_discord_inside_person_alarm_message
-  - alias: 'Turn on light evening when away'
+  - alias: 'Turn on outside lights at night'
+    trigger:
+      platform: state
+      entity_id: sun.sun
+      to: below_horizon
+    action:
+      - service: switch.turn_on
+        entity_id: switch.in_wall_smart_switch_current_value
+  - alias: 'Turn off all lights at sunrise'
+    trigger:
+      platform: state
+      entity_id: sun.sun
+      to: above_horizon
+    action:
+      - service: switch.turn_off
+        entity_id: switch.office_lamp
+      - service: switch.turn_off
+        entity_id: switch.living_room_lamp
+      - service: switch.turn_off
+        entity_id: switch.in_wall_smart_switch_current_value
+  - alias: 'Turn on lights at dusk when away'
     trigger:
       platform: state
       entity_id: sun.sun
       to: below_horizon
     condition:
       - condition: state
-        entity_id: input_boolean.alarm
+        entity_id: switch.garage_switch
         state: 'on'
     action:
       - service: switch.turn_on
-        entity_id:  switch.living_room_lamp
-      - delay: 00:00:10
+        entity_id: switch.office_lamp
       - service: switch.turn_on
-        entity_id:   switch.office_lamp
-      - delay: 02:00:00
+        entity_id: switch.living_room_lamp
+  - alias: 'Turn off lights at bedtime when away'
+    trigger:
+      platform: state
+      entity_id: switch.garage_switch
+      to: 'on'
+    condition:
+      - condition: time
+        after: '22:40:00'
+    action:
       - service: switch.turn_off
-        entity_id:  switch.living_room_lamp
-      - delay: 00:00:20
+        entity_id: switch.office_lamp
+      - delay: 00:00:59
       - service: switch.turn_off
-        entity_id:   switch.office_lamp
-        
-        
-  # - alias: 'Turn off all lights at sunrise'
-  #   trigger:
-  #     platform: state
-  #     entity_id: sun.sun
-  #     to: above_horizon
-  #   action:
-  #     - service: switch.turn_off
-  #       entity_id:  switch.living_room_lamp
-  #     - service: switch.turn_off
-  #       entity_id:   switch.office_lamp
-  #     - service: switch.turn_off
-  #       entity_id:  switch.bedroom_lamp
+        entity_id: switch.living_room_lamp
+
+
   # - alias: 'Turn on light when away'
   #   trigger:
   #     platform: state
@@ -254,13 +281,13 @@ automation:
   #       after: '22:50:00'
   #   action:
   #     - service: switch.turn_off
-  #       entity_id:   switch.office_lamp
+  #       entity_id: switch.office_lamp
   #     - delay: 00:00:10
   #     - service: switch.turn_off
-  #       entity_id:  switch.living_room_lamp
+  #       entity_id: switch.living_room_lamp
   #     - delay: 00:00:59
   #     - service: switch.turn_off
-  #       entity_id:  switch.bedroom_lamp
+  #       entity_id: switch.bedroom_lamp
   # - alias: 'Turn on light when back'
   #   trigger:
   #     platform: state

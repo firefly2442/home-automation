@@ -17,11 +17,15 @@ views:
           
       # https://www.home-assistant.io/lovelace/entities/
       - type: entities
-        title: Alarm
+        title: Arm Alarm
         show_header_toggle: false
         entities:
           - entity: switch.garage_switch
-            name: Arm Alarm
+            name: Away
+            icon: mdi:light-switch
+          - type: divider
+          - entity: input_boolean.alarm_away
+            name: Home
             icon: mdi:light-switch
       - type: entities
         title: Intruder! Alarm!
