@@ -79,6 +79,14 @@ Leverages the [integration with HA](https://blakeblackshear.github.io/frigate/us
 Script copies `custom_components` folder over to `/media/usbdrive/homeassistant/` as part of home automation
 refresh and update process.
 
+[Setup Bluetooth](https://gist.github.com/actuino/9548329d1bba6663a63886067af5e4cb) on Raspberry Pi 4
+Copy an `alarm.wav` file to the `homeassistant` folder.
+Copy your `~/.ssh/id_rsa.pub` and `~/.ssh/id_rsa` files to the `homeassistant` folder.
+Add your own public key to the `authorized_keys` file via: `cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys`
+on the Raspberry Pi 4.  Also set permissions `chmod 640 ~/.ssh/authorized_keys`.
+We end up SSHing back into the host OS from within the Docker container in order to play sounds since it's
+not easy to pass Bluetooth into the container itself.
+
 ## UI
 
 * [Zoneminder - https://192.168.1.226:9443/zm/](https://192.168.1.226:9443/zm/)

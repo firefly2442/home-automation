@@ -9,7 +9,9 @@ secrets.ini
 /zoneminder/ServerName
 /frigate/recordings/
 /frigate/clips/
-
+*.wav
+id_rsa.pub
+id_rsa
 
 
 # Docker project generated files to ignore
