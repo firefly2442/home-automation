@@ -69,6 +69,20 @@ sensor:
     value_template: '1' # dummy value, not used, avoids the "state max length is 255 characters" error
     json_attributes:
       - tag_name
+  - platform: rest
+    # https://www.home-assistant.io/docs/configuration/platform_options/
+    scan_interval: 43200 # run every 12 hours, default on local polling of sensors is 30 seconds
+    resource: https://api.github.com/repos/blakeblackshear/frigate/releases/latest
+    name: frigate_latest_release
+    value_template: '1' # dummy value, not used, avoids the "state max length is 255 characters" error
+    json_attributes:
+      - tag_name
+  - platform: rest
+    # https://www.home-assistant.io/docs/configuration/platform_options/
+    scan_interval: 43200 # run every 12 hours, default on local polling of sensors is 30 seconds
+    resource: http://192.168.1.224:5000/api/version
+    name: frigate_version
+    value_template: 'v{{ value.split("-")[0] }}'
   - platform: template
     sensors:
       # https://community.home-assistant.io/t/uptime-in-days-hours-and-minutes/180916/4
@@ -129,6 +143,8 @@ binary_sensor:
     sensors:
       zoneminder_update:
         value_template: "{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') != state_attr('sensor.zoneminder_version', 'version') }}"
+      frigate_update:
+        value_template: "{{ state_attr('sensor.frigate_latest_release', 'tag_name') != states('sensor.frigate_version') }}"
 
 # https://www.home-assistant.io/docs/automation/
 automation:

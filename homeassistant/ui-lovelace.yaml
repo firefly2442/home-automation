@@ -34,6 +34,8 @@ views:
           - entity: input_boolean.alarm
             name: Intruder! Alarm!
             icon: mdi:alarm-light
+      - type: markdown
+        content: "[Zwavejs webpage](http://192.168.1.226:8091) with devices."
   - title: Thermostat
     cards:
       # https://www.home-assistant.io/lovelace/thermostat/
@@ -78,6 +80,8 @@ views:
             name: Person Detected
       - type: markdown
         content: "[Frigate webpage](http://192.168.1.224:5000) showing detection events."
+      - type: markdown
+        content: "[Zoneminder webpage](https://192.168.1.226:9443/zm/) with recordings."
       - type: history-graph
         title: Motion Sensor
         entities:
@@ -143,10 +147,14 @@ views:
             name: Home Assistant
           - entity: binary_sensor.zoneminder_update
             name: Zoneminder
+          - entity: binary_sensor.frigate_update
+            name: Frigate
       - type: markdown
         content: "Home Assistant [{{ state_attr('binary_sensor.updater', 'newest_version') }}](https://github.com/home-assistant/core/releases) is available.  You're running version {{ states('sensor.current_version') }}."
       - type: markdown
         content: "Zoneminder release [{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') }}](https://github.com/ZoneMinder/zoneminder/releases) is available.  You're running version: {{ state_attr('sensor.zoneminder_version', 'version') }}"
+      - type: markdown
+        content: "Frigate release [{{ state_attr('sensor.frigate_latest_release', 'tag_name') }}](https://github.com/blakeblackshear/frigate/releases) is available.  You're running version: {{ states('sensor.frigate_version') }}"
   - title: Batteries
     cards:
       # https://www.home-assistant.io/lovelace/glance/
