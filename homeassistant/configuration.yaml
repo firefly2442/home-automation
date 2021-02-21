@@ -216,9 +216,6 @@ automation:
         data_template:
           message: "<@{{ states('input_text.discord_user_id') }}> Alarm!"
           target: !secret discord_channel # channel ID
-          data:
-            images:
-              - "{{ states('sensor.inside_camera_mqtt_path') }}"
       - delay: 00:00:15 # delay so that we don't spam Discord
       - service: automation.turn_on
         entity_id: automation.send_discord_inside_person_alarm_message
@@ -242,6 +239,16 @@ automation:
         entity_id: switch.living_room_lamp
       - service: switch.turn_off
         entity_id: switch.in_wall_smart_switch_current_value
+  - alias: 'Turn off lights when arrive home'
+    trigger:
+      platform: state
+      entity_id: switch.garage_switch
+      to: 'off'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.office_lamp
+      - service: switch.turn_off
+        entity_id: switch.living_room_lamp
   - alias: 'Turn on lights at dusk when away'
     trigger:
       platform: state
@@ -252,8 +259,10 @@ automation:
         entity_id: switch.garage_switch
         state: 'on'
     action:
+      - delay: 00:00:55
       - service: switch.turn_on
         entity_id: switch.office_lamp
+      - delay: 00:00:55
       - service: switch.turn_on
         entity_id: switch.living_room_lamp
   - alias: 'Turn off lights at bedtime when away'
@@ -297,6 +306,34 @@ automation:
       # turn it back on
       - service: automation.turn_on
         entity_id: automation.play_alarm_audio_via_bluetooth_if_alarm_triggers
+  - alias: 'Save snapshot from camera when person detected'
+    trigger:
+      platform: state
+      entity_id: binary_sensor.amcrest_person_motion
+      to: 'on'
+    condition:
+      - condition: state
+        entity_id: switch.garage_switch
+        state: 'on'
+    action:
+      - service: camera.snapshot
+        target:
+          entity_id: camera.amcrest_person
+        data:
+          filename: '/config/www/amcrest-person.jpg'
+      # turning the service off and then back on after a delay prevents it from spamming
+      # - service: automation.turn_off
+      #   entity_id: automation.save_snapshot_from_camera_when_person_detected
+      - service: notify.discord
+        data_template:
+          message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected!"
+          target: !secret discord_channel # channel ID
+          data:
+            images:
+              - "/config/www/amcrest-person.jpg"
+      - delay: 00:00:15 # delay so that we don't spam Discord
+      # - service: automation.turn_on
+      #   entity_id: automation.save_snapshot_from_camera_when_person_detected
 
 
   # - alias: 'Turn on light when away'

@@ -171,18 +171,14 @@ Cleanup files from the mounted Docker volumes
 
 ## Helpful Links and References
 
-Not using zmEventServer
-
-* [Zoneminder and HA integration with zmEventServer](https://seanb.co.uk/2019/08/zoneminder-and-home-assistant/)
-* [Managing notifications in HA](https://seanb.co.uk/2019/08/managing-zoneminder-notifications-with-home-assistant/)
 * [Dockerized version of Zoneminder](https://github.com/dlandon/zoneminder)
 
 ## TODO
 
+* monitor disk usage of Raspberry Pi 3B+
+* turn on alarm after sufficient testing
+* test alarm and bluetooth connectivity after reboot
+* get dimmer switch working, zwave
 * flash lights when person detected
-* randomly turn on/off lights when away
-* test yolo logging and status when other containers are down
-* test yolo when zoneminder cameras are down
-* calculate estimated distance based on pixels?
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion
 * add explanatory text on containers, documentation, images/GIFs to README, add helpful links
