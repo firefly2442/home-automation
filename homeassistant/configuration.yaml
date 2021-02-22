@@ -57,6 +57,14 @@ sensor:
   - platform: rest
     # https://www.home-assistant.io/docs/configuration/platform_options/
     scan_interval: 600 # run every 10 minutes, default on local polling of sensors is 30 seconds
+    # https://blakeblackshear.github.io/frigate/usage/api#apistats
+    resource: http://192.168.1.224:5000/api/stats
+    name: frigate_used_space_percentage
+    value_template: '{{ ((value_json["service"]["storage"]["/media/frigate/recordings"]["used"] / value_json["service"]["storage"]["/media/frigate/recordings"]["total"]) * 100|float)|round(0) }}'
+  # https://www.home-assistant.io/integrations/rest
+  - platform: rest
+    # https://www.home-assistant.io/docs/configuration/platform_options/
+    scan_interval: 600 # run every 10 minutes, default on local polling of sensors is 30 seconds
     resource: https://192.168.1.226:9443/zm/api/host/getVersion.json
     name: zoneminder_version
     json_attributes:

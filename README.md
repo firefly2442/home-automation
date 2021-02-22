@@ -175,7 +175,6 @@ Cleanup files from the mounted Docker volumes
 
 ## TODO
 
-* monitor disk usage of Raspberry Pi 3B+
 * turn on alarm after sufficient testing
 * test alarm and bluetooth connectivity after reboot
 * get dimmer switch working, zwave

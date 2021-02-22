@@ -136,6 +136,14 @@ views:
           red: 85
       - type: markdown
         content: "Home Assistant Uptime: {{ states('sensor.uptime_days') }}"
+      - type: gauge
+        name: Frigate Used Diskspace
+        unit: '%'
+        entity: sensor.frigate_used_space_percentage
+        severity:
+          green: 0
+          yellow: 70
+          red: 85
   - title: Updates
     cards:
       # https://www.home-assistant.io/integrations/updater/
