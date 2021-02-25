@@ -234,7 +234,7 @@ automation:
       to: below_horizon
     action:
       - service: switch.turn_on
-        entity_id: switch.in_wall_smart_switch_current_value
+        entity_id: switch.nodeid_4_switch
   - alias: 'Turn off all lights at sunrise'
     trigger:
       platform: state
@@ -246,7 +246,7 @@ automation:
       - service: switch.turn_off
         entity_id: switch.living_room_lamp
       - service: switch.turn_off
-        entity_id: switch.in_wall_smart_switch_current_value
+        entity_id: switch.nodeid_4_switch
   - alias: 'Turn off lights when arrive home'
     trigger:
       platform: state

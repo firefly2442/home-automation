@@ -11,7 +11,7 @@ views:
             icon: mdi:lamp
           - entity: switch.living_room_lamp
             icon: mdi:floor-lamp
-          - entity: switch.in_wall_smart_switch_current_value
+          - entity: switch.nodeid_4_switch
             name: Outside Lights
             icon: mdi:outdoor-lamp
           
@@ -165,16 +165,10 @@ views:
         content: "Frigate release [{{ state_attr('sensor.frigate_latest_release', 'tag_name') }}](https://github.com/blakeblackshear/frigate/releases) is available.  You're running version: {{ states('sensor.frigate_version') }}"
   - title: Batteries
     cards:
-      # https://www.home-assistant.io/lovelace/glance/
-      - type: glance
-        title: Batteries
-        entities:
-          - entity: binary_sensor.t6_pro_z_wave_programmable_thermostat_low_battery_level
-            name: Thermostat Battery
       - type: history-graph
         title: Thermostat Battery
         entities:
-          - entity: sensor.t6_pro_z_wave_programmable_thermostat_battery_level
+          - entity: sensor.nodeid_3_battery_level
             name: Thermostat Battery
       - type: history-graph
         title: Aqara Motion Sensor Battery
