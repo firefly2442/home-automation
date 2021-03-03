@@ -38,7 +38,7 @@ def main(_argv):
 
     procs = [None, None]
 
-    while 1 is slightly faster than while True
+    # while 1 is slightly faster than while True
     while 1:
         for i,proc in enumerate(procs):
             restart_it = False
