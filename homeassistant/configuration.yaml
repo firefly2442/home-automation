@@ -287,21 +287,6 @@ automation:
       - delay: 00:00:59
       - service: switch.turn_off
         entity_id: switch.living_room_lamp
-  # TODO: this works but need to test to make sure this doesn't go off randomly during the day
-  # - alias: 'Play alarm audio via bluetooth if alarm triggers'
-  #   trigger:
-  #     platform: state
-  #     entity_id: input_boolean.alarm
-  #     to: 'on'
-  #   action:
-  #     repeat:
-  #       # 5 second alarm * 360 = 30 minutes
-  #       count: 360
-  #       sequence:
-  #         service: notify.ssh_and_aplay
-  #         data:
-  #           title: "Playing alarm"
-  #           message: "Playing alarm"
   - alias: 'Turn off audio alarm when alarm turned off'
     trigger:
       platform: state
@@ -451,11 +436,6 @@ notify:
   - platform: discord
     name: Discord
     token: !secret discord_token
-  - platform: command_line
-    name: ssh_and_aplay
-    # aplay requires apt install alsa-utils
-    # seems to run commands as root user just like when you `exec` into the container
-    command: 'ssh carlsonp@192.168.1.226 "aplay /home/carlsonp/src/home-automation/homeassistant/alarm.wav"'
 
 # https://www.home-assistant.io/integrations/zha/
 zha:

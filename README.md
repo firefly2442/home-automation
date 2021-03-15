@@ -175,6 +175,7 @@ Cleanup files from the mounted Docker volumes
 
 ## TODO
 
+* add zwavejs version to update check
 * turn on alarm after sufficient testing
 * test alarm and bluetooth connectivity after reboot
 * get dimmer switch working, zwave
