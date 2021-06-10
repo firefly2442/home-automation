@@ -150,9 +150,9 @@ binary_sensor:
   - platform: template
     sensors:
       zoneminder_update:
-        value_template: "{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') != state_attr('sensor.zoneminder_version', 'version') }}"
+        value_template: "{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') > state_attr('sensor.zoneminder_version', 'version') }}"
       frigate_update:
-        value_template: "{{ state_attr('sensor.frigate_latest_release', 'tag_name') != states('sensor.frigate_version') }}"
+        value_template: "{{ state_attr('sensor.frigate_latest_release', 'tag_name') > states('sensor.frigate_version') }}"
 
 # https://www.home-assistant.io/docs/automation/
 automation:

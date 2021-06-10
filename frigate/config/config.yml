@@ -82,6 +82,148 @@ cameras:
       bounding_box: False
       # Optional: crop the snapshot
       crop: False
+  frontdoor:
+    ffmpeg:
+      inputs:
+        # sub-stream, lower quality and FPS
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
+          roles:
+            - detect
+            - clips
+    # detect on the sub-stream for improved performance
+    width: 704
+    height: 480
+    fps: 15
+    objects:
+      track:
+        - person
+    clips:
+      # Required: enables clips for the camera
+      # This value can be set via MQTT and will be updated in startup based on retained value
+      enabled: True
+      # Optional: Number of seconds before the event to include in the clips
+      pre_capture: 5
+      # Optional: Number of seconds after the event to include in the clips
+      post_capture: 5
+      # Optional: Objects to save clips for
+      objects:
+        - person
+      # Optional: Camera override for retention settings
+      retain:
+        # Required: Default retention days
+        default: 10
+        # Optional: Per object retention days
+        objects:
+          person: 15
+    record:
+      # Optional: Enable recording
+      enabled: False
+      # Optional: Number of days to retain (default: global setting)
+      retain_days: 10
+    rtmp:
+      # Required: Enable the live stream
+      enabled: False
+        # Optional: Configuration for the jpg snapshots written to the clips directory for each event
+    snapshots:
+      # Optional: Enable writing jpg snapshot to /media/frigate/clips
+      # This value can be set via MQTT and will be updated in startup based on retained value
+      enabled: True
+      # Optional: print a timestamp on the snapshots
+      timestamp: False
+      # Optional: draw bounding box on the snapshots
+      bounding_box: False
+      # Optional: crop the snapshot
+      crop: False
+      # Optional: Camera override for retention settings
+      retain:
+        # Required: Default retention days
+        default: 10
+        # Optional: Per object retention days
+        objects:
+          person: 15
+    # Optional: Configuration for the jpg snapshots published via MQTT
+    mqtt:
+      # Optional: Enable publishing snapshot via mqtt for camera
+      # NOTE: Only applies to publishing image data to MQTT via 'frigate/<camera_name>/<object_name>/snapshot'.
+      # All other messages will still be published.
+      enabled: True
+      # Optional: print a timestamp on the snapshots
+      timestamp: False
+      # Optional: draw bounding box on the snapshots
+      bounding_box: False
+      # Optional: crop the snapshot
+      crop: False
+  backdoor:
+    ffmpeg:
+      inputs:
+        # sub-stream, lower quality and FPS
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=1
+          roles:
+            - detect
+            - clips
+    # detect on the sub-stream for improved performance
+    width: 704
+    height: 480
+    fps: 15
+    objects:
+      track:
+        - person
+    clips:
+      # Required: enables clips for the camera
+      # This value can be set via MQTT and will be updated in startup based on retained value
+      enabled: True
+      # Optional: Number of seconds before the event to include in the clips
+      pre_capture: 5
+      # Optional: Number of seconds after the event to include in the clips
+      post_capture: 5
+      # Optional: Objects to save clips for
+      objects:
+        - person
+      # Optional: Camera override for retention settings
+      retain:
+        # Required: Default retention days
+        default: 10
+        # Optional: Per object retention days
+        objects:
+          person: 15
+    record:
+      # Optional: Enable recording
+      enabled: False
+      # Optional: Number of days to retain (default: global setting)
+      retain_days: 10
+    rtmp:
+      # Required: Enable the live stream
+      enabled: False
+        # Optional: Configuration for the jpg snapshots written to the clips directory for each event
+    snapshots:
+      # Optional: Enable writing jpg snapshot to /media/frigate/clips
+      # This value can be set via MQTT and will be updated in startup based on retained value
+      enabled: True
+      # Optional: print a timestamp on the snapshots
+      timestamp: False
+      # Optional: draw bounding box on the snapshots
+      bounding_box: False
+      # Optional: crop the snapshot
+      crop: False
+      # Optional: Camera override for retention settings
+      retain:
+        # Required: Default retention days
+        default: 10
+        # Optional: Per object retention days
+        objects:
+          person: 15
+    # Optional: Configuration for the jpg snapshots published via MQTT
+    mqtt:
+      # Optional: Enable publishing snapshot via mqtt for camera
+      # NOTE: Only applies to publishing image data to MQTT via 'frigate/<camera_name>/<object_name>/snapshot'.
+      # All other messages will still be published.
+      enabled: True
+      # Optional: print a timestamp on the snapshots
+      timestamp: False
+      # Optional: draw bounding box on the snapshots
+      bounding_box: False
+      # Optional: crop the snapshot
+      crop: False
 
 detectors:
   cpu1:

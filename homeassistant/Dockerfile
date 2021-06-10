@@ -1,7 +1,7 @@
 FROM homeassistant/home-assistant:stable
 
 RUN apk add --no-cache \
-    python3 py3-pip ca-certificates
+    python3 py3-pip ca-certificates iputils
 
 RUN pip3 install --no-cache-dir requests
 
