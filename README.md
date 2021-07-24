@@ -90,19 +90,21 @@ refresh and update process.
 
 ### Cameras
 
+Don't use h265, zoneminder and frigate struggle with this.
+
 Camera (Amcrest IP4M-1051W - 4MP)
 
 * Web-UI: `http://192.168.1.111`
 * `rtsp://admin:secret@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0`
 * 2688 x 1520 (20 fps)
-* h265 passthrough
+* h264 passthrough
 
 Camera (Amcrest IP8M-2493EW - 8MP - x2)
 
 * Web-UI: `http://192.168.1.110`, `http://192.168.1.112`
 * `rtsp://admin:secret@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0`
 * 3840 x 2160 (15 fps)
-* h265 passthrough
+* h264 passthrough
 
 Camera (Samsung Galaxy Nexus cellphone)
 
@@ -174,6 +176,8 @@ Cleanup files from the mounted Docker volumes
 
 ## TODO
 
+* check pihole status and notify if down
+* setup two new cameras
 * add zwavejs version to update check
 * turn on alarm after sufficient testing
 * test alarm and bluetooth connectivity after reboot
