@@ -12,7 +12,7 @@ My personal home automation setup in Docker leveraging:
 
 Install Docker and run Linux post-install steps so you don't need `sudo` for your regular user.
 
-Install docker-compose.
+Install [Docker Compose](https://docs.docker.com/compose/).
 
 Copy `.env-copy` to `.env` and edit
 
@@ -22,10 +22,10 @@ Copy `flaskcamera/config.example.py` to `flaskcamera/config.py` and edit
 
 Run `setup-certs.sh`
 
-Build our docker-compose and bring up services
+Build via compose and bring up services
 
 ```shell
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
 Wait until `zoneminder` is up and running.  This will take some time, you can check the progress via:
@@ -125,16 +125,16 @@ cellphone, smart plugs, etc.
 If there are updates upstream in the Docker images:
 
 ```shell
-docker-compose build --pull --parallel
+docker compose build --pull --parallel
 # or force a full rebuild
-# docker-compose build --no-cache --pull --parallel
-docker-compose up -d
+# docker compose build --no-cache --pull --parallel
+docker compose up -d
 ```
 
 ## Teardown
 
 ```shell
-docker-compose down -v
+docker compose down -v
 ```
 
 Cleanup files from the mounted Docker volumes
