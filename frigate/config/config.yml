@@ -4,51 +4,37 @@ mqtt:
   port: 1883
 # https://blakeblackshear.github.io/frigate/configuration/index#cameras
 cameras:
-  amcrest:
+  inside:
     ffmpeg:
+      hwaccel_args:
+      - -c:v
+      - h264_v4l2m2m
       inputs:
         # sub-stream, lower quality and FPS
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - detect
-            - clips
+            - record
         # full 4k stream
         # Frigate seems to choke on this, my guess is it can't handle writing the huge 4MP stream...
         # so we have to move clips over to the sub-stream
-        # WARNING : Unable to create clip for amcrest and event 1613278155.473675-cdr40x. There were no cache files for this event.
+        # WARNING : Unable to create clip for inside and event 1613278155.473675-cdr40x. There were no cache files for this event.
         # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0
-        #   roles:
-        #     - clips
     # detect on the sub-stream for improved performance
-    width: 640
-    height: 480
-    fps: 20
+    detect:
+      width: 640
+      height: 480
+      fps: 20
     objects:
       track:
         - person
-    clips:
-      # Required: enables clips for the camera
-      # This value can be set via MQTT and will be updated in startup based on retained value
-      enabled: True
-      # Optional: Number of seconds before the event to include in the clips
-      pre_capture: 5
-      # Optional: Number of seconds after the event to include in the clips
-      post_capture: 5
-      # Optional: Objects to save clips for
-      objects:
-        - person
-      # Optional: Camera override for retention settings
-      retain:
-        # Required: Default retention days
-        default: 10
-        # Optional: Per object retention days
-        objects:
-          person: 15
     record:
       # Optional: Enable recording
-      enabled: False
-      # Optional: Number of days to retain (default: global setting)
-      retain_days: 10
+      enabled: True
+      retain_days: 0
+      events:
+        retain:
+          default: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
@@ -84,42 +70,30 @@ cameras:
       crop: False
   frontdoor:
     ffmpeg:
+      hwaccel_args:
+      - -c:v
+      - h264_v4l2m2m
       inputs:
         # sub-stream, lower quality and FPS
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - detect
-            - clips
+            - record
     # detect on the sub-stream for improved performance
-    width: 704
-    height: 480
-    fps: 15
+    detect:
+      width: 704
+      height: 480
+      fps: 15
     objects:
       track:
         - person
-    clips:
-      # Required: enables clips for the camera
-      # This value can be set via MQTT and will be updated in startup based on retained value
-      enabled: True
-      # Optional: Number of seconds before the event to include in the clips
-      pre_capture: 5
-      # Optional: Number of seconds after the event to include in the clips
-      post_capture: 5
-      # Optional: Objects to save clips for
-      objects:
-        - person
-      # Optional: Camera override for retention settings
-      retain:
-        # Required: Default retention days
-        default: 10
-        # Optional: Per object retention days
-        objects:
-          person: 15
     record:
       # Optional: Enable recording
-      enabled: False
-      # Optional: Number of days to retain (default: global setting)
-      retain_days: 10
+      enabled: True
+      retain_days: 0
+      events:
+        retain:
+          default: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
@@ -155,42 +129,30 @@ cameras:
       crop: False
   backdoor:
     ffmpeg:
+      hwaccel_args:
+      - -c:v
+      - h264_v4l2m2m
       inputs:
         # sub-stream, lower quality and FPS
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - detect
-            - clips
+            - record
     # detect on the sub-stream for improved performance
-    width: 704
-    height: 480
-    fps: 15
+    detect:
+      width: 704
+      height: 480
+      fps: 15
     objects:
       track:
         - person
-    clips:
-      # Required: enables clips for the camera
-      # This value can be set via MQTT and will be updated in startup based on retained value
-      enabled: True
-      # Optional: Number of seconds before the event to include in the clips
-      pre_capture: 5
-      # Optional: Number of seconds after the event to include in the clips
-      post_capture: 5
-      # Optional: Objects to save clips for
-      objects:
-        - person
-      # Optional: Camera override for retention settings
-      retain:
-        # Required: Default retention days
-        default: 10
-        # Optional: Per object retention days
-        objects:
-          person: 15
     record:
       # Optional: Enable recording
-      enabled: False
-      # Optional: Number of days to retain (default: global setting)
-      retain_days: 10
+      enabled: True
+      retain_days: 0
+      events:
+        retain:
+          default: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
