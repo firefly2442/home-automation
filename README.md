@@ -14,19 +14,6 @@ Install Docker and run Linux post-install steps so you don't need `sudo` for you
 
 Install docker-compose.
 
-Install the proprietary Nvidia drivers via the "Additional Drivers" GUI.
-
-Follow directions for [installing nvidia-docker](https://github.com/NVIDIA/nvidia-docker) support
-
-Use `sudo watch -n0.5 nvidia-smi` to check things are working
-
-Use `sudo nvtop` for a graphical view of the GPU usage
-
-Until [docker-compose](https://github.com/docker/compose/issues/6691) support works, GPU support is hacky.
-
-Check to make sure [Tensorflow via GPUs](https://www.tensorflow.org/install/docker) works by following instructions
-for testing by running a Docker image to calculate a tensor.
-
 Copy `.env-copy` to `.env` and edit
 
 Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
@@ -34,15 +21,6 @@ Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
 Copy `flaskcamera/config.example.py` to `flaskcamera/config.py` and edit
 
 Run `setup-certs.sh`
-
-Checkout dlandon zoneminder code in separate directory.
-
-Build dlandon zoneminder for arm64, checkout code, build, and tag
-
-```shell
-docker build --tag zoneminder:latest --tag localhost:5000/zoneminder:latest .
-docker push localhost:5000/zoneminder:latest
-```
 
 Build our docker-compose and bring up services
 
@@ -71,19 +49,18 @@ docker restart zoneminder
 Install the [home-assistant Android application](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android&hl=en_US)
 on cellphone
 
-Run `run-yolo-CPU.sh` or `run-yolo-GPU.sh` for debugging/testing
-
 Setup Frigate on Raspberry Pi 3 B+.  Set `FRIGATE_RTSP_PASSWORD` in `.env` which is the camera password.  See `frigate` folder.  Run `run-frigate.sh`.
 
 Leverages the [integration with HA](https://blakeblackshear.github.io/frigate/usage/home-assistant)
 Script copies `custom_components` folder over to `/media/usbdrive/homeassistant/` as part of home automation
 refresh and update process.
 
+Use the `run-home-automation.sh` for future changes and to grab the latest versions of Docker images.
+
 ## UI
 
 * [Zoneminder - https://192.168.1.226:9443/zm/](https://192.168.1.226:9443/zm/)
 * [Home-Assistant - http://192.168.1.226:8123](http://192.168.1.226:8123)
-* [Flask Camera Events - http://192.168.1.226:5000/camera/sensor.outside_camera_mqtt_full](http://localhost:5000/camera/sensor.outside_camera_mqtt_full)
 * [ZWaveJS - http://192.168.1.226:8091](http://192.168.1.226:8091/)
 
 ## Zoneminder
@@ -134,15 +111,7 @@ then refresh the page.
 
 ### Smart Power Plug Switches
 
-TP-Link HS105 smart switches.  Uses the `Kasa` Android app for setup.
-
-## Yolo object detection
-
-Run `yolo.py`
-
-### Benchmarking and Profiling Performance
-
-Turn on/off debugging via pyinstrument from `yolo/startup.sh`
+TP-Link HS105 smart switches with various hardware versions.  Uses the `Kasa` Android app for setup.
 
 ## Networking
 
@@ -170,17 +139,12 @@ docker-compose down -v
 
 Cleanup files from the mounted Docker volumes
 
-## Helpful Links and References
-
-* [Dockerized version of Zoneminder](https://github.com/dlandon/zoneminder)
-
 ## TODO
 
 * check pihole status and notify if down
 * setup two new cameras
 * add zwavejs version to update check
 * turn on alarm after sufficient testing
-* test alarm and bluetooth connectivity after reboot
 * get dimmer switch working, zwave
 * flash lights when person detected
 * make sure scaled images and event folders get cleared away by zoneminder filter deletion

@@ -87,18 +87,6 @@ services:
       # usb Nortek device forwarded to the docker image
       - /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C1300092-if00-port0:/dev/ttyUSB0
 
-  # yolo:
-  #   build: ./yolo/
-  #   restart: always
-  #   container_name: yolo
-  #   hostname: yolo
-  #   environment:
-  #     TZ: "America/Denver"
-  #   volumes:
-  #     - zoneminder_data:/var/cache/zoneminder:rw
-  #   depends_on:
-  #     - zoneminder
-
   # mqtt broker
   # https://hub.docker.com/_/eclipse-mosquitto
   mosquitto:
@@ -114,30 +102,6 @@ services:
       #- 9001:9001/tcp # websockets
     depends_on:
       - homeassistant
-
-  # a simple flask app to show camera events
-  # flaskcamera:
-  #   build: ./flaskcamera/
-  #   restart: always
-  #   container_name: flaskcamera
-  #   hostname: flaskcamera
-  #   environment:
-  #     TZ: "America/Denver"
-  #   ports:
-  #     - 5001:5000/tcp
-  #   volumes:
-  #     - zoneminder_data:/config/www/zoneminder:ro
-  #   depends_on:
-  #     - homeassistant
-  #     - zoneminder
-  #   # https://docs.docker.com/compose/compose-file/#healthcheck
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-  #     interval: 30s
-  #     timeout: 5s
-  #     retries: 3
-  #     start_period: 10s
-
 
 # http://blog.code4hire.com/2018/06/define-named-volume-with-host-mount-in-the-docker-compose-file/
 # https://docs.docker.com/compose/compose-file/#volume-configuration-reference
