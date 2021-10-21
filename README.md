@@ -76,7 +76,7 @@ Camera (Amcrest IP4M-1051W - 4MP)
 * 2688 x 1520 (20 fps)
 * h264 passthrough
 
-Camera (Amcrest IP8M-2493EW - 8MP - x2)
+Camera (Amcrest IP8M-2493EW-V2 - 8MP - x2)
 
 * Web-UI: `http://192.168.1.110`, `http://192.168.1.112`
 * `rtsp://admin:secret@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0`
