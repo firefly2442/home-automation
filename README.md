@@ -72,15 +72,23 @@ Don't use h265, zoneminder and frigate struggle with this.
 Camera (Amcrest IP4M-1051W - 4MP)
 
 * Web-UI: `http://192.168.1.111`
-* `rtsp://admin:secret@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0`
-* 2688 x 1520 (20 fps)
+* main stream (recording)
+  * `rtsp://admin:secret@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0`
+  * 2688 x 1520 (20 fps)
+* sub-stream (person detection)
+  * `rtsp://admin:secret@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1`
+  * 640 x 480 (5 fps)
 * h264 passthrough
 
 Camera (Amcrest IP8M-2493EW-V2 - 8MP - x2)
 
 * Web-UI: `http://192.168.1.110`, `http://192.168.1.112`
-* `rtsp://admin:secret@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0`
-* 3840 x 2160 (15 fps)
+* main stream (recording)
+  * `rtsp://admin:secret@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0`
+  * 3840 x 2160 (15 fps)
+* sub-stream (person detection)
+  * `rtsp://admin:secret@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1`
+  * 704 x 480 (5 fps)
 * h264 passthrough
 
 Camera (Samsung Galaxy Nexus cellphone)

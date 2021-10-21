@@ -14,17 +14,15 @@ cameras:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - detect
-            - record
         # full 4k stream
-        # Frigate seems to choke on this, my guess is it can't handle writing the huge 4MP stream...
-        # so we have to move clips over to the sub-stream
-        # WARNING : Unable to create clip for inside and event 1613278155.473675-cdr40x. There were no cache files for this event.
-        # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0
+          roles:
+            - record
     # detect on the sub-stream for improved performance
     detect:
       width: 640
       height: 480
-      fps: 20
+      fps: 5
     objects:
       track:
         - person
@@ -75,15 +73,18 @@ cameras:
       - h264_v4l2m2m
       inputs:
         # sub-stream, lower quality and FPS
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0
+          roles:
+            - record
+        # full 4k stream
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - detect
-            - record
     # detect on the sub-stream for improved performance
     detect:
       width: 704
       height: 480
-      fps: 15
+      fps: 5
     objects:
       track:
         - person
@@ -134,15 +135,18 @@ cameras:
       - h264_v4l2m2m
       inputs:
         # sub-stream, lower quality and FPS
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=0
+          roles:
+            - record
+        # full 4k stream
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - detect
-            - record
     # detect on the sub-stream for improved performance
     detect:
       width: 704
       height: 480
-      fps: 15
+      fps: 5
     objects:
       track:
         - person
