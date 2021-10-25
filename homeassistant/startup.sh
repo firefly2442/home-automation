@@ -18,7 +18,4 @@ openssl x509 -in /config/ssl/cert.crt -out /config/ssl/cert.pem
 cat /usr/local/lib/python3.8/site-packages/certifi/cacert.pem /config/ssl/cert.pem > /usr/local/lib/python3.8/site-packages/certifi/cacert-updated.pem
 mv /usr/local/lib/python3.8/site-packages/certifi/cacert-updated.pem /usr/local/lib/python3.8/site-packages/certifi/cacert.pem
 
-# blocks until zoneminder is ready to prevent race condition with HA startup
-python3 /check_zoneminder.py
-
 /init

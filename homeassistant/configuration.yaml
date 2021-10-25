@@ -1,4 +1,3 @@
-
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
@@ -8,20 +7,7 @@ default_config:
   #ssl_certificate: /config/ssl/cert.crt
   #ssl_key: /config/ssl/cert.key
 
-# https://www.home-assistant.io/integrations/zoneminder/
-zoneminder:
-  host: 192.168.1.226:9443
-  path: /zm/
-  ssl: True
-
-# https://www.home-assistant.io/integrations/zoneminder/#switch
-switch:
-  - platform: zoneminder
-    command_on: Record
-    command_off: None
-
 camera:
-  - platform: zoneminder
   # https://www.home-assistant.io/integrations/generic_ip_camera/
   - platform: generic
     still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=10&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=1&smooth=0&centerx=400&centery=240&station=ABX&rainsnow=1&lightning=0&noclutter=1&showlabels=0&showstorms=0&rand=26384596'
@@ -39,9 +25,6 @@ sensor:
       - type: load_5m
   # https://www.home-assistant.io/integrations/version/
   - platform: version
-  # https://www.home-assistant.io/integrations/zoneminder/
-  - platform: zoneminder
-    include_archived: False
   # https://www.home-assistant.io/integrations/uptime/
   - platform: uptime
     name: Uptime
@@ -58,25 +41,10 @@ sensor:
     # https://www.home-assistant.io/docs/configuration/platform_options/
     scan_interval: 600 # run every 10 minutes, default on local polling of sensors is 30 seconds
     # https://blakeblackshear.github.io/frigate/usage/api#apistats
-    resource: http://192.168.1.224:5000/api/stats
+    resource: http://192.168.1.113:5000/api/stats
     name: frigate_used_space_percentage
     value_template: '{{ ((value_json["service"]["storage"]["/media/frigate/recordings"]["used"] / value_json["service"]["storage"]["/media/frigate/recordings"]["total"]) * 100|float)|round(0) }}'
   # https://www.home-assistant.io/integrations/rest
-  - platform: rest
-    # https://www.home-assistant.io/docs/configuration/platform_options/
-    scan_interval: 600 # run every 10 minutes, default on local polling of sensors is 30 seconds
-    resource: https://192.168.1.226:9443/zm/api/host/getVersion.json
-    name: zoneminder_version
-    json_attributes:
-      - version
-  - platform: rest
-    # https://www.home-assistant.io/docs/configuration/platform_options/
-    scan_interval: 43200 # run every 12 hours, default on local polling of sensors is 30 seconds
-    resource: https://api.github.com/repos/ZoneMinder/zoneminder/releases/latest
-    name: zoneminder_latest_release
-    value_template: '1' # dummy value, not used, avoids the "state max length is 255 characters" error
-    json_attributes:
-      - tag_name
   - platform: rest
     # https://www.home-assistant.io/docs/configuration/platform_options/
     scan_interval: 43200 # run every 12 hours, default on local polling of sensors is 30 seconds
@@ -88,7 +56,7 @@ sensor:
   - platform: rest
     # https://www.home-assistant.io/docs/configuration/platform_options/
     scan_interval: 43200 # run every 12 hours, default on local polling of sensors is 30 seconds
-    resource: http://192.168.1.224:5000/api/version
+    resource: http://192.168.1.113:5000/api/version
     name: frigate_version
     value_template: 'v{{ value.split("-")[0] }}'
   - platform: template
@@ -149,8 +117,6 @@ input_text:
 binary_sensor:
   - platform: template
     sensors:
-      zoneminder_update:
-        value_template: "{{ state_attr('sensor.zoneminder_latest_release', 'tag_name') > state_attr('sensor.zoneminder_version', 'version') }}"
       frigate_update:
         value_template: "{{ state_attr('sensor.frigate_latest_release', 'tag_name') > states('sensor.frigate_version') }}"
 
@@ -417,6 +383,7 @@ tplink:
   - host: 192.168.1.147
   - host: 192.168.1.200
   - host: 192.168.1.188
+  - host: 192.168.1.172
 
 # https://www.home-assistant.io/integrations/mqtt/
 mqtt:

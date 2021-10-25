@@ -6,9 +6,9 @@ mqtt:
 cameras:
   inside:
     ffmpeg:
-      hwaccel_args:
-      - -c:v
-      - h264_v4l2m2m
+      input_args:
+        - -c:v
+        - h264_cuvid
       inputs:
         # sub-stream, lower quality and FPS
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
@@ -68,9 +68,9 @@ cameras:
       crop: False
   frontdoor:
     ffmpeg:
-      hwaccel_args:
-      - -c:v
-      - h264_v4l2m2m
+      input_args:
+        - -c:v
+        - h264_cuvid
       inputs:
         # sub-stream, lower quality and FPS
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0
@@ -130,9 +130,9 @@ cameras:
       crop: False
   backdoor:
     ffmpeg:
-      hwaccel_args:
-      - -c:v
-      - h264_v4l2m2m
+      input_args:
+        - -c:v
+        - h264_cuvid
       inputs:
         # sub-stream, lower quality and FPS
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=0
@@ -198,5 +198,4 @@ detectors:
     type: cpu
   cpu3:
     type: cpu
-  cpu4:
-    type: cpu
+

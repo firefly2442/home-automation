@@ -4,7 +4,6 @@
 secrets.yaml
 secrets.ini
 *.h5
-/zoneminder/ServerName
 /frigate/recordings/
 *.wav
 id_rsa.pub

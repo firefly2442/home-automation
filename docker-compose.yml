@@ -1,48 +1,6 @@
 version: '3.4'
 services:
 
-  # https://hub.docker.com/r/zoneminderhq/zoneminder
-  zoneminder:
-    build: ./zoneminder/
-    restart: unless-stopped
-    container_name: zoneminder
-    hostname: zoneminder
-    privileged: "true"
-    shm_size: 512m
-    ports:
-      - 9443:443/tcp
-    environment:
-      TZ: "America/Denver"
-      ZM_DB_USER: 'zoneminder'
-      ZM_DB_PASS: 'zoneminder'
-      ZM_DB_NAME: 'zm'
-      ZM_DB_HOST: 'mariadb'
-    depends_on:
-      - mariadb
-    volumes:
-      - zoneminder_events:/var/cache/zoneminder/events:rw
-      - zoneminder_images:/var/cache/zoneminder/images:rw
-      - zoneminder_logs:/var/log/zoneminder:rw
-    # https://docs.docker.com/compose/compose-file/#healthcheck
-    healthcheck:
-      test: ["CMD", "curl", "-f", "https://192.168.1.226:9443/zm/api/host/getVersion.json"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-
-  # https://hub.docker.com/_/mariadb
-  mariadb:
-    build: ./mariadb/
-    restart: unless-stopped
-    container_name: mariadb
-    hostname: mariadb
-    environment:
-      MARIADB_RANDOM_ROOT_PASSWORD: 'yes'
-    volumes:
-      - zoneminder_mysql:/var/lib/mysql:rw
-
-
   # https://github.com/home-assistant/home-assistant
   homeassistant:
     build: ./homeassistant/
@@ -55,9 +13,6 @@ services:
       TZ: "America/Denver"
     volumes:
       - ${HOMEASSISTANT_PATH}:/config:rw
-      - zoneminder_data:/config/www/zoneminder:ro
-    depends_on:
-      - zoneminder
     devices:
       # usb Nortek device forwarded to the docker image
       # zwave
@@ -102,37 +57,3 @@ services:
       #- 9001:9001/tcp # websockets
     depends_on:
       - homeassistant
-
-# http://blog.code4hire.com/2018/06/define-named-volume-with-host-mount-in-the-docker-compose-file/
-# https://docs.docker.com/compose/compose-file/#volume-configuration-reference
-volumes:
-  zoneminder_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${ZONEMINDER_PATH}/data/
-      o: bind
-  zoneminder_events:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${ZONEMINDER_PATH}/data/events/
-      o: bind
-  zoneminder_images:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${ZONEMINDER_PATH}/data/images/
-      o: bind
-  zoneminder_mysql:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${ZONEMINDER_PATH}/data/mysql/
-      o: bind
-  zoneminder_logs:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${ZONEMINDER_PATH}/data/logs/
-      o: bind

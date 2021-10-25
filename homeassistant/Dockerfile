@@ -14,8 +14,6 @@ RUN touch /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys && 
     cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys && \
     ssh-keyscan -H 192.168.1.226 >> /root/.ssh/known_hosts
 
-COPY *.py /
-
 COPY cert.crt /usr/local/share/ca-certificates/cert.crt
 COPY cert.key /usr/local/share/ca-certificates/cert.key
 

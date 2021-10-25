@@ -8,11 +8,6 @@ if [ ! -f "cert.crt" ]; then
     openssl req -x509 -nodes -days 4096 -newkey rsa:2048 -out cert.crt -keyout cert.key -subj "/C=US/ST=Self/L=Self/O=Self/CN=192.168.1.226" -addext "subjectAltName = IP:192.168.1.226"
 fi
 
-# copy key to zoneminder folder
-cp cert.crt ./zoneminder/cert.crt
-cp cert.key ./zoneminder/cert.key
-cp ServerName ./zoneminder/ServerName
-
 # copy key to home-assistant folder
 cp cert.crt ./homeassistant/cert.crt
 cp cert.key ./homeassistant/cert.key
