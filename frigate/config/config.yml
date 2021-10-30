@@ -2,30 +2,37 @@
 mqtt:
   host: 192.168.1.226
   port: 1883
+
+birdseye:
+  enabled: True
+  mode: continuous
+
 # https://blakeblackshear.github.io/frigate/configuration/index#cameras
 cameras:
   inside:
     ffmpeg:
+      # use Nvidia GPU for h264 decoding
       input_args:
         - -c:v
         - h264_cuvid
       inputs:
         # sub-stream, lower quality and FPS
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - detect
+        # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
+        #   roles:
+        #     - detect
         # full 4k stream
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
     # detect on the sub-stream for improved performance
     detect:
-      width: 640
-      height: 480
-      fps: 5
-    objects:
-      track:
-        - person
+      enabled: False
+    #   width: 640
+    #   height: 480
+    #   fps: 5
+    # objects:
+    #   track:
+    #     - person
     record:
       # Optional: Enable recording
       enabled: True
@@ -51,9 +58,6 @@ cameras:
       retain:
         # Required: Default retention days
         default: 10
-        # Optional: Per object retention days
-        objects:
-          person: 15
     # Optional: Configuration for the jpg snapshots published via MQTT
     mqtt:
       # Optional: Enable publishing snapshot via mqtt for camera
@@ -68,26 +72,28 @@ cameras:
       crop: False
   frontdoor:
     ffmpeg:
+      # use Nvidia GPU for h264 decoding
       input_args:
         - -c:v
         - h264_cuvid
       inputs:
         # sub-stream, lower quality and FPS
+        # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
+        #   roles:
+        #     - detect
+        # full 4k stream
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        # full 4k stream
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - detect
     # detect on the sub-stream for improved performance
     detect:
-      width: 704
-      height: 480
-      fps: 5
-    objects:
-      track:
-        - person
+      enabled: False
+    #   width: 704
+    #   height: 480
+    #   fps: 5
+    # objects:
+    #   track:
+    #     - person
     record:
       # Optional: Enable recording
       enabled: True
@@ -113,9 +119,6 @@ cameras:
       retain:
         # Required: Default retention days
         default: 10
-        # Optional: Per object retention days
-        objects:
-          person: 15
     # Optional: Configuration for the jpg snapshots published via MQTT
     mqtt:
       # Optional: Enable publishing snapshot via mqtt for camera
@@ -130,26 +133,28 @@ cameras:
       crop: False
   backdoor:
     ffmpeg:
+      # use Nvidia GPU for h264 decoding
       input_args:
         - -c:v
         - h264_cuvid
       inputs:
         # sub-stream, lower quality and FPS
+        # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=1
+        #   roles:
+        #     - detect
+        # full 4k stream
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        # full 4k stream
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - detect
     # detect on the sub-stream for improved performance
     detect:
-      width: 704
-      height: 480
-      fps: 5
-    objects:
-      track:
-        - person
+      enabled: False
+    #   width: 704
+    #   height: 480
+    #   fps: 5
+    # objects:
+    #   track:
+    #     - person
     record:
       # Optional: Enable recording
       enabled: True
@@ -175,9 +180,6 @@ cameras:
       retain:
         # Required: Default retention days
         default: 10
-        # Optional: Per object retention days
-        objects:
-          person: 15
     # Optional: Configuration for the jpg snapshots published via MQTT
     mqtt:
       # Optional: Enable publishing snapshot via mqtt for camera
@@ -190,12 +192,3 @@ cameras:
       bounding_box: False
       # Optional: crop the snapshot
       crop: False
-
-detectors:
-  cpu1:
-    type: cpu
-  cpu2:
-    type: cpu
-  cpu3:
-    type: cpu
-

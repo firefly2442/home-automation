@@ -22,7 +22,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config:/config:ro
-      - ./recordings/:/media/frigate/:rw
+      - /video/frigate/:/media/frigate/:rw
     ports:
       - 5000:5000/tcp # web-interface
       - 1935:1935/tcp # RTMP feeds
