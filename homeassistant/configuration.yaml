@@ -12,6 +12,15 @@ camera:
   - platform: generic
     still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=10&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=1&smooth=0&centerx=400&centery=240&station=ABX&rainsnow=1&lightning=0&noclutter=1&showlabels=0&showstorms=0&rand=26384596'
     name: Animated Radar
+  - platform: generic
+    still_image_url: 'http://192.168.1.113:8080/snapshot/inside/person'
+    name: Inside Camera Person
+  - platform: generic
+    still_image_url: 'http://192.168.1.113:8080/snapshot/frontdoor/person'
+    name: Frontdoor Camera Person
+  - platform: generic
+    still_image_url: 'http://192.168.1.113:8080/snapshot/backdoor/person'
+    name: Backdoor Camera Person
 
 sensor:
   # https://www.home-assistant.io/integrations/systemmonitor/
@@ -119,6 +128,15 @@ binary_sensor:
     sensors:
       frigate_update:
         value_template: "{{ state_attr('sensor.frigate_latest_release', 'tag_name') > states('sensor.frigate_version') }}"
+  - platform: mqtt
+    name: inside_person_detected
+    state_topic: "watsor/cameras/inside/detection/person/state"
+  - platform: mqtt
+    name: frontdoor_person_detected
+    state_topic: "watsor/cameras/frontdoor/detection/person/state"
+  - platform: mqtt
+    name: backdoor_person_detected
+    state_topic: "watsor/cameras/backdoor/detection/person/state"
 
 # https://www.home-assistant.io/docs/automation/
 automation:
@@ -380,10 +398,10 @@ automation:
 tplink:
   discovery: false
   switch:
-  - host: 192.168.1.147
-  - host: 192.168.1.200
-  - host: 192.168.1.188
-  - host: 192.168.1.172
+  - host: 192.168.1.147 # hs105-1
+  - host: 192.168.1.200 # hs105-2
+  - host: 192.168.1.188 # hs105-3
+  - host: 192.168.1.172 # hs105-4
 
 # https://www.home-assistant.io/integrations/mqtt/
 mqtt:

@@ -38,7 +38,7 @@ Set `FRIGATE_RTSP_PASSWORD` in `.env` which is the camera password.  See `frigat
 
 TODO: fix path
 Leverages the [integration with HA](https://blakeblackshear.github.io/frigate/usage/home-assistant)
-Script copies `custom_components` folder over to `/media/usbdrive/homeassistant/` as part of home automation
+Script copies `custom_components` folder over to `homeassistant` as part of home automation
 refresh and update process.  Go into integrations in Home Assistant if Frigate doesn't load properly and add it.
 
 Use the `run-home-automation.sh` for future changes and to grab the latest versions of Docker images.
@@ -49,7 +49,7 @@ Use the `run-home-automation.sh` for future changes and to grab the latest versi
 * [Home-Assistant - http://192.168.1.226:8123](http://192.168.1.226:8123)
 * [ZWaveJS - http://192.168.1.226:8091](http://192.168.1.226:8091/)
 
-## Zoneminder
+## Frigate
 
 ### Cameras
 
@@ -109,6 +109,7 @@ then refresh the page.
 ### Smart Power Plug Switches
 
 TP-Link HS105 smart switches with various hardware versions.  Uses the `Kasa` Android app for setup.
+Don't update firmware because it locks out ability to communicate with devices.
 
 ## Networking
 
@@ -144,6 +145,9 @@ Cleanup files from the mounted Docker volumes
 * get dimmer switch working, zwave
 * flash lights when person detected
 * check disk usage by Frigate
+* check /video disk usage and frigate recordings amounts
 * add explanatory text on containers, documentation, images/GIFs to README, add helpful links
 * setup Frigate with SSL certs
-* fix run-home-automation.sh frigate copy location
+* look into DOODS for GPU based object detection, code up possible integration with frigate?
+* look into watsor
+* https://github.com/blakeblackshear/frigate/pull/145
