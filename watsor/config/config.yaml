@@ -1,0 +1,86 @@
+# Optional HTTP server configuration and authentication.
+http:
+  port: 8080
+  # username: !env_var "USERNAME john"
+  # password: !env_var "PASSWORD qwerty"
+
+
+# Optional MQTT client configuration and authentication.
+mqtt:
+  host: 192.168.1.226
+  port: 1883
+  # username: !secret mqtt_username
+  # password: !secret mqtt_password
+
+
+# Default FFmpeg arguments for decoding video stream before detection and encoding back afterwards.
+# Optional, can be overwritten per camera.
+ffmpeg:
+  decoder:
+    - -hide_banner              # hide build options and library versions
+    - -loglevel
+    -  error
+    - -nostdin
+    #- -hwaccel                   # These options enable hardware acceleration, check what's available with: ffmpeg -hwaccels
+    #-  cuvid
+    #- -hwaccel_output_format
+    #-  yuv420p
+    - -c:v
+    -  h264_cuvid                 # use GPU for h264 decoding
+    - -fflags
+    -  nobuffer
+    - -flags
+    -  low_delay
+    - -fflags
+    -  +genpts+discardcorrupt
+    - -i                          # camera input field will follow '-i' ffmpeg argument automatically
+    - -f
+    -  rawvideo
+    - -pix_fmt
+    -  rgb24
+    #- -rtsp_transport             # try to prevent lost packets/frames via TCP
+    #-  tcp
+  # encoder:                        # Encoder is optional, remove the entire list to disable.
+  #   - -hide_banner
+  #   - -loglevel
+  #   -  error
+  #   - -f
+  #   -  rawvideo
+  #   - -pix_fmt
+  #   -  rgb24
+  #   - -i                          # detection output stream will follow '-i' ffmpeg argument automatically
+  #   - -an
+  #   - -f
+  #   -  mpegts
+  #   - -vcodec
+  #   -  libx264
+  #   - -pix_fmt
+  #   -  yuv420p
+  #   - -vf
+  #   - "drawtext='text=%{localtime\\:%c}': x=w-tw-lh: y=h-2*lh: fontcolor=white: box=1: boxcolor=black@0.55"
+
+
+# Detect the following labels of the object detection model.
+# Optional, can be overwritten per camera.
+detect:
+  - person:
+      area: 5                    # Minimum area of the bounding box an object should have in
+                                  # order to be detected. Defaults to 10% of entire video resolution.
+      confidence: 75              # Confidence threshold that a detection is what it's guessed to be,
+                                  # otherwise it's ruled out. 50% if not set.
+
+
+# List of cameras and their configurations. Don't wrap rtsp in quotes otherwise it seems to not work injecting the password.
+cameras:
+  - inside:
+      width: 640
+      height: 480
+      input: !ENV rtsp://admin:${FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
+  - frontdoor:
+      width: 704
+      height: 480
+      input: !ENV rtsp://admin:${FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
+  - backdoor:
+      width: 704
+      height: 480
+      input: !ENV rtsp://admin:${FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=1

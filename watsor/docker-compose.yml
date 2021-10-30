@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  watsor:
+    container_name: watsor
+    build: ./watsor/
+    runtime: nvidia
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - LOG_LEVEL=info
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config:/etc/watsor:ro
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+      - /dev/dri:/dev/dri
+    ports:
+      - 8080:8080/tcp
+    shm_size: 512m
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - FRIGATE_RTSP_PASSWORD=${FRIGATE_RTSP_PASSWORD}

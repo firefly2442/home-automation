@@ -36,10 +36,7 @@ cameras:
     record:
       # Optional: Enable recording
       enabled: True
-      retain_days: 0
-      events:
-        retain:
-          default: 10
+      retain_days: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
@@ -97,10 +94,7 @@ cameras:
     record:
       # Optional: Enable recording
       enabled: True
-      retain_days: 0
-      events:
-        retain:
-          default: 10
+      retain_days: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
@@ -158,10 +152,7 @@ cameras:
     record:
       # Optional: Enable recording
       enabled: True
-      retain_days: 0
-      events:
-        retain:
-          default: 10
+      retain_days: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
