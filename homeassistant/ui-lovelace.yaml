@@ -40,7 +40,7 @@ views:
     cards:
       # https://www.home-assistant.io/lovelace/thermostat/
       - type: thermostat
-        entity: climate.t6_pro_z_wave_programmable_thermostat_thermostat_mode
+        entity: climate.t6_pro_z_wave_programmable_thermostat
         name: Thermostat
       - type: history-graph
         title: Temperature
@@ -184,7 +184,7 @@ views:
       - type: history-graph
         title: Thermostat Battery
         entities:
-          - entity: sensor.nodeid_3_battery_level
+          - entity: sensor.t6_pro_z_wave_programmable_thermostat_battery_level
             name: Thermostat Battery
       - type: history-graph
         title: Aqara Motion Sensor Battery

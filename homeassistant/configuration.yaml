@@ -140,22 +140,6 @@ binary_sensor:
 
 # https://www.home-assistant.io/docs/automation/
 automation:
-  - alias: 'Turn on camera recording when away'
-    trigger:
-      platform: state
-      entity_id: switch.garage_switch
-      to: 'on'
-    action:
-      service: switch.turn_on
-      entity_id: switch.amcrestcamera_state
-  - alias: 'Turn off camera recording when home'
-    trigger:
-      platform: state
-      entity_id: switch.garage_switch
-      to: 'off'
-    action:
-      service: switch.turn_off
-      entity_id: switch.amcrestcamera_state
   - alias: 'Motion triggers alarm if alarm home or alarm away'
     trigger:
       platform: state
@@ -175,9 +159,12 @@ automation:
       entity_id: input_boolean.alarm
   - alias: 'Person detection triggers alarm if alarm home or alarm away'
     trigger:
-      platform: state
-      entity_id: binary_sensor.amcrest_person_motion
-      to: 'on'
+      - platform: state
+        entity_id: binary_sensor.inside_person_detected
+        to: 'on'
+      - platform: state
+        entity_id: binary_sensor.backdoor_person_detected
+        to: 'on'
     condition:
       condition: or
       conditions:
@@ -271,22 +258,10 @@ automation:
       - delay: 00:00:59
       - service: switch.turn_off
         entity_id: switch.living_room_lamp
-  - alias: 'Turn off audio alarm when alarm turned off'
+  - alias: 'Save snapshot from inside camera when person detected'
     trigger:
       platform: state
-      entity_id: input_boolean.alarm
-      to: 'off'
-    action:
-      # turn off alarm sound
-      - service: automation.turn_off
-        entity_id: automation.play_alarm_audio_via_bluetooth_if_alarm_triggers
-      # turn it back on
-      - service: automation.turn_on
-        entity_id: automation.play_alarm_audio_via_bluetooth_if_alarm_triggers
-  - alias: 'Save snapshot from camera when person detected'
-    trigger:
-      platform: state
-      entity_id: binary_sensor.amcrest_person_motion
+      entity_id: binary_sensor.inside_person_detected
       to: 'on'
     condition:
       - condition: state
@@ -295,104 +270,63 @@ automation:
     action:
       - service: camera.snapshot
         target:
-          entity_id: camera.amcrest_person
+          entity_id: camera.inside
         data:
-          filename: '/config/www/amcrest-person.jpg'
-      # turning the service off and then back on after a delay prevents it from spamming
-      # - service: automation.turn_off
-      #   entity_id: automation.save_snapshot_from_camera_when_person_detected
+          filename: '/config/www/inside-person.jpg'
       - service: notify.discord
         data_template:
           message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected!"
           target: !secret discord_channel # channel ID
           data:
             images:
-              - "/config/www/amcrest-person.jpg"
+              - "/config/www/inside-person.jpg"
       - delay: 00:00:15 # delay so that we don't spam Discord
-      # - service: automation.turn_on
-      #   entity_id: automation.save_snapshot_from_camera_when_person_detected
-
-
-  # - alias: 'Turn on light when away'
-  #   trigger:
-  #     platform: state
-  #     entity_id: person.patrick
-  #     to: not_home
-  #   condition:
-  #     - condition: sun
-  #       after: sunset
-  #     - condition: time
-  #       before: '22:30:00'
-  #   action:
-  #     - service: switch.turn_on
-  #       entity_id:  switch.living_room_lamp
-  # - alias: 'Turn off lights when away and simulate bedtime'
-  #   trigger:
-  #     platform: state
-  #     entity_id: person.patrick
-  #     to: not_home
-  #   condition:
-  #     - condition: sun
-  #       after: sunset
-  #     - condition: time
-  #       after: '22:50:00'
-  #   action:
-  #     - service: switch.turn_off
-  #       entity_id: switch.office_lamp
-  #     - delay: 00:00:10
-  #     - service: switch.turn_off
-  #       entity_id: switch.living_room_lamp
-  #     - delay: 00:00:59
-  #     - service: switch.turn_off
-  #       entity_id: switch.bedroom_lamp
-  # - alias: 'Turn on light when back'
-  #   trigger:
-  #     platform: state
-  #     entity_id: person.patrick
-  #     to: home
-  #   condition:
-  #     - condition: sun
-  #       after: sunset
-  #   action:
-  #     - service: switch.turn_on
-  #       entity_id:  switch.living_room_lamp
-  #     - delay: 00:02:30
-  #     - service: switch.turn_off
-  #       entity_id:  switch.living_room_lamp
-  # - alias: 'Randomly turn on office lamp when away'
-  #   trigger:
-  #     platform: state
-  #     entity_id: person.patrick
-  #     to: not_home
-  #   condition:
-  #     - condition: sun
-  #       after: sunset
-  #     - condition: time
-  #       before: '22:30:00'
-  #   action:
-  #     - service: switch.turn_off
-  #       entity_id:  switch.office_lamp
-  #     - delay: '00:0{{ range(5,10) | random | int }}:00'
-  #     - service: switch.turn_on
-  #       entity_id:  switch.office_lamp
-  #     - delay: '00:0{{ range(5,10) | random | int }}:00'
-  # - alias: 'Randomly turn on bedroom lamp when away'
-  #   trigger:
-  #     platform: state
-  #     entity_id: person.patrick
-  #     to: not_home
-  #   condition:
-  #     - condition: sun
-  #       after: sunset
-  #     - condition: time
-  #       before: '22:30:00'
-  #   action:
-  #     - service: switch.turn_off
-  #       entity_id:  switch.bedroom_lamp
-  #     - delay: '00:0{{ range(5,10) | random | int }}:00'
-  #     - service: switch.turn_on
-  #       entity_id:  switch.bedroom_lamp
-  #     - delay: '00:0{{ range(5,10) | random | int }}:00'
+  - alias: 'Save snapshot from backdoor camera when person detected'
+    trigger:
+      platform: state
+      entity_id: binary_sensor.backdoor_person_detected
+      to: 'on'
+    condition:
+      - condition: state
+        entity_id: switch.garage_switch
+        state: 'on'
+    action:
+      - service: camera.snapshot
+        target:
+          entity_id: camera.backdoor
+        data:
+          filename: '/config/www/backdoor-person.jpg'
+      - service: notify.discord
+        data_template:
+          message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected!"
+          target: !secret discord_channel # channel ID
+          data:
+            images:
+              - "/config/www/backdoor-person.jpg"
+      - delay: 00:00:15 # delay so that we don't spam Discord
+  - alias: 'Save snapshot from frontdoor camera when person detected'
+    trigger:
+      platform: state
+      entity_id: binary_sensor.frontdoor_person_detected
+      to: 'on'
+    condition:
+      - condition: state
+        entity_id: switch.garage_switch
+        state: 'on'
+    action:
+      - service: camera.snapshot
+        target:
+          entity_id: camera.frontdoor
+        data:
+          filename: '/config/www/frontdoor-person.jpg'
+      - service: notify.discord
+        data_template:
+          message: "<@{{ states('input_text.discord_user_id') }}> Frontdoor, person detected!"
+          target: !secret discord_channel # channel ID
+          data:
+            images:
+              - "/config/www/frontdoor-person.jpg"
+      - delay: 00:00:15 # delay so that we don't spam Discord
 
 # https://www.home-assistant.io/integrations/tplink/
 tplink:
@@ -401,7 +335,6 @@ tplink:
   - host: 192.168.1.147 # hs105-1
   - host: 192.168.1.200 # hs105-2
   - host: 192.168.1.188 # hs105-3
-  - host: 192.168.1.172 # hs105-4
 
 # https://www.home-assistant.io/integrations/mqtt/
 mqtt:

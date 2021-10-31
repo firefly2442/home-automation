@@ -40,7 +40,7 @@ services:
       - homeassistant
     devices:
       # usb Nortek device forwarded to the docker image
-      - /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C1300092-if00-port0:/dev/ttyUSB0
+      - /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C1300092-if00-port0:/dev/zwave
 
   # mqtt broker
   # https://hub.docker.com/_/eclipse-mosquitto

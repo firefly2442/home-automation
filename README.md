@@ -95,9 +95,9 @@ application for Android
 * 1280 x 720 (30 fps)
 * h264 passthrough
 
-### Additional Setup
+## Additional Setup
 
-## Home Assistant
+### Home Assistant
 
 Upon startup, register with name `Patrick` and username `patrick`.
 
@@ -114,6 +114,27 @@ then refresh the page.  Works with a live running container.
 
 TP-Link HS105 smart switches with various hardware versions.  Uses the `Kasa` Android app for setup.
 Don't update firmware because it locks out ability to communicate with devices.
+
+### Z-Wave
+
+In `zwavejs2mqtt`, enable the `WS Server` option.  Then go into Home Assistant and add the integration for `zwavejs2mqtt`.
+In `zwavejs2mqtt`, under MQTT set the hostname to be `mosquitto` instead of localhost, this will connect
+to the existing MQTT broker running in Docker.
+
+#### Z-Wave Devices
+
+* Qolsys IQ Dimmer - QZ2140-840
+  * Single tap button to turn on inclusion mode
+* In-wall switch front-door lights, GE
+* Honeywell thermostat
+
+### Zigbee
+
+In Home Assistant under integrations, add the Hubz Smart Home Controller for Zigbee.
+
+#### Zigbee Devices
+
+* Aqara motion sensor
 
 ## Networking
 
@@ -146,10 +167,9 @@ Cleanup files from the mounted Docker volumes
 * check pihole status and notify if down
 * add zwavejs version to update check
 * add zwavejs devices back in
-* turn on alarm after sufficient testing
-* get dimmer switch working, zwave
-* flash lights when person detected
-* create container on Pi to subscribe to mqtt and save person detection to usb drive, provide deep links to frigate recordings at this timestamps via the API
+* update watsor to 20.04 and TensorRT 8.2
+* get dimmer switch working, zwave, get integrated into automations
+* create container on Pi to subscribe to mqtt and save person detection to usb drive, provide deep links to frigate recordings at this timestamp via the API
 * check disk usage by Frigate
 * check /video disk usage and frigate recordings amounts
 * add explanatory text on containers, documentation, images/GIFs to README, add helpful links
