@@ -5,8 +5,9 @@
 
 My personal home automation setup in Docker leveraging:
 
-* [Frigate](https://github.com/blakeblackshear/frigate)
-* [Home-Assistant](https://github.com/home-assistant/home-assistant)
+* [Frigate](https://github.com/blakeblackshear/frigate) - recording of full resolution videos
+* [Home-Assistant](https://github.com/home-assistant/home-assistant) - integration and UI
+* [Watsor](https://github.com/asmirnou/watsor) - camera object detection via GPU
 
 ## Setup
 
@@ -36,7 +37,9 @@ and the `nvidia-docker2` package, see [details here](https://docs.nvidia.com/dat
 Use the `nvidia-smi` command to make sure you can launch Docker and pass the GPU through properly.
 Set `FRIGATE_RTSP_PASSWORD` in `.env` which is the camera password.  See `frigate` folder.  Run `run-frigate.sh`.
 
-TODO: fix path
+Setup Watsor on main Asus computer with Nvidia decoding of h264 video as well as object detection.
+See `watsor` folder.  Run `run-watsor.sh`.
+
 Leverages the [integration with HA](https://blakeblackshear.github.io/frigate/usage/home-assistant)
 Script copies `custom_components` folder over to `homeassistant` as part of home automation
 refresh and update process.  Go into integrations in Home Assistant if Frigate doesn't load properly and add it.
@@ -47,7 +50,8 @@ Use the `run-home-automation.sh` for future changes and to grab the latest versi
 
 * [Frigate - https://192.168.1.113:5000](https://192.168.1.113:5000)
 * [Home-Assistant - http://192.168.1.226:8123](http://192.168.1.226:8123)
-* [ZWaveJS - http://192.168.1.226:8091](http://192.168.1.226:8091/)
+* [ZWaveJS - http://192.168.1.226:8091](http://192.168.1.226:8091)
+* [Watsor - http://192.168.1.113:8080](http://192.168.1.113:8080)
 
 ## Frigate
 
@@ -104,7 +108,7 @@ See `ui-lovelace.yaml` for UI configuration
 ### Updating UI
 
 Make changes, then run `initial-setup.sh` to copy the `ui-lovelace.yaml` file over,
-then refresh the page.
+then refresh the page.  Works with a live running container.
 
 ### Smart Power Plug Switches
 
@@ -141,13 +145,13 @@ Cleanup files from the mounted Docker volumes
 
 * check pihole status and notify if down
 * add zwavejs version to update check
+* add zwavejs devices back in
 * turn on alarm after sufficient testing
 * get dimmer switch working, zwave
 * flash lights when person detected
+* create container on Pi to subscribe to mqtt and save person detection to usb drive, provide deep links to frigate recordings at this timestamps via the API
 * check disk usage by Frigate
 * check /video disk usage and frigate recordings amounts
 * add explanatory text on containers, documentation, images/GIFs to README, add helpful links
-* setup Frigate with SSL certs
-* look into DOODS for GPU based object detection, code up possible integration with frigate?
-* look into watsor
-* https://github.com/blakeblackshear/frigate/pull/145
+* setup Frigate with SSL certs (is this possible to connect from HA?)
+* secure Frigate RTMP ports?
