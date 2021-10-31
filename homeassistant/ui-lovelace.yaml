@@ -23,10 +23,6 @@ views:
           - entity: switch.garage_switch
             name: Away
             icon: mdi:light-switch
-          - type: divider
-          - entity: input_boolean.alarm_away
-            name: Home
-            icon: mdi:light-switch
       - type: entities
         title: Intruder! Alarm!
         show_header_toggle: false

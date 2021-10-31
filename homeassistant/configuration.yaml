@@ -114,8 +114,6 @@ homeassistant:
 input_boolean:
   alarm:
     name: Toggle Alarm
-  alarm_away:
-    name: Alarm Away
 
 input_text:
   discord_user_id:
@@ -140,24 +138,22 @@ binary_sensor:
 
 # https://www.home-assistant.io/docs/automation/
 automation:
-  - alias: 'Motion triggers alarm if alarm home or alarm away'
+  - alias: 'Motion triggers alarm if alarm set'
     trigger:
       platform: state
       entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_a2fe8704_ias_zone
       to: 'on'
     condition:
-      condition: or
-      conditions:
-        - condition: state
-          entity_id: switch.garage_switch
-          state: 'on'
-        - condition: state
-          entity_id: input_boolean.alarm_away
-          state: 'on'
+      - condition: state
+        entity_id: switch.garage_switch
+        state: 'on'
     action:
-      service: input_boolean.turn_on
-      entity_id: input_boolean.alarm
-  - alias: 'Person detection triggers alarm if alarm home or alarm away'
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.alarm
+      - service: notify.notify
+        data:
+          message: "Motion detector triggered!"
+  - alias: 'Person detection triggers alarm if alarm set'
     trigger:
       - platform: state
         entity_id: binary_sensor.inside_person_detected
@@ -166,17 +162,12 @@ automation:
         entity_id: binary_sensor.backdoor_person_detected
         to: 'on'
     condition:
-      condition: or
-      conditions:
-        - condition: state
-          entity_id: switch.garage_switch
-          state: 'on'
-        - condition: state
-          entity_id: input_boolean.alarm_away
-          state: 'on'
+      - condition: state
+        entity_id: switch.garage_switch
+        state: 'on'
     action:
-      service: input_boolean.turn_on
-      entity_id: input_boolean.alarm
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.alarm
   # https://www.home-assistant.io/integrations/notify/
   - alias: 'Send Discord alarm message'
     trigger:
@@ -268,6 +259,9 @@ automation:
         entity_id: switch.garage_switch
         state: 'on'
     action:
+      - service: notify.notify
+        data:
+          message: "Inside camera person detected!"
       - service: camera.snapshot
         target:
           entity_id: camera.inside
@@ -275,7 +269,7 @@ automation:
           filename: '/config/www/inside-person.jpg'
       - service: notify.discord
         data_template:
-          message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected!"
+          message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected inside!"
           target: !secret discord_channel # channel ID
           data:
             images:
@@ -291,6 +285,9 @@ automation:
         entity_id: switch.garage_switch
         state: 'on'
     action:
+      - service: notify.notify
+        data:
+          message: "Backdoor camera person detected!"
       - service: camera.snapshot
         target:
           entity_id: camera.backdoor
@@ -298,7 +295,7 @@ automation:
           filename: '/config/www/backdoor-person.jpg'
       - service: notify.discord
         data_template:
-          message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected!"
+          message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected at backdoor!"
           target: !secret discord_channel # channel ID
           data:
             images:
@@ -321,12 +318,22 @@ automation:
           filename: '/config/www/frontdoor-person.jpg'
       - service: notify.discord
         data_template:
-          message: "<@{{ states('input_text.discord_user_id') }}> Frontdoor, person detected!"
+          message: "<@{{ states('input_text.discord_user_id') }}> Frontdoor, person detected."
           target: !secret discord_channel # channel ID
           data:
             images:
               - "/config/www/frontdoor-person.jpg"
       - delay: 00:00:15 # delay so that we don't spam Discord
+  - alias: 'Notify message from frontdoor camera when person detected'
+    trigger:
+      platform: state
+      entity_id: binary_sensor.frontdoor_person_detected
+      to: 'on'
+    action:
+      - service: notify.notify
+        data:
+          message: "Person at front door"
+      - delay: 00:00:60 # delay so we don't spam messages
 
 # https://www.home-assistant.io/integrations/tplink/
 tplink:
