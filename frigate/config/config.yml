@@ -15,6 +15,9 @@ cameras:
       input_args:
         - -c:v
         - h264_cuvid
+        # try to prevent smearing of the video from packetloss
+        - -rtsp_transport
+        - tcp
       inputs:
         # sub-stream, lower quality and FPS
         # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
@@ -36,7 +39,8 @@ cameras:
     record:
       # Optional: Enable recording
       enabled: True
-      retain_days: 10
+      retain:
+        days: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
@@ -73,6 +77,9 @@ cameras:
       input_args:
         - -c:v
         - h264_cuvid
+        # try to prevent smearing of the video from packetloss
+        - -rtsp_transport
+        - tcp
       inputs:
         # sub-stream, lower quality and FPS
         # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
@@ -94,7 +101,8 @@ cameras:
     record:
       # Optional: Enable recording
       enabled: True
-      retain_days: 10
+      retain:
+        days: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False
@@ -131,6 +139,9 @@ cameras:
       input_args:
         - -c:v
         - h264_cuvid
+        # try to prevent smearing of the video from packetloss
+        - -rtsp_transport
+        - tcp
       inputs:
         # sub-stream, lower quality and FPS
         # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.112:554/cam/realmonitor?channel=1&subtype=1
@@ -152,7 +163,8 @@ cameras:
     record:
       # Optional: Enable recording
       enabled: True
-      retain_days: 10
+      retain:
+        days: 10
     rtmp:
       # Required: Enable the live stream
       enabled: False

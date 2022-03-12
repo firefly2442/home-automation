@@ -21,6 +21,16 @@ camera:
   - platform: generic
     still_image_url: 'http://192.168.1.113:8080/snapshot/backdoor/person'
     name: Backdoor Camera Person
+  # https://www.home-assistant.io/integrations/camera.mqtt/
+  - platform: mqtt
+    topic: docker-movement-detection/inside
+    name: Inside Motion Detected
+  - platform: mqtt
+    topic: docker-movement-detection/frontdoor
+    name: Frontdoor Motion Detected
+  - platform: mqtt
+    topic: docker-movement-detection/backdoor
+    name: Backdoor Motion Detected
 
 sensor:
   # https://www.home-assistant.io/integrations/systemmonitor/
@@ -135,6 +145,15 @@ binary_sensor:
   - platform: mqtt
     name: backdoor_person_detected
     state_topic: "watsor/cameras/backdoor/detection/person/state"
+  - platform: mqtt
+    name: inside_motion_detected
+    state_topic: "docker-movement-detection/inside/state"
+  - platform: mqtt
+    name: frontdoor_motion_detected
+    state_topic: "docker-movement-detection/frontdoor/state"
+  - platform: mqtt
+    name: backdoor_motion_detected
+    state_topic: "docker-movement-detection/backdoor/state"
 
 # https://www.home-assistant.io/docs/automation/
 automation:
@@ -153,6 +172,13 @@ automation:
       - service: notify.notify
         data:
           message: "Motion detector triggered!"
+      - service: notify.mobile_app_SMG930V
+        data:
+          message: TTS
+          title: "Motion detector triggered!"
+          importance: high
+          data:
+            channel: "alarm_stream"
   - alias: 'Person detection triggers alarm if alarm set'
     trigger:
       - platform: state
@@ -262,6 +288,13 @@ automation:
       - service: notify.notify
         data:
           message: "Inside camera person detected!"
+      - service: notify.mobile_app_SMG930V
+        data:
+          message: TTS
+          title: "Inside camera person detected!"
+          importance: high
+          data:
+            channel: "alarm_stream"
       - service: camera.snapshot
         target:
           entity_id: camera.inside

@@ -168,6 +168,7 @@ Cleanup files from the mounted Docker volumes
 * add zwavejs version to update check
 * add zwavejs devices back in
 * update watsor to 20.04 and TensorRT 8.2
+* send more forceful messages to phone on alarm, using TTS - https://companion.home-assistant.io/docs/notifications/notifications-basic
 * get dimmer switch working, zwave, get integrated into automations
 * create container on Pi to subscribe to mqtt and save person detection to usb drive, provide deep links to frigate recordings at this timestamp via the API
 * check disk usage by Frigate
@@ -175,3 +176,9 @@ Cleanup files from the mounted Docker volumes
 * add explanatory text on containers, documentation, images/GIFs to README, add helpful links
 * setup Frigate with SSL certs (is this possible to connect from HA?)
 * secure Frigate RTMP ports?
+* up substream FPS
+* build dockerized opencv based system that looks for blur or motion in video
+to identify object movement, this could be less computationally taxing than
+person object detection, send cases where it hits some percentage threshold
+to mqtt stream.  Look into motioneye.
+

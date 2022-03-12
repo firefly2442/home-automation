@@ -38,8 +38,8 @@ ffmpeg:
     -  rawvideo
     - -pix_fmt
     -  rgb24
-    #- -rtsp_transport             # try to prevent lost packets/frames via TCP
-    #-  tcp
+    - -rtsp_transport             # try to prevent lost packets/frames via TCP
+    -  tcp
   # encoder:                        # Encoder is optional, remove the entire list to disable.
   #   - -hide_banner
   #   - -loglevel
@@ -66,7 +66,7 @@ detect:
   - person:
       area: 5                    # Minimum area of the bounding box an object should have in
                                   # order to be detected. Defaults to 10% of entire video resolution.
-      confidence: 75              # Confidence threshold that a detection is what it's guessed to be,
+      confidence: 90              # Confidence threshold that a detection is what it's guessed to be,
                                   # otherwise it's ruled out. 50% if not set.
 
 

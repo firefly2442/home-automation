@@ -13,7 +13,7 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    image: blakeblackshear/frigate:0.9.4-amd64nvidia
+    image: blakeblackshear/frigate:0.10.1-amd64nvidia
     devices:
       - /dev/bus/usb:/dev/bus/usb
       - /dev/dri/renderD128:/dev/dri/renderD128

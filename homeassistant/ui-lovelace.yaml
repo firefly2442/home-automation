@@ -78,15 +78,30 @@ views:
         entities:
           - binary_sensor.inside_person_detected
       - type: picture-glance
-        title: Frontdoor Detected
+        title: Frontdoor Person
         camera_image: camera.frontdoor_camera_person
         entities:
           - binary_sensor.frontdoor_person_detected
       - type: picture-glance
-        title: Backdoor Detected
+        title: Backdoor Person
         camera_image: camera.backdoor_camera_person
         entities:
           - binary_sensor.backdoor_person_detected
+      - type: picture-glance
+        title: Inside Motion
+        camera_image: camera.inside_motion_detected
+        entities:
+          - binary_sensor.inside_motion_detected
+      - type: picture-glance
+        title: Frontdoor Motion
+        camera_image: camera.frontdoor_motion_detected
+        entities:
+          - binary_sensor.frontdoor_motion_detected
+      - type: picture-glance
+        title: Backdoor Motion
+        camera_image: camera.backdoor_motion_detected
+        entities:
+          - binary_sensor.backdoor_motion_detected
       - type: history-graph
         title: Person Detected
         entities:
@@ -95,6 +110,15 @@ views:
           - entity: binary_sensor.frontdoor_person_detected
             name: Frontdoor
           - entity: binary_sensor.backdoor_person_detected
+            name: Backdoor
+      - type: history-graph
+        title: Motion Detected
+        entities:
+          - entity: binary_sensor.inside_motion_detected
+            name: Inside
+          - entity: binary_sensor.frontdoor_motion_detected
+            name: Frontdoor
+          - entity: binary_sensor.backdoor_motion_detected
             name: Backdoor
       - type: markdown
         content: "[Frigate webpage](http://192.168.1.113:5000) for recordings."
