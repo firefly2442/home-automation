@@ -191,12 +191,12 @@ views:
       - type: glance
         title: Updates
         entities:
-          - entity: binary_sensor.updater
+          - entity: binary_sensor.docker_hub_update_available
             name: Home Assistant
           - entity: binary_sensor.frigate_update
             name: Frigate
       - type: markdown
-        content: "Home Assistant [{{ state_attr('binary_sensor.updater', 'newest_version') }}](https://github.com/home-assistant/core/releases) is available.  You're running version {{ states('sensor.current_version') }}."
+        content: "Home Assistant [{{ states('sensor.docker_hub') }}](https://github.com/home-assistant/core/releases) is available.  You're running version {{ states('sensor.current_version_2') }}."
       - type: markdown
         content: "Frigate release [{{ state_attr('sensor.frigate_latest_release', 'tag_name') }}](https://github.com/blakeblackshear/frigate/releases) is available.  You're running version: {{ states('sensor.frigate_version') }}"
   - title: Batteries
