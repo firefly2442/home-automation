@@ -178,3 +178,4 @@ Cleanup files from the mounted Docker volumes
 * setup Frigate with SSL certs (is this possible to connect from HA?)
 * secure Frigate RTMP ports?
 * up substream FPS
+* fix camera NTP
