@@ -9,6 +9,8 @@ views:
         entities:
           - entity: switch.office_lamp
             icon: mdi:lamp
+          - entity: switch.office_lamp_second
+            icon: mdi:lamp
           - entity: switch.living_room_lamp
             icon: mdi:floor-lamp
           - entity: switch.nodeid_4_switch

@@ -232,6 +232,8 @@ automation:
       - service: switch.turn_off
         entity_id: switch.office_lamp
       - service: switch.turn_off
+        entity_id: switch.office_lamp_second
+      - service: switch.turn_off
         entity_id: switch.living_room_lamp
       - service: switch.turn_off
         entity_id: switch.nodeid_4_switch
@@ -243,6 +245,8 @@ automation:
     action:
       - service: switch.turn_off
         entity_id: switch.office_lamp
+      - service: switch.turn_off
+        entity_id: switch.office_lamp_second
       - service: switch.turn_off
         entity_id: switch.living_room_lamp
   - alias: 'Turn on lights at dusk when away'
@@ -260,6 +264,9 @@ automation:
         entity_id: switch.office_lamp
       - delay: 00:00:55
       - service: switch.turn_on
+        entity_id: switch.office_lamp_second
+      - delay: 00:00:55
+      - service: switch.turn_on
         entity_id: switch.living_room_lamp
   - alias: 'Turn off lights at bedtime when away'
     trigger:
@@ -272,6 +279,9 @@ automation:
     action:
       - service: switch.turn_off
         entity_id: switch.office_lamp
+      - delay: 00:00:59
+      - service: switch.turn_off
+        entity_id: switch.office_lamp_second
       - delay: 00:00:59
       - service: switch.turn_off
         entity_id: switch.living_room_lamp
@@ -375,6 +385,7 @@ tplink:
   - host: 192.168.1.147 # hs105-1
   - host: 192.168.1.200 # hs105-2
   - host: 192.168.1.188 # hs105-3
+  - host: 192.168.1.172 # hs105-4
 
 # https://www.home-assistant.io/integrations/mqtt/
 mqtt:
