@@ -18,6 +18,8 @@ Install [Docker Compose](https://docs.docker.com/compose/).
 
 Copy `.env-copy` to `.env` and edit
 
+Make sure `/config/www/` which gets mounted is writeable.
+
 Copy `homeassistant/secrets_copy.yaml` to `homeassistant/secrets.yaml` and edit
 
 Run `setup-certs.sh`
@@ -135,7 +137,7 @@ In Home Assistant under integrations, add the Hubz Smart Home Controller for Zig
 
 #### Zigbee Devices
 
-* Aqara motion sensor
+* Aqara motion sensor model: RTCGQ11LM
 
 ## Networking
 
