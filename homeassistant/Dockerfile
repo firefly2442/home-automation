@@ -17,7 +17,3 @@ RUN touch /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys && 
 COPY cert.crt /usr/local/share/ca-certificates/cert.crt
 COPY cert.key /usr/local/share/ca-certificates/cert.key
 
-COPY startup.sh /startup.sh
-RUN chmod +x /startup.sh
-
-CMD ["/startup.sh"]
