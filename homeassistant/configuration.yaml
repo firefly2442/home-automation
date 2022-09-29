@@ -382,13 +382,6 @@ mqtt:
   discovery: true
   broker: 192.168.1.226
   port: 1883
-  # https://zwave-js.github.io/zwavejs2mqtt/#/guide/homeassistant
-  birth_message:
-    topic: 'homeassistant/status'
-    payload: 'online'
-  will_message:
-    topic: 'homeassistant/status'
-    payload: 'offline'
 
 notify:
   # https://www.home-assistant.io/integrations/discord/
