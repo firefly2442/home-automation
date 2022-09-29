@@ -13,7 +13,7 @@ views:
             icon: mdi:lamp
           - entity: switch.living_room_lamp
             icon: mdi:floor-lamp
-          - entity: switch.nodeid_4_switch
+          - entity: switch.in_wall_smart_switch
             name: Outside Lights
             icon: mdi:outdoor-lamp
           
