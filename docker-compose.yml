@@ -10,7 +10,7 @@ services:
     ports:
       - 8123:8123/tcp
     environment:
-      TZ: "America/Denver"
+      TZ: "America/Chicago"
     volumes:
       - ${HOMEASSISTANT_PATH}:/config:rw
     devices:
@@ -30,7 +30,7 @@ services:
     container_name: zwavejs2mqtt
     hostname: zwavejs2mqtt
     environment:
-      TZ: "America/Denver"
+      TZ: "America/Chicago"
     ports:
       - 8091:8091/tcp # port for web interface
       - 3000:3000/tcp # port for zwave-js websocket server
@@ -50,7 +50,7 @@ services:
     container_name: mosquitto
     hostname: mosquitto
     environment:
-      TZ: "America/Denver"
+      TZ: "America/Chicago"
     ports:
       - 1883:1883/tcp # standard port
       # this shouldn't be needed
