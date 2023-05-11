@@ -75,21 +75,6 @@ Camera (Amcrest IP4M-1051W - 4MP)
   * 640 x 480 (5 fps)
 * h264 passthrough
 
-Camera (Amcrest IP8M-2493EW-V2 - 8MP - x2)
-
-* Web-UI:
-  * `http://192.168.1.110`
-    * frontdoor camera
-  * `http://192.168.1.112`
-    * backdoor camera
-* main stream (recording)
-  * `rtsp://admin:secret@192.168.1.110:554/cam/realmonitor?channel=1&subtype=0`
-  * 3840 x 2160 (15 fps)
-* sub-stream (person detection)
-  * `rtsp://admin:secret@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1`
-  * 704 x 480 (5 fps)
-* h264 passthrough
-
 Camera (Samsung Galaxy Nexus cellphone)
 
 * Uses the [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_US)

@@ -10,27 +10,12 @@ default_config:
 camera:
   # https://www.home-assistant.io/integrations/generic_ip_camera/
   - platform: generic
-    still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=10&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=1&smooth=0&centerx=400&centery=240&station=ABX&rainsnow=1&lightning=0&noclutter=1&showlabels=0&showstorms=0&rand=26384596'
-    name: Animated Radar
-  - platform: generic
     still_image_url: 'http://192.168.1.113:8080/snapshot/inside/person'
     name: Inside Camera Person
-  - platform: generic
-    still_image_url: 'http://192.168.1.113:8080/snapshot/frontdoor/person'
-    name: Frontdoor Camera Person
-  - platform: generic
-    still_image_url: 'http://192.168.1.113:8080/snapshot/backdoor/person'
-    name: Backdoor Camera Person
   # https://www.home-assistant.io/integrations/camera.mqtt/
   - platform: mqtt
     topic: docker-movement-detection/inside
     name: Inside Motion Detected
-  - platform: mqtt
-    topic: docker-movement-detection/frontdoor
-    name: Frontdoor Motion Detected
-  - platform: mqtt
-    topic: docker-movement-detection/backdoor
-    name: Backdoor Motion Detected
 
 sensor:
   # https://www.home-assistant.io/integrations/systemmonitor/
@@ -113,7 +98,6 @@ lovelace:
 
 # https://community.home-assistant.io/t/picture-for-person-component-and-zone-naming-enhancement-for-home-and-not-home/103835/7
 homeassistant:
-  unit_system: imperial
   customize:
     person.patrick:
       entity_picture: /local/binary_logo.jpg
@@ -144,20 +128,8 @@ binary_sensor:
     name: inside_person_detected
     state_topic: "watsor/cameras/inside/detection/person/state"
   - platform: mqtt
-    name: frontdoor_person_detected
-    state_topic: "watsor/cameras/frontdoor/detection/person/state"
-  - platform: mqtt
-    name: backdoor_person_detected
-    state_topic: "watsor/cameras/backdoor/detection/person/state"
-  - platform: mqtt
     name: inside_motion_detected
     state_topic: "docker-movement-detection/inside/state"
-  - platform: mqtt
-    name: frontdoor_motion_detected
-    state_topic: "docker-movement-detection/frontdoor/state"
-  - platform: mqtt
-    name: backdoor_motion_detected
-    state_topic: "docker-movement-detection/backdoor/state"
 
 # https://www.home-assistant.io/docs/automation/
 automation:
@@ -180,9 +152,6 @@ automation:
     trigger:
       - platform: state
         entity_id: binary_sensor.inside_person_detected
-        to: 'on'
-      - platform: state
-        entity_id: binary_sensor.backdoor_person_detected
         to: 'on'
     condition:
       - condition: state
@@ -308,65 +277,6 @@ automation:
             images:
               - "/config/www/inside-person.jpg"
       - delay: 00:00:15 # delay so that we don't spam Discord
-  - alias: 'Save snapshot from backdoor camera when person detected'
-    trigger:
-      platform: state
-      entity_id: binary_sensor.backdoor_person_detected
-      to: 'on'
-    condition:
-      - condition: state
-        entity_id: switch.garage_switch
-        state: 'on'
-    action:
-      - service: notify.notify
-        data:
-          message: "Backdoor camera person detected!"
-      - service: camera.snapshot
-        target:
-          entity_id: camera.backdoor
-        data:
-          filename: '/config/www/backdoor-person.jpg'
-      - service: notify.discord
-        data_template:
-          message: "<@{{ states('input_text.discord_user_id') }}> Intruder, person detected at backdoor!"
-          target: !secret discord_channel # channel ID
-          data:
-            images:
-              - "/config/www/backdoor-person.jpg"
-      - delay: 00:00:15 # delay so that we don't spam Discord
-  - alias: 'Save snapshot from frontdoor camera when person detected'
-    trigger:
-      platform: state
-      entity_id: binary_sensor.frontdoor_person_detected
-      to: 'on'
-    condition:
-      - condition: state
-        entity_id: switch.garage_switch
-        state: 'on'
-    action:
-      - service: camera.snapshot
-        target:
-          entity_id: camera.frontdoor
-        data:
-          filename: '/config/www/frontdoor-person.jpg'
-      - service: notify.discord
-        data_template:
-          message: "<@{{ states('input_text.discord_user_id') }}> Frontdoor, person detected."
-          target: !secret discord_channel # channel ID
-          data:
-            images:
-              - "/config/www/frontdoor-person.jpg"
-      - delay: 00:00:15 # delay so that we don't spam Discord
-  - alias: 'Notify message from frontdoor camera when person detected'
-    trigger:
-      platform: state
-      entity_id: binary_sensor.frontdoor_person_detected
-      to: 'on'
-    action:
-      - service: notify.notify
-        data:
-          message: "Person at front door"
-      - delay: 00:00:60 # delay so we don't spam messages
 
 # https://www.home-assistant.io/integrations/tplink/
 tplink:

@@ -34,22 +34,6 @@ views:
             icon: mdi:alarm-light
       - type: markdown
         content: "[Zwavejs webpage](http://192.168.1.226:8091) with devices."
-  - title: Thermostat
-    cards:
-      # https://www.home-assistant.io/lovelace/thermostat/
-      - type: thermostat
-        entity: climate.t6_pro_z_wave_programmable_thermostat
-        name: Thermostat
-      - type: history-graph
-        title: Temperature
-        entities:
-          - entity: sensor.t6_pro_z_wave_programmable_thermostat_air_temperature
-            name: Temperature
-      - type: history-graph
-        title: Humidity
-        entities:
-          - entity: sensor.t6_pro_z_wave_programmable_thermostat_humidity
-            name: Humidity
   - title: Cameras/Motion
     cards:
       # https://www.home-assistant.io/lovelace/picture-glance/
@@ -58,70 +42,29 @@ views:
         title: Inside Camera
         entities:
           - camera.inside
-      - type: picture-glance
-        camera_image: camera.frontdoor
-        title: Frontdoor Camera
-        entities:
-          - camera.frontdoor
-      - type: picture-glance
-        camera_image: camera.backdoor
-        title: Backdoor Camera
-        entities:
-          - camera.backdoor
       - type: history-graph
         title: Camera Status
         entities:
           - camera.inside
-          - camera.frontdoor
-          - camera.backdoor
       - type: picture-glance
         title: Inside Person
         camera_image: camera.inside_camera_person
         entities:
           - binary_sensor.inside_person_detected
       - type: picture-glance
-        title: Frontdoor Person
-        camera_image: camera.frontdoor_camera_person
-        entities:
-          - binary_sensor.frontdoor_person_detected
-      - type: picture-glance
-        title: Backdoor Person
-        camera_image: camera.backdoor_camera_person
-        entities:
-          - binary_sensor.backdoor_person_detected
-      - type: picture-glance
         title: Inside Motion
         camera_image: camera.inside_motion_detected
         entities:
           - binary_sensor.inside_motion_detected
-      - type: picture-glance
-        title: Frontdoor Motion
-        camera_image: camera.frontdoor_motion_detected
-        entities:
-          - binary_sensor.frontdoor_motion_detected
-      - type: picture-glance
-        title: Backdoor Motion
-        camera_image: camera.backdoor_motion_detected
-        entities:
-          - binary_sensor.backdoor_motion_detected
       - type: history-graph
         title: Person Detected
         entities:
           - entity: binary_sensor.inside_person_detected
             name: Inside
-          - entity: binary_sensor.frontdoor_person_detected
-            name: Frontdoor
-          - entity: binary_sensor.backdoor_person_detected
-            name: Backdoor
-      - type: history-graph
         title: Motion Detected
         entities:
           - entity: binary_sensor.inside_motion_detected
             name: Inside
-          - entity: binary_sensor.frontdoor_motion_detected
-            name: Frontdoor
-          - entity: binary_sensor.backdoor_motion_detected
-            name: Backdoor
       - type: markdown
         content: "[Frigate webpage](http://192.168.1.113:5000) for recordings."
       - type: history-graph
@@ -132,11 +75,6 @@ views:
     cards:
       - type: weather-forecast
         entity: weather.home
-      - type: picture-glance
-        title: Animated Radar
-        camera_image: camera.animated_radar
-        entities:
-          - camera.animated_radar
   - title: System Monitor
     cards:
       - type: history-graph
@@ -203,11 +141,6 @@ views:
         content: "Frigate release [{{ state_attr('sensor.frigate_latest_release', 'tag_name') }}](https://github.com/blakeblackshear/frigate/releases) is available.  You're running version: {{ states('sensor.frigate_version') }}"
   - title: Batteries
     cards:
-      - type: history-graph
-        title: Thermostat Battery
-        entities:
-          - entity: sensor.t6_pro_z_wave_programmable_thermostat_battery_level
-            name: Thermostat Battery
       - type: history-graph
         title: Aqara Motion Sensor Battery
         entities:
