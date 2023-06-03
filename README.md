@@ -48,10 +48,9 @@ Use the `run-home-automation.sh` for future changes and to grab the latest versi
 
 ## UI
 
-* [Frigate - https://192.168.1.113:5000](https://192.168.1.113:5000)
+* [Frigate - https://192.168.1.226:5005](https://192.168.1.226:5005)
 * [Home-Assistant - http://192.168.1.226:8123](http://192.168.1.226:8123)
 * [ZWaveJS - http://192.168.1.226:8091](http://192.168.1.226:8091)
-* [Watsor - http://192.168.1.113:8080](http://192.168.1.113:8080)
 
 ## Frigate
 

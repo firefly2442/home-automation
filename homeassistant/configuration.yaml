@@ -7,16 +7,6 @@ default_config:
   #ssl_certificate: /config/ssl/cert.crt
   #ssl_key: /config/ssl/cert.key
 
-camera:
-  # https://www.home-assistant.io/integrations/generic_ip_camera/
-  - platform: generic
-    still_image_url: 'http://192.168.1.113:8080/snapshot/inside/person'
-    name: Inside Camera Person
-  # https://www.home-assistant.io/integrations/camera.mqtt/
-  - platform: mqtt
-    topic: docker-movement-detection/inside
-    name: Inside Motion Detected
-
 sensor:
   # https://www.home-assistant.io/integrations/systemmonitor/
   # TODO: how can we define multiple disks/mounts here?
@@ -45,7 +35,7 @@ sensor:
     # https://www.home-assistant.io/docs/configuration/platform_options/
     scan_interval: 600 # run every 10 minutes, default on local polling of sensors is 30 seconds
     # https://blakeblackshear.github.io/frigate/usage/api#apistats
-    resource: http://192.168.1.113:5000/api/stats
+    resource: http://192.168.1.226:5005/api/stats
     name: frigate_used_space_percentage
     value_template: '{{ ((value_json["service"]["storage"]["/media/frigate/recordings"]["used"] / value_json["service"]["storage"]["/media/frigate/recordings"]["total"]) * 100|float)|round(0) }}'
   # https://www.home-assistant.io/integrations/rest
@@ -60,7 +50,7 @@ sensor:
   - platform: rest
     # https://www.home-assistant.io/docs/configuration/platform_options/
     scan_interval: 43200 # run every 12 hours, default on local polling of sensors is 30 seconds
-    resource: http://192.168.1.113:5000/api/version
+    resource: http://192.168.1.226:5005/api/version
     name: frigate_version
     value_template: 'v{{ value.split("-")[0] }}'
   - platform: template
@@ -124,12 +114,6 @@ binary_sensor:
     sensors:
       frigate_update:
         value_template: "{{ state_attr('sensor.frigate_latest_release', 'tag_name') > states('sensor.frigate_version') }}"
-  - platform: mqtt
-    name: inside_person_detected
-    state_topic: "watsor/cameras/inside/detection/person/state"
-  - platform: mqtt
-    name: inside_motion_detected
-    state_topic: "docker-movement-detection/inside/state"
 
 # https://www.home-assistant.io/docs/automation/
 automation:
@@ -288,10 +272,11 @@ tplink:
   - host: 192.168.1.172 # hs105-4
 
 # https://www.home-assistant.io/integrations/mqtt/
-mqtt:
-  discovery: true
-  broker: 192.168.1.226
-  port: 1883
+# Can no longer be set using YAML, use the UI
+# mqtt:
+#   discovery: true
+#   broker: 192.168.1.226
+#   port: 1883
 
 notify:
   # https://www.home-assistant.io/integrations/discord/
