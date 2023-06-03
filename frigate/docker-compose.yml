@@ -2,31 +2,31 @@ version: '3.9'
 services:
   frigate:
     container_name: frigate
-    runtime: nvidia
+    # runtime: nvidia
     restart: unless-stopped
     privileged: true
     # https://docs.docker.com/compose/gpu-support/
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-    image: blakeblackshear/frigate:0.11.1
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    image: ghcr.io/blakeblackshear/frigate:stable
     devices:
       - /dev/bus/usb:/dev/bus/usb
-      - /dev/dri/renderD128:/dev/dri/renderD128
-      - /dev/vpu_service:/dev/vpu_service
-      - /dev/dri/card0:/dev/dri/card0
+      #- /dev/dri/renderD128:/dev/dri/renderD128
+      #- /dev/vpu_service:/dev/vpu_service
+      #- /dev/dri/card0:/dev/dri/card0
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config:/config:ro
-      - /video/frigate/:/media/frigate/:rw
+      - ./config:/config:rw
+      - /media/usbdrive/frigate/:/media/frigate/:rw
     ports:
-      - 5000:5000/tcp # web-interface
+      - 5005:5000/tcp # web-interface
       - 1935:1935/tcp # RTMP feeds
     environment:
       - FRIGATE_RTSP_PASSWORD=${FRIGATE_RTSP_PASSWORD}
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      #- NVIDIA_VISIBLE_DEVICES=all
+      #- NVIDIA_DRIVER_CAPABILITIES=compute,utility,video

@@ -12,30 +12,30 @@ cameras:
   inside:
     ffmpeg:
       # use Nvidia GPU for h264 decoding
-      input_args:
-        - -c:v
-        - h264_cuvid
-        # try to prevent smearing of the video from packetloss
-        - -rtsp_transport
-        - tcp
+      # input_args:
+      #   - -c:v
+      #   - h264_cuvid
+      #   # try to prevent smearing of the video from packetloss
+      #   - -rtsp_transport
+      #   - tcp
       inputs:
         # sub-stream, lower quality and FPS
-        # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
-        #   roles:
-        #     - detect
-        # full 4k stream
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
           roles:
-            - record
+            - detect
+        # full 4k stream
+        # - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.111:554/cam/realmonitor?channel=1&subtype=0
+        #   roles:
+        #     - record
     # detect on the sub-stream for improved performance
     detect:
-      enabled: False
-    #   width: 640
-    #   height: 480
-    #   fps: 5
-    # objects:
-    #   track:
-    #     - person
+      enabled: True
+      width: 640
+      height: 480
+      fps: 5
+    objects:
+      track:
+        - person
     record:
       # Optional: Enable recording
       enabled: True
@@ -72,3 +72,5 @@ cameras:
       bounding_box: False
       # Optional: crop the snapshot
       crop: False
+    birdseye:
+      mode: objects
