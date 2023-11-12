@@ -11,6 +11,10 @@ birdseye:
 cameras:
   inside:
     ffmpeg:
+      # record audio
+      # https://docs.frigate.video/troubleshooting/faqs/
+      output_args:
+        record: preset-record-generic-audio-aac
       # use Nvidia GPU for h264 decoding
       # input_args:
       #   - -c:v
